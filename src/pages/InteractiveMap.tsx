@@ -1,0 +1,253 @@
+import { useEffect, useRef, useState } from "react";
+import { MapPin, Navigation, Phone, Clock } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+// Fix default marker icon issue with Leaflet + Vite
+import icon from "leaflet/dist/images/marker-icon.png";
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
+
+let DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
+L.Marker.prototype.options.icon = DefaultIcon;
+
+interface Location {
+  id: number;
+  name: string;
+  type: string;
+  lat: number;
+  lng: number;
+  address: string;
+  hours?: string;
+  phone?: string;
+  accepts?: string[];
+  capacity?: string;
+}
+
+const InteractiveMap = () => {
+  const mapRef = useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([
+    "recycling",
+    "ewaste",
+    "hospital",
+    "shelter",
+  ]);
+
+  const filterTypes = [
+    { id: "recycling", label: "Recycling Centers", color: "#10b981", icon: "♻️" },
+    { id: "ewaste", label: "E-Waste Points", color: "#3b82f6", icon: "🔋" },
+    { id: "hospital", label: "Hospitals", color: "#ef4444", icon: "🏥" },
+    { id: "shelter", label: "Flood Shelters", color: "#f59e0b", icon: "🛡️" },
+  ];
+
+  useEffect(() => {
+    // Load locations data
+    fetch("/data/locations.json")
+      .then((res) => res.json())
+      .then((data) => setLocations(data))
+      .catch((err) => console.error("Failed to load locations:", err));
+  }, []);
+
+  useEffect(() => {
+    if (!mapContainerRef.current || mapRef.current) return;
+
+    // Initialize map
+    const map = L.map(mapContainerRef.current).setView([4.2105, 101.9758], 7);
+    mapRef.current = map;
+
+    // Add tile layer
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mapRef.current || locations.length === 0) return;
+
+    // Clear existing markers
+    mapRef.current.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        mapRef.current?.removeLayer(layer);
+      }
+    });
+
+    // Add markers for filtered locations
+    const filteredLocations = locations.filter((loc) =>
+      activeFilters.includes(loc.type)
+    );
+
+    filteredLocations.forEach((location) => {
+      const markerColor = filterTypes.find((f) => f.id === location.type)?.color || "#10b981";
+      
+      const customIcon = L.divIcon({
+        className: "custom-marker",
+        html: `<div style="background-color: ${markerColor}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-center; font-size: 16px;"></div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+      });
+
+      const marker = L.marker([location.lat, location.lng], { icon: customIcon })
+        .addTo(mapRef.current!)
+        .on("click", () => {
+          setSelectedLocation(location);
+          mapRef.current?.setView([location.lat, location.lng], 12);
+        });
+
+      marker.bindPopup(`<strong>${location.name}</strong><br>${location.address}`);
+    });
+  }, [locations, activeFilters]);
+
+  const toggleFilter = (filterId: string) => {
+    setActiveFilters((prev) =>
+      prev.includes(filterId)
+        ? prev.filter((id) => id !== filterId)
+        : [...prev, filterId]
+    );
+  };
+
+  const getDirections = (location: Location) => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}`;
+    window.open(url, "_blank");
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-12">
+      <div className="text-center mb-8">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          Interactive Map
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          Find recycling centers, e-waste points, hospitals, and emergency shelters
+        </p>
+      </div>
+
+      {/* Filters */}
+      <Card className="p-4 mb-6 shadow-custom-md">
+        <div className="flex flex-wrap gap-2">
+          {filterTypes.map((filter) => (
+            <Button
+              key={filter.id}
+              onClick={() => toggleFilter(filter.id)}
+              variant={activeFilters.includes(filter.id) ? "default" : "outline"}
+              size="sm"
+              className={activeFilters.includes(filter.id) ? "gradient-primary" : ""}
+            >
+              <span className="mr-2">{filter.icon}</span>
+              {filter.label}
+            </Button>
+          ))}
+        </div>
+      </Card>
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Map */}
+        <div className="lg:col-span-2">
+          <Card className="overflow-hidden shadow-custom-lg">
+            <div ref={mapContainerRef} className="w-full h-[600px]" />
+          </Card>
+        </div>
+
+        {/* Location Details */}
+        <div className="space-y-6">
+          {selectedLocation ? (
+            <Card className="p-6 shadow-custom-lg animate-scale-in">
+              <h2 className="text-2xl font-bold mb-4">{selectedLocation.name}</h2>
+              
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <p className="text-muted-foreground">{selectedLocation.address}</p>
+                </div>
+
+                {selectedLocation.hours && (
+                  <div className="flex items-start space-x-3">
+                    <Clock className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p className="text-muted-foreground">{selectedLocation.hours}</p>
+                  </div>
+                )}
+
+                {selectedLocation.phone && (
+                  <div className="flex items-start space-x-3">
+                    <Phone className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p className="text-muted-foreground">{selectedLocation.phone}</p>
+                  </div>
+                )}
+
+                {selectedLocation.accepts && (
+                  <div className="pt-3 border-t">
+                    <p className="font-semibold mb-2">Accepts:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedLocation.accepts.map((item, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedLocation.capacity && (
+                  <div className="pt-3 border-t">
+                    <p className="font-semibold">Capacity: {selectedLocation.capacity}</p>
+                  </div>
+                )}
+              </div>
+
+              <Button
+                onClick={() => getDirections(selectedLocation)}
+                className="w-full mt-6 gradient-primary"
+              >
+                <Navigation className="mr-2" size={18} />
+                Get Directions
+              </Button>
+            </Card>
+          ) : (
+            <Card className="p-6 shadow-custom-lg">
+              <p className="text-center text-muted-foreground">
+                Click on a marker to view details
+              </p>
+            </Card>
+          )}
+
+          {/* Legend */}
+          <Card className="p-6 shadow-custom-md">
+            <h3 className="font-semibold mb-4">Legend</h3>
+            <div className="space-y-2">
+              {filterTypes.map((filter) => (
+                <div key={filter.id} className="flex items-center space-x-3">
+                  <div
+                    className="w-4 h-4 rounded-full"
+                    style={{ backgroundColor: filter.color }}
+                  />
+                  <span className="text-sm text-muted-foreground">{filter.label}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default InteractiveMap;

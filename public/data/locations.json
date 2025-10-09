@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "name": "Kuala Lumpur Recycling Centre",
+    "type": "recycling",
+    "lat": 3.1390,
+    "lng": 101.6869,
+    "address": "Jalan Ampang, Kuala Lumpur",
+    "hours": "Mon-Sat: 8AM-6PM",
+    "accepts": ["plastic", "paper", "glass", "metal"]
+  },
+  {
+    "id": 2,
+    "name": "Penang E-Waste Collection Point",
+    "type": "ewaste",
+    "lat": 5.4164,
+    "lng": 100.3327,
+    "address": "Georgetown, Penang",
+    "hours": "Daily: 9AM-5PM",
+    "accepts": ["electronics", "batteries", "appliances"]
+  },
+  {
+    "id": 3,
+    "name": "Hospital Kuala Lumpur",
+    "type": "hospital",
+    "lat": 3.1735,
+    "lng": 101.7020,
+    "address": "Jalan Pahang, Kuala Lumpur",
+    "hours": "24/7",
+    "phone": "+603-2615-5555"
+  },
+  {
+    "id": 4,
+    "name": "Flood Relief Shelter - Selangor",
+    "type": "shelter",
+    "lat": 3.0738,
+    "lng": 101.5183,
+    "address": "Shah Alam, Selangor",
+    "hours": "Emergency only",
+    "capacity": "500 people"
+  },
+  {
+    "id": 5,
+    "name": "Johor Bahru Recycling Hub",
+    "type": "recycling",
+    "lat": 1.4927,
+    "lng": 103.7414,
+    "address": "Johor Bahru, Johor",
+    "hours": "Mon-Sat: 7AM-7PM",
+    "accepts": ["plastic", "paper", "glass", "metal", "cardboard"]
+  },
+  {
+    "id": 6,
+    "name": "Ipoh E-Waste Drop-off",
+    "type": "ewaste",
+    "lat": 4.5975,
+    "lng": 101.0901,
+    "address": "Ipoh, Perak",
+    "hours": "Mon-Fri: 9AM-5PM",
+    "accepts": ["computers", "phones", "batteries"]
+  },
+  {
+    "id": 7,
+    "name": "Melaka Hospital",
+    "type": "hospital",
+    "lat": 2.1896,
+    "lng": 102.2501,
+    "address": "Melaka City",
+    "hours": "24/7",
+    "phone": "+606-289-2344"
+  },
+  {
+    "id": 8,
+    "name": "Emergency Shelter - Kelantan",
+    "type": "shelter",
+    "lat": 6.1256,
+    "lng": 102.2381,
+    "address": "Kota Bharu, Kelantan",
+    "hours": "Emergency only",
+    "capacity": "300 people"
+  }
+]

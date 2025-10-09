@@ -1,0 +1,164 @@
+import { Link } from "react-router-dom";
+import { 
+  Camera, 
+  Map, 
+  BarChart3, 
+  Leaf, 
+  Shield, 
+  BookOpen,
+  Recycle,
+  Sparkles
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+
+const Home = () => {
+  const features = [
+    {
+      icon: Camera,
+      title: "RecycAI Scanner",
+      description: "Scan items with AI to identify recyclable materials instantly",
+      link: "/recycle",
+      gradient: "gradient-primary",
+    },
+    {
+      icon: Map,
+      title: "Interactive Map",
+      description: "Find recycling centers, e-waste bins, and emergency shelters",
+      link: "/map",
+      gradient: "gradient-secondary",
+    },
+    {
+      icon: BarChart3,
+      title: "Impact Dashboard",
+      description: "Track your recycling progress and environmental impact",
+      link: "/dashboard",
+      gradient: "gradient-warm",
+    },
+    {
+      icon: Leaf,
+      title: "Protect Environment",
+      description: "Learn practical tips to reduce waste and save resources",
+      link: "/protect",
+      gradient: "gradient-primary",
+    },
+    {
+      icon: Shield,
+      title: "Safety Guide",
+      description: "Prepare for floods, haze, and other environmental disasters",
+      link: "/safety",
+      gradient: "gradient-secondary",
+    },
+    {
+      icon: BookOpen,
+      title: "Learn Recycling",
+      description: "Comprehensive guides and FAQs about proper recycling",
+      link: "/learn",
+      gradient: "gradient-primary",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative py-20 px-4 overflow-hidden">
+        <div className="absolute inset-0 gradient-hero opacity-10 -z-10" />
+        <div className="container mx-auto text-center max-w-4xl">
+          <div className="inline-flex items-center space-x-2 bg-primary/10 px-4 py-2 rounded-full mb-6 animate-scale-in">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <span className="text-sm font-semibold text-primary">Malaysia Coolest Project 2025</span>
+          </div>
+          
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in">
+            MyMalaysia Care+
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-slide-up">
+            Your AI-powered companion for recycling, environmental protection, and disaster safety
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up">
+            <Link to="/recycle">
+              <Button size="lg" className="gradient-primary text-white shadow-custom-lg hover:shadow-custom-xl transition-all">
+                <Camera className="mr-2" size={20} />
+                Try RecycAI Scanner
+              </Button>
+            </Link>
+            <Link to="/map">
+              <Button size="lg" variant="outline" className="border-2 hover:bg-primary/5">
+                <Map className="mr-2" size={20} />
+                Explore Map
+              </Button>
+            </Link>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+            <Card className="p-4 shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-3xl font-bold text-primary">100%</div>
+              <div className="text-sm text-muted-foreground">Client-Side</div>
+            </Card>
+            <Card className="p-4 shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-3xl font-bold text-secondary">AI-Powered</div>
+              <div className="text-sm text-muted-foreground">Smart Scanner</div>
+            </Card>
+            <Card className="p-4 shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-3xl font-bold text-accent">24/7</div>
+              <div className="text-sm text-muted-foreground">Available</div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Comprehensive Environmental Tools
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Everything you need to make a positive impact on Malaysia's environment
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <Link key={index} to={feature.link}>
+                <Card className="p-6 h-full hover:shadow-custom-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+                  <div className={`w-12 h-12 rounded-lg ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <feature.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-16 px-4">
+        <Card className="container mx-auto max-w-4xl p-8 md:p-12 shadow-custom-xl gradient-hero text-white">
+          <div className="text-center">
+            <Recycle className="w-16 h-16 mx-auto mb-6 animate-float" />
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Start Making a Difference Today
+            </h2>
+            <p className="text-lg mb-8 text-white/90">
+              Join thousands of Malaysians protecting our environment with smart technology
+            </p>
+            <Link to="/recycle">
+              <Button size="lg" variant="secondary" className="shadow-custom-lg">
+                Get Started
+              </Button>
+            </Link>
+          </div>
+        </Card>
+      </section>
+    </div>
+  );
+};
+
+export default Home;
