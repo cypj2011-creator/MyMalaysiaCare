@@ -92,10 +92,13 @@ const Footer = () => {
         </div>
 
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p className="flex items-center justify-center space-x-1">
+          <p className="flex items-center justify-center space-x-1 mb-3">
             <span>Made with</span>
             <Heart size={14} className="text-destructive fill-destructive" />
             <span>for Malaysia Coolest Project {currentYear}</span>
+          </p>
+          <p className="font-semibold text-foreground mb-2">
+            Created by Yeoh Phee Jun & Thang Wei Zen
           </p>
           <p className="mt-2">
             © {currentYear} MyMalaysia Care+. Powered by TensorFlow.js, Leaflet, and Chart.js

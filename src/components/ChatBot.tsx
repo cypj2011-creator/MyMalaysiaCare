@@ -126,7 +126,7 @@ const ChatBot = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] flex flex-col shadow-custom-xl z-50 animate-scale-in">
+        <Card className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] flex flex-col shadow-custom-xl z-50 animate-bounce-in">
           {/* Header */}
           <div className="gradient-hero text-white p-4 rounded-t-lg">
             <h3 className="font-semibold">AI Assistant</h3>

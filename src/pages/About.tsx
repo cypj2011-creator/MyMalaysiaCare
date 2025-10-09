@@ -163,10 +163,14 @@ const About = () => {
       <Card className="p-8 shadow-custom-xl gradient-warm text-white text-center">
         <Award className="w-16 h-16 mx-auto mb-4" />
         <h2 className="text-2xl font-bold mb-3">Malaysia Coolest Project 2025</h2>
+        <div className="mb-4">
+          <p className="text-xl font-bold text-white mb-2">Created by</p>
+          <p className="text-2xl font-bold text-white">Yeoh Phee Jun & Thang Wei Zen</p>
+        </div>
         <p className="text-white/90 max-w-2xl mx-auto mb-4">
-          Created by passionate students who believe technology can solve environmental 
+          Built by passionate students who believe technology can solve environmental 
           challenges. This project demonstrates how modern web technologies can create 
-          real-world impact.
+          real-world impact for Malaysia.
         </p>
         <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur px-4 py-2 rounded-full">
           <Users className="w-5 h-5" />
