@@ -81,24 +81,24 @@ const About = () => {
         <div className="grid md:grid-cols-3 gap-6">
           <Card className="p-6 shadow-custom-lg">
             <div className="text-4xl mb-4">📊</div>
-            <h3 className="text-xl font-semibold mb-2">Low Recycling Rate</h3>
-            <p className="text-muted-foreground">
-              Malaysia's recycling rate is only 28%, far below the government's 40% target. 
-              Many Malaysians don't know what can be recycled or how to recycle properly.
+            <h3 className="text-xl font-semibold mb-2 break-words">Low Recycling Rate</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed break-words">
+              Malaysia&apos;s recycling rate is only 28%, far below the government&apos;s 40% target. 
+              Many Malaysians don&apos;t know what can be recycled or how to recycle properly.
             </p>
           </Card>
           <Card className="p-6 shadow-custom-lg">
             <div className="text-4xl mb-4">🗑️</div>
-            <h3 className="text-xl font-semibold mb-2">Rising Waste</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-xl font-semibold mb-2 break-words">Rising Waste</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed break-words">
               Over 38,000 tons of waste are generated daily in Malaysia. Without proper 
               recycling, our landfills are filling up rapidly.
             </p>
           </Card>
           <Card className="p-6 shadow-custom-lg">
             <div className="text-4xl mb-4">⚠️</div>
-            <h3 className="text-xl font-semibold mb-2">Environmental Disasters</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-xl font-semibold mb-2 break-words">Environmental Disasters</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed break-words">
               Floods, haze, and landslides affect Malaysians yearly, but many lack proper 
               disaster preparedness knowledge and resources.
             </p>
@@ -115,8 +115,8 @@ const About = () => {
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                 <feature.icon className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="text-xl font-semibold mb-2 break-words">{feature.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed break-words">{feature.description}</p>
             </Card>
           ))}
         </div>
@@ -130,9 +130,9 @@ const About = () => {
             <Card key={index} className="p-6 shadow-custom-lg">
               <div className="flex items-start space-x-4">
                 <div className="text-4xl flex-shrink-0">{goal.icon}</div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">{goal.title}</h3>
-                  <p className="text-muted-foreground">{goal.description}</p>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-semibold mb-2 break-words">{goal.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed break-words">{goal.description}</p>
                 </div>
               </div>
             </Card>

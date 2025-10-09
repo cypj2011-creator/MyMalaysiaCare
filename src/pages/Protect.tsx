@@ -144,13 +144,13 @@ const Protect = () => {
               <div className={`w-12 h-12 rounded-lg ${category.bg} flex items-center justify-center flex-shrink-0`}>
                 <category.icon className={`w-6 h-6 ${category.color}`} />
               </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold mb-3">{category.title}</h3>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-xl font-semibold mb-3 break-words">{category.title}</h3>
                 <ul className="space-y-2">
                   {category.tips.map((tip, tipIndex) => (
                     <li key={tipIndex} className="flex items-start space-x-2">
                       <span className="text-primary mt-1 flex-shrink-0">•</span>
-                      <span className="text-muted-foreground text-sm">{tip}</span>
+                      <span className="text-muted-foreground text-sm break-words">{tip}</span>
                     </li>
                   ))}
                 </ul>

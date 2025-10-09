@@ -168,12 +168,12 @@ const InteractiveMap = () => {
         <div className="space-y-6">
           {selectedLocation ? (
             <Card className="p-6 shadow-custom-lg animate-scale-in">
-              <h2 className="text-2xl font-bold mb-4">{selectedLocation.name}</h2>
+              <h2 className="text-2xl font-bold mb-4 break-words">{selectedLocation.name}</h2>
               
               <div className="space-y-3">
                 <div className="flex items-start space-x-3">
                   <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                  <p className="text-muted-foreground">{selectedLocation.address}</p>
+                  <p className="text-muted-foreground text-sm break-words">{selectedLocation.address}</p>
                 </div>
 
                 {selectedLocation.hours && (

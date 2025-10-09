@@ -129,8 +129,8 @@ const Home = () => {
                   <div className={`w-12 h-12 rounded-lg ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
+                  <h3 className="text-xl font-semibold mb-2 break-words">{feature.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed break-words">{feature.description}</p>
                 </Card>
               </Link>
             ))}
