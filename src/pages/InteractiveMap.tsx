@@ -41,6 +41,7 @@ const InteractiveMap = () => {
     "hospital",
     "shelter",
   ]);
+  const [loading, setLoading] = useState(false);
 
   const filterTypes = [
     { id: "recycling", label: "Recycling Centers", color: "#10b981", icon: "♻️" },
@@ -49,12 +50,127 @@ const InteractiveMap = () => {
     { id: "shelter", label: "Flood Shelters", color: "#f59e0b", icon: "🛡️" },
   ];
 
+  // Load nationwide data from OpenStreetMap Overpass API (fallback to bundled JSON)
+  const fetchOverpassNationwide = async (): Promise<Location[]> => {
+    const query = `
+      [out:json][timeout:120];
+      area["ISO3166-1"="MY"][admin_level=2]->.searchArea;
+      (
+        node["amenity"="hospital"](area.searchArea);
+        way["amenity"="hospital"](area.searchArea);
+        relation["amenity"="hospital"](area.searchArea);
+
+        node["amenity"="recycling"](area.searchArea);
+        way["amenity"="recycling"](area.searchArea);
+        relation["amenity"="recycling"](area.searchArea);
+
+        node["emergency"="shelter"](area.searchArea);
+        way["emergency"="shelter"](area.searchArea);
+        relation["emergency"="shelter"](area.searchArea);
+
+        node["amenity"="shelter"](area.searchArea);
+        way["amenity"="shelter"](area.searchArea);
+        relation["amenity"="shelter"](area.searchArea);
+      );
+      out center;
+    `;
+    const resp = await fetch("https://overpass-api.de/api/interpreter", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+      body: `data=${encodeURIComponent(query)}`,
+    });
+    if (!resp.ok) throw new Error(`Overpass error ${resp.status}`);
+    const data = await resp.json();
+    const elements = Array.isArray(data?.elements) ? data.elements : [];
+
+    const toLocation = (el: any, idx: number): Location | null => {
+      const tags = el.tags || {};
+      const lat = el.lat ?? el.center?.lat;
+      const lng = el.lon ?? el.center?.lon;
+      if (typeof lat !== "number" || typeof lng !== "number") return null;
+
+      let type: string | null = null;
+      if (tags.amenity === "hospital") type = "hospital";
+      else if (tags.amenity === "recycling") {
+        const isEwaste =
+          tags["recycling:electronics"] === "yes" ||
+          tags["recycling:electrical_items"] === "yes" ||
+          tags["recycling:batteries"] === "yes";
+        type = isEwaste ? "ewaste" : "recycling";
+      } else if (tags.emergency === "shelter" || tags.amenity === "shelter") {
+        type = "shelter";
+      }
+
+      if (!type) return null;
+
+      const address =
+        tags["addr:full"] ||
+        [tags["addr:housenumber"], tags["addr:street"], tags["addr:city"], tags["addr:state"]]
+          .filter(Boolean)
+          .join(", ") ||
+        "Malaysia";
+
+      const accepts: string[] | undefined =
+        type === "recycling" || type === "ewaste"
+          ? ([
+              tags["recycling:glass"] === "yes" && "glass",
+              tags["recycling:paper"] === "yes" && "paper",
+              tags["recycling:plastic"] === "yes" && "plastic",
+              tags["recycling:metal"] === "yes" && "metal",
+              tags["recycling:cardboard"] === "yes" && "cardboard",
+              (tags["recycling:electronics"] === "yes" || tags["recycling:electrical_items"] === "yes") && "electronics",
+              tags["recycling:batteries"] === "yes" && "batteries",
+            ].filter(Boolean) as string[])
+          : undefined;
+
+      return {
+        id: el.id ?? idx,
+        name: tags.name || (type === "hospital" ? "Hospital" : type === "shelter" ? "Shelter" : "Recycling Point"),
+        type,
+        lat,
+        lng,
+        address,
+        hours: tags.opening_hours,
+        phone: tags.phone || tags["contact:phone"],
+        accepts,
+      };
+    };
+
+    const out: Location[] = [];
+    for (let i = 0; i < elements.length; i++) {
+      const loc = toLocation(elements[i], i);
+      if (loc) out.push(loc);
+    }
+    return out;
+  };
+
   useEffect(() => {
-    // Load locations data
-    fetch("/data/locations.json")
-      .then((res) => res.json())
-      .then((data) => setLocations(data))
-      .catch((err) => console.error("Failed to load locations:", err));
+    let cancelled = false;
+    async function load() {
+      try {
+        setLoading(true);
+        const nationwide = await fetchOverpassNationwide();
+        if (!cancelled && nationwide.length) {
+          setLocations(nationwide);
+          return;
+        }
+      } catch (e) {
+        console.warn("Nationwide data failed, falling back to bundled locations:", e);
+      } finally {
+        setLoading(false);
+      }
+
+      fetch("/data/locations.json")
+        .then((res) => res.json())
+        .then((data) => {
+          if (!cancelled) setLocations(data);
+        })
+        .catch((err) => console.error("Failed to load locations:", err));
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
