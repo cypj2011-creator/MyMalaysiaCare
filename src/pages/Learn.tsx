@@ -110,10 +110,10 @@ const Learn = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words px-2">
           Learn Recycling
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto break-words px-4">
           Comprehensive guide to recycling properly in Malaysia
         </p>
       </div>
@@ -124,10 +124,10 @@ const Learn = () => {
           <HelpCircle className="w-6 h-6" />
           <h2 className="text-2xl font-bold">Quick Tips</h2>
         </div>
-        <div className="grid md:grid-cols-2 gap-3">
+        <div className="grid sm:grid-cols-2 gap-3">
           {quickTips.map((tip, index) => (
-            <div key={index} className="flex items-start space-x-2 bg-white/10 backdrop-blur rounded-lg p-3">
-              <span className="text-sm">{tip}</span>
+            <div key={index} className="flex items-start space-x-2 bg-white/10 backdrop-blur rounded-lg p-3 min-w-0">
+              <span className="text-xs sm:text-sm break-words leading-relaxed">{tip}</span>
             </div>
           ))}
         </div>
@@ -137,21 +137,21 @@ const Learn = () => {
       <div className="space-y-6">
         {categories.map((category, index) => (
           <Card key={index} className="p-6 shadow-custom-lg">
-            <div className="flex items-center space-x-4 mb-6">
-              <div className={`w-12 h-12 rounded-lg ${category.bg} flex items-center justify-center`}>
-                <category.icon className={`w-6 h-6 ${category.color}`} />
+            <div className="flex items-center space-x-3 sm:space-x-4 mb-6 min-w-0">
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${category.bg} flex items-center justify-center flex-shrink-0`}>
+                <category.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${category.color}`} />
               </div>
-              <h2 className="text-2xl font-bold">{category.title}</h2>
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold break-words leading-tight">{category.title}</h2>
             </div>
 
             <Accordion type="single" collapsible className="w-full">
               {category.faqs.map((faq, faqIndex) => (
                 <AccordionItem key={faqIndex} value={`item-${faqIndex}`}>
                   <AccordionTrigger className="text-left">
-                    <span className="font-semibold">{faq.q}</span>
+                    <span className="font-semibold text-sm sm:text-base break-words pr-4">{faq.q}</span>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <p className="text-muted-foreground leading-relaxed">{faq.a}</p>
+                    <p className="text-muted-foreground leading-relaxed text-sm sm:text-base break-words">{faq.a}</p>
                   </AccordionContent>
                 </AccordionItem>
               ))}

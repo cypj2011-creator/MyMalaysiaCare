@@ -210,15 +210,15 @@ const RecycleScanner = () => {
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <div className="text-center mb-12 animate-fade-in">
-        <div className="inline-flex items-center space-x-2 bg-primary/10 px-4 py-2 rounded-full mb-4">
-          <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-          <span className="text-sm font-semibold text-primary">Powered by TensorFlow.js AI</span>
+      <div className="text-center mb-12 animate-fade-in px-4">
+        <div className="inline-flex items-center space-x-2 bg-primary/10 px-3 sm:px-4 py-2 rounded-full mb-4">
+          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
+          <span className="text-xs sm:text-sm font-semibold text-primary">Powered by TensorFlow.js AI</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words">
           RecycAI Scanner
         </h1>
-        <p className="text-lg text-muted-foreground">
+        <p className="text-base sm:text-lg text-muted-foreground break-words leading-relaxed max-w-2xl mx-auto">
           Upload or capture an image to identify if it&apos;s recyclable with real AI
         </p>
       </div>
@@ -230,11 +230,11 @@ const RecycleScanner = () => {
             <>
               <div className="w-full aspect-video bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-border transition-all hover:border-primary">
                 <div className="text-center p-8">
-                  <Camera className="w-16 h-16 mx-auto mb-4 text-muted-foreground animate-float" />
-                  <p className="text-muted-foreground mb-2 font-semibold">
+                  <Camera className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-muted-foreground animate-float" />
+                  <p className="text-muted-foreground mb-2 font-semibold text-sm sm:text-base break-words px-4">
                     {isLoadingModel ? "Loading AI model..." : "Ready to scan!"}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs sm:text-sm text-muted-foreground break-words px-4">
                     Upload an image or take a photo
                   </p>
                 </div>
@@ -329,9 +329,9 @@ const RecycleScanner = () => {
                   <AlertCircle className="w-6 h-6 text-destructive" />
                 </div>
               )}
-              <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-2">{result.category}</h2>
-                <p className="text-sm text-muted-foreground mb-3">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-xl sm:text-2xl font-bold mb-2 break-words leading-tight">{result.category}</h2>
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 break-words leading-relaxed">
                   AI detected: <span className="font-semibold">{result.aiPrediction}</span>
                 </p>
                 <div className="flex items-center space-x-2 mb-2">
@@ -355,13 +355,13 @@ const RecycleScanner = () => {
             </div>
 
             <div className="border-t pt-6 animate-slide-down">
-              <h3 className="font-semibold text-lg mb-2">♻️ Recycling Instructions</h3>
-              <p className="text-muted-foreground">{result.instructions}</p>
+              <h3 className="font-semibold text-base sm:text-lg mb-2">♻️ Recycling Instructions</h3>
+              <p className="text-muted-foreground text-sm sm:text-base break-words leading-relaxed">{result.instructions}</p>
             </div>
 
             <div className="border-t pt-6 bg-muted/30 -m-8 p-8 rounded-b-lg animate-slide-down">
-              <h3 className="font-semibold text-lg mb-2">🌱 Eco Fact</h3>
-              <p className="text-foreground">{result.ecoFact}</p>
+              <h3 className="font-semibold text-base sm:text-lg mb-2">🌱 Eco Fact</h3>
+              <p className="text-foreground text-sm sm:text-base break-words leading-relaxed">{result.ecoFact}</p>
             </div>
           </div>
         </Card>
@@ -369,8 +369,8 @@ const RecycleScanner = () => {
 
       {/* Info Section */}
       <Card className="p-6 mt-8 bg-primary/5 border-primary/20 animate-slide-up">
-        <h3 className="font-semibold mb-2">🤖 Real AI Technology</h3>
-        <p className="text-sm text-muted-foreground">
+        <h3 className="font-semibold mb-2 text-base sm:text-lg">🤖 Real AI Technology</h3>
+        <p className="text-xs sm:text-sm text-muted-foreground break-words leading-relaxed">
           Our scanner uses Google&apos;s TensorFlow.js with the MobileNet model running directly in your browser. 
           The AI has been trained on millions of images to recognize everyday objects. All processing happens 
           on your device - no images are sent to servers, ensuring your privacy!

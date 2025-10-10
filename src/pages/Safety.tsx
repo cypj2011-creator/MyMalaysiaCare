@@ -131,10 +131,10 @@ const Safety = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words px-2">
           Disaster Safety Guide
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto break-words px-4 leading-relaxed">
           Essential preparation and response guidelines for environmental disasters in Malaysia
         </p>
       </div>
@@ -145,14 +145,14 @@ const Safety = () => {
           <Phone className="w-6 h-6" />
           <h2 className="text-2xl font-bold">Emergency Contacts</h2>
         </div>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {emergencyContacts.map((contact, index) => (
-            <div key={index} className="bg-white/10 backdrop-blur rounded-lg p-4 text-center">
-              <div className="text-3xl mb-2">{contact.icon}</div>
-              <div className="font-semibold mb-1">{contact.service}</div>
+            <div key={index} className="bg-white/10 backdrop-blur rounded-lg p-3 sm:p-4 text-center min-w-0">
+              <div className="text-2xl sm:text-3xl mb-2">{contact.icon}</div>
+              <div className="font-semibold mb-1 text-xs sm:text-sm break-words leading-tight">{contact.service}</div>
               <a
                 href={`tel:${contact.number}`}
-                className="text-2xl font-bold hover:underline"
+                className="text-lg sm:text-2xl font-bold hover:underline"
               >
                 {contact.number}
               </a>
@@ -165,25 +165,25 @@ const Safety = () => {
       <div className="space-y-6">
         {safetyGuides.map((guide, index) => (
           <Card key={index} className="p-6 shadow-custom-lg">
-            <div className="flex items-center space-x-4 mb-6">
-              <div className={`w-14 h-14 rounded-lg ${guide.bg} flex items-center justify-center`}>
-                <guide.icon className={`w-8 h-8 ${guide.color}`} />
+            <div className="flex items-center space-x-3 sm:space-x-4 mb-6 min-w-0">
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-lg ${guide.bg} flex items-center justify-center flex-shrink-0`}>
+                <guide.icon className={`w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ${guide.color}`} />
               </div>
-              <h2 className="text-2xl font-bold">{guide.title}</h2>
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold break-words leading-tight">{guide.title}</h2>
             </div>
 
             <Accordion type="single" collapsible className="w-full">
               {guide.sections.map((section, sectionIndex) => (
                 <AccordionItem key={sectionIndex} value={`item-${sectionIndex}`}>
-                  <AccordionTrigger className="text-lg font-semibold">
-                    {section.title}
+                  <AccordionTrigger className="text-base sm:text-lg font-semibold">
+                    <span className="break-words pr-4">{section.title}</span>
                   </AccordionTrigger>
                   <AccordionContent>
                     <ul className="space-y-2 mt-2">
                       {section.tips.map((tip, tipIndex) => (
-                        <li key={tipIndex} className="flex items-start space-x-2">
-                          <AlertTriangle className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                          <span className="text-muted-foreground">{tip}</span>
+                        <li key={tipIndex} className="flex items-start space-x-2 min-w-0">
+                          <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-primary mt-0.5 flex-shrink-0" />
+                          <span className="text-muted-foreground text-sm sm:text-base break-words leading-relaxed">{tip}</span>
                         </li>
                       ))}
                     </ul>
@@ -211,50 +211,50 @@ const Safety = () => {
 
       {/* Preparation Checklist */}
       <Card className="p-6 mt-6 bg-muted/30 shadow-custom-md">
-        <h3 className="text-xl font-semibold mb-4">🎒 Emergency Kit Checklist</h3>
+        <h3 className="text-lg sm:text-xl font-semibold mb-4 break-words">🎒 Emergency Kit Checklist</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <ul className="space-y-2">
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">Water (1 gallon/person/day for 3 days)</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">Water (1 gallon/person/day for 3 days)</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">Non-perishable food (3-day supply)</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">Non-perishable food (3-day supply)</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">First aid kit</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">First aid kit</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">Flashlight and extra batteries</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">Flashlight and extra batteries</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">Battery-powered or hand-crank radio</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">Battery-powered or hand-crank radio</span>
             </li>
           </ul>
           <ul className="space-y-2">
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">Prescription medications</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">Prescription medications</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">Important documents (waterproof container)</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">Important documents (waterproof container)</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">Cash and credit cards</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">Cash and credit cards</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">Phone charger and power bank</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">Phone charger and power bank</span>
             </li>
-            <li className="flex items-center space-x-2">
-              <input type="checkbox" className="w-4 h-4" />
-              <span className="text-sm">N95 masks</span>
+            <li className="flex items-start sm:items-center space-x-2 min-w-0">
+              <input type="checkbox" className="w-4 h-4 mt-0.5 sm:mt-0 flex-shrink-0" />
+              <span className="text-xs sm:text-sm break-words leading-relaxed">N95 masks</span>
             </li>
           </ul>
         </div>

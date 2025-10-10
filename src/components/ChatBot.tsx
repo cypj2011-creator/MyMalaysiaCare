@@ -126,11 +126,11 @@ const ChatBot = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-6 w-96 max-w-[calc(100vw-3rem)] h-[500px] flex flex-col shadow-custom-xl z-50 animate-bounce-in">
+        <Card className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-96 max-w-[calc(100vw-2rem)] h-[500px] max-h-[calc(100vh-8rem)] flex flex-col shadow-custom-xl z-50 animate-bounce-in">
           {/* Header */}
-          <div className="gradient-hero text-white p-4 rounded-t-lg">
-            <h3 className="font-semibold">AI Assistant</h3>
-            <p className="text-sm text-white/90">Ask me anything about recycling and environment!</p>
+          <div className="gradient-hero text-white p-3 sm:p-4 rounded-t-lg">
+            <h3 className="font-semibold text-sm sm:text-base break-words">AI Assistant</h3>
+            <p className="text-xs sm:text-sm text-white/90 break-words leading-relaxed">Ask me anything about recycling and environment!</p>
           </div>
 
           {/* Messages */}
@@ -141,13 +141,13 @@ const ChatBot = () => {
                 className={`flex ${message.isBot ? "justify-start" : "justify-end"}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={`max-w-[85%] rounded-lg p-2.5 sm:p-3 ${
                     message.isBot
                       ? "bg-muted text-foreground"
                       : "gradient-primary text-white"
                   }`}
                 >
-                  <p className="text-sm">{message.text}</p>
+                  <p className="text-xs sm:text-sm break-words leading-relaxed">{message.text}</p>
                   {message.link && (
                     <a
                       href={message.link}
