@@ -66,7 +66,7 @@ const Home = () => {
         <div className="container mx-auto text-center max-w-4xl">
           <div className="inline-flex items-center space-x-2 bg-primary/10 px-4 py-2 rounded-full mb-6 animate-scale-in">
             <Sparkles className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-primary">Malaysia Coolest Project 2025</span>
+            <span className="text-sm font-semibold text-primary">Malaysia Coolest Project 2026</span>
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in">
