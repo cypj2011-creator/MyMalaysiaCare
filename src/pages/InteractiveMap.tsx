@@ -165,7 +165,7 @@ const InteractiveMap = () => {
         setLoading(false);
       }
 
-      fetch("/data/locations.json")
+      fetch(`${import.meta.env.BASE_URL}data/locations.json`)
         .then((res) => res.json())
         .then((data) => {
           if (!cancelled) setLocations(data);
