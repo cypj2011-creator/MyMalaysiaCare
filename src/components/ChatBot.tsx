@@ -1,21 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-
-interface FAQ {
-  question: string;
-  answer: string;
-  keywords: string[];
-  link?: string;
-}
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Message {
   id: number;
   text: string;
   isBot: boolean;
-  link?: string;
 }
 
 const ChatBot = () => {
@@ -23,62 +17,20 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm your MyMalaysia Care+ assistant. Ask me about recycling, environmental protection, or disaster safety!",
+      text: "Hello! I'm your AI-powered MyMalaysia Care+ assistant. Ask me anything about recycling, environmental protection, or disaster safety!",
       isBot: true,
     },
   ]);
   const [input, setInput] = useState("");
-  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Load FAQ data
-    fetch("/data/faq.json")
-      .then((res) => res.json())
-      .then((data) => setFaqs(data))
-      .catch((err) => console.error("Failed to load FAQs:", err));
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const findBestMatch = (query: string): FAQ | null => {
-    const lowerQuery = query.toLowerCase();
-    
-    // Simple fuzzy search implementation
-    let bestMatch: FAQ | null = null;
-    let bestScore = 0;
-
-    faqs.forEach((faq) => {
-      let score = 0;
-      
-      // Check keywords
-      faq.keywords.forEach((keyword) => {
-        if (lowerQuery.includes(keyword.toLowerCase())) {
-          score += 2;
-        }
-      });
-
-      // Check question
-      const questionWords = faq.question.toLowerCase().split(" ");
-      questionWords.forEach((word) => {
-        if (lowerQuery.includes(word) && word.length > 3) {
-          score += 1;
-        }
-      });
-
-      if (score > bestScore) {
-        bestScore = score;
-        bestMatch = faq;
-      }
-    });
-
-    return bestScore > 2 ? bestMatch : null;
-  };
-
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: messages.length + 1,
@@ -87,23 +39,43 @@ const ChatBot = () => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
-
-    // Find matching answer
-    const match = findBestMatch(input);
-    
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: messages.length + 2,
-        text: match 
-          ? match.answer 
-          : "I'm not sure about that. Try asking about recycling, e-waste disposal, environmental protection, or disaster safety!",
-        isBot: true,
-        link: match?.link,
-      };
-      setMessages((prev) => [...prev, botMessage]);
-    }, 500);
-
     setInput("");
+    setIsLoading(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('chat', {
+        body: { message: input }
+      });
+
+      if (error) {
+        console.error("Chat error:", error);
+        toast.error("Failed to get response. Please try again.");
+        const errorMessage: Message = {
+          id: messages.length + 2,
+          text: "Sorry, I encountered an error. Please try again!",
+          isBot: true,
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      } else {
+        const botMessage: Message = {
+          id: messages.length + 2,
+          text: data.message || "I'm sorry, I couldn't generate a response.",
+          isBot: true,
+        };
+        setMessages((prev) => [...prev, botMessage]);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      toast.error("An unexpected error occurred.");
+      const errorMessage: Message = {
+        id: messages.length + 2,
+        text: "Sorry, something went wrong. Please try again later!",
+        isBot: true,
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -148,14 +120,6 @@ const ChatBot = () => {
                   }`}
                 >
                   <p className="text-xs sm:text-sm break-words leading-relaxed">{message.text}</p>
-                  {message.link && (
-                    <a
-                      href={message.link}
-                      className="text-sm underline mt-2 block font-semibold hover:opacity-80"
-                    >
-                      Learn more →
-                    </a>
-                  )}
                 </div>
               </div>
             ))}
@@ -170,13 +134,15 @@ const ChatBot = () => {
               onKeyPress={handleKeyPress}
               placeholder="Type your question..."
               className="flex-1"
+              disabled={isLoading}
             />
             <Button
               onClick={handleSend}
               size="icon"
               className="gradient-primary"
+              disabled={isLoading}
             >
-              <Send size={18} />
+              {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
             </Button>
           </div>
         </Card>

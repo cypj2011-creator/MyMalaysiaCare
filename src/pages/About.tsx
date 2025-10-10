@@ -162,7 +162,7 @@ const About = () => {
       {/* Competition */}
       <Card className="p-8 shadow-custom-xl gradient-warm text-white text-center">
         <Award className="w-16 h-16 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold mb-3">Malaysia Coolest Project 2025</h2>
+        <h2 className="text-2xl font-bold mb-3">Malaysia Coolest Project 2026</h2>
         <div className="mb-4">
           <p className="text-xl font-bold text-white mb-2">Created by</p>
           <p className="text-2xl font-bold text-white">Yeoh Phee Jun & Thang Wei Zen</p>

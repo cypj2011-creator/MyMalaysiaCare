@@ -1,82 +1,348 @@
 [
   {
     "id": 1,
+    "name": "Hospital Kuala Lumpur",
+    "type": "hospital",
+    "lat": 3.1735,
+    "lng": 101.7020,
+    "address": "Jalan Pahang, 50586 Kuala Lumpur",
+    "hours": "24/7",
+    "phone": "+603-2615-5555"
+  },
+  {
+    "id": 2,
+    "name": "Hospital Sungai Buloh",
+    "type": "hospital",
+    "lat": 3.2141,
+    "lng": 101.5766,
+    "address": "Jalan Hospital, 47000 Sungai Buloh, Selangor",
+    "hours": "24/7",
+    "phone": "+603-6126-5000"
+  },
+  {
+    "id": 3,
+    "name": "Hospital Selayang",
+    "type": "hospital",
+    "lat": 3.2576,
+    "lng": 101.6471,
+    "address": "Lebuhraya Selayang-Kepong, 68100 Batu Caves, Selangor",
+    "hours": "24/7",
+    "phone": "+603-6137-0000"
+  },
+  {
+    "id": 4,
+    "name": "Hospital Tengku Ampuan Rahimah",
+    "type": "hospital",
+    "lat": 3.0471,
+    "lng": 101.5183,
+    "address": "Jalan Langat, 41200 Klang, Selangor",
+    "hours": "24/7",
+    "phone": "+603-3375-7000"
+  },
+  {
+    "id": 5,
+    "name": "Penang General Hospital",
+    "type": "hospital",
+    "lat": 5.4205,
+    "lng": 100.3356,
+    "address": "Jalan Residensi, 10990 George Town, Penang",
+    "hours": "24/7",
+    "phone": "+604-222-5333"
+  },
+  {
+    "id": 6,
+    "name": "Hospital Sultanah Aminah",
+    "type": "hospital",
+    "lat": 1.4655,
+    "lng": 103.7578,
+    "address": "Jalan Persiaran Abu Bakar Sultan, 80100 Johor Bahru, Johor",
+    "hours": "24/7",
+    "phone": "+607-223-3333"
+  },
+  {
+    "id": 7,
+    "name": "Hospital Raja Permaisuri Bainun",
+    "type": "hospital",
+    "lat": 4.5848,
+    "lng": 101.0901,
+    "address": "Jalan Hospital, 30990 Ipoh, Perak",
+    "hours": "24/7",
+    "phone": "+605-208-5000"
+  },
+  {
+    "id": 8,
+    "name": "Hospital Melaka",
+    "type": "hospital",
+    "lat": 2.1896,
+    "lng": 102.2501,
+    "address": "Jalan Mufti Haji Khalil, 75400 Melaka",
+    "hours": "24/7",
+    "phone": "+606-289-2344"
+  },
+  {
+    "id": 9,
+    "name": "Hospital Sultanah Bahiyah",
+    "type": "hospital",
+    "lat": 6.1363,
+    "lng": 100.3695,
+    "address": "KM 6, Jalan Langgar, 05460 Alor Setar, Kedah",
+    "hours": "24/7",
+    "phone": "+604-740-6233"
+  },
+  {
+    "id": 10,
+    "name": "Hospital Sultanah Nur Zahirah",
+    "type": "hospital",
+    "lat": 5.3267,
+    "lng": 103.1366,
+    "address": "Jalan Sultan Mahmud, 20400 Kuala Terengganu, Terengganu",
+    "hours": "24/7",
+    "phone": "+609-621-2121"
+  },
+  {
+    "id": 11,
+    "name": "Hospital Raja Perempuan Zainab II",
+    "type": "hospital",
+    "lat": 6.1256,
+    "lng": 102.2381,
+    "address": "Jalan Hospital, 15586 Kota Bharu, Kelantan",
+    "hours": "24/7",
+    "phone": "+609-745-2000"
+  },
+  {
+    "id": 12,
+    "name": "Hospital Tunku Azizah",
+    "type": "hospital",
+    "lat": 3.0378,
+    "lng": 101.5183,
+    "address": "Jalan Tun Razak, 68000 Ampang, Selangor",
+    "hours": "24/7",
+    "phone": "+603-4145-6000"
+  },
+  {
+    "id": 13,
     "name": "Kuala Lumpur Recycling Centre",
     "type": "recycling",
     "lat": 3.1390,
     "lng": 101.6869,
     "address": "Jalan Ampang, Kuala Lumpur",
     "hours": "Mon-Sat: 8AM-6PM",
+    "accepts": ["plastic", "paper", "glass", "metal", "cardboard"]
+  },
+  {
+    "id": 14,
+    "name": "Petaling Jaya Recycling Hub",
+    "type": "recycling",
+    "lat": 3.1073,
+    "lng": 101.6067,
+    "address": "Section 14, Petaling Jaya, Selangor",
+    "hours": "Mon-Sat: 9AM-5PM",
     "accepts": ["plastic", "paper", "glass", "metal"]
   },
   {
-    "id": 2,
-    "name": "Penang E-Waste Collection Point",
-    "type": "ewaste",
-    "lat": 5.4164,
-    "lng": 100.3327,
-    "address": "Georgetown, Penang",
-    "hours": "Daily: 9AM-5PM",
-    "accepts": ["electronics", "batteries", "appliances"]
-  },
-  {
-    "id": 3,
-    "name": "Hospital Kuala Lumpur",
-    "type": "hospital",
-    "lat": 3.1735,
-    "lng": 101.7020,
-    "address": "Jalan Pahang, Kuala Lumpur",
-    "hours": "24/7",
-    "phone": "+603-2615-5555"
-  },
-  {
-    "id": 4,
-    "name": "Flood Relief Shelter - Selangor",
-    "type": "shelter",
+    "id": 15,
+    "name": "Shah Alam Waste Collection",
+    "type": "recycling",
     "lat": 3.0738,
     "lng": 101.5183,
-    "address": "Shah Alam, Selangor",
-    "hours": "Emergency only",
-    "capacity": "500 people"
+    "address": "Section 13, Shah Alam, Selangor",
+    "hours": "Daily: 8AM-6PM",
+    "accepts": ["plastic", "paper", "glass", "metal", "cardboard"]
   },
   {
-    "id": 5,
+    "id": 16,
+    "name": "Subang Jaya Recycling Center",
+    "type": "recycling",
+    "lat": 3.0449,
+    "lng": 101.5850,
+    "address": "SS15, Subang Jaya, Selangor",
+    "hours": "Mon-Sat: 8AM-6PM",
+    "accepts": ["plastic", "paper", "glass", "metal"]
+  },
+  {
+    "id": 17,
+    "name": "Penang Recycling Centre",
+    "type": "recycling",
+    "lat": 5.4164,
+    "lng": 100.3327,
+    "address": "Jalan Macalister, Georgetown, Penang",
+    "hours": "Mon-Sat: 9AM-5PM",
+    "accepts": ["plastic", "paper", "glass", "metal", "cardboard"]
+  },
+  {
+    "id": 18,
     "name": "Johor Bahru Recycling Hub",
     "type": "recycling",
     "lat": 1.4927,
     "lng": 103.7414,
-    "address": "Johor Bahru, Johor",
+    "address": "Taman Molek, Johor Bahru, Johor",
     "hours": "Mon-Sat: 7AM-7PM",
     "accepts": ["plastic", "paper", "glass", "metal", "cardboard"]
   },
   {
-    "id": 6,
-    "name": "Ipoh E-Waste Drop-off",
+    "id": 19,
+    "name": "Ipoh Recycling Point",
+    "type": "recycling",
+    "lat": 4.5975,
+    "lng": 101.0901,
+    "address": "Greentown, Ipoh, Perak",
+    "hours": "Mon-Fri: 9AM-5PM",
+    "accepts": ["plastic", "paper", "glass", "metal"]
+  },
+  {
+    "id": 20,
+    "name": "Melaka Recycling Center",
+    "type": "recycling",
+    "lat": 2.1896,
+    "lng": 102.2501,
+    "address": "Batu Berendam, Melaka",
+    "hours": "Mon-Sat: 8AM-5PM",
+    "accepts": ["plastic", "paper", "glass", "metal", "cardboard"]
+  },
+  {
+    "id": 21,
+    "name": "Kuching Recycling Hub",
+    "type": "recycling",
+    "lat": 1.5535,
+    "lng": 110.3593,
+    "address": "Pending, Kuching, Sarawak",
+    "hours": "Mon-Sat: 8AM-6PM",
+    "accepts": ["plastic", "paper", "glass", "metal"]
+  },
+  {
+    "id": 22,
+    "name": "Kota Kinabalu Recycling Point",
+    "type": "recycling",
+    "lat": 5.9804,
+    "lng": 116.0735,
+    "address": "Sembulan, Kota Kinabalu, Sabah",
+    "hours": "Mon-Fri: 9AM-5PM",
+    "accepts": ["plastic", "paper", "glass", "metal", "cardboard"]
+  },
+  {
+    "id": 23,
+    "name": "KL E-Waste Collection Centre",
+    "type": "ewaste",
+    "lat": 3.1478,
+    "lng": 101.6953,
+    "address": "Jalan Raja Laut, Kuala Lumpur",
+    "hours": "Mon-Sat: 9AM-5PM",
+    "accepts": ["computers", "phones", "tablets", "batteries", "appliances"]
+  },
+  {
+    "id": 24,
+    "name": "Penang E-Waste Drop-off",
+    "type": "ewaste",
+    "lat": 5.4164,
+    "lng": 100.3327,
+    "address": "Komtar, Georgetown, Penang",
+    "hours": "Daily: 9AM-5PM",
+    "accepts": ["electronics", "batteries", "appliances", "cables"]
+  },
+  {
+    "id": 25,
+    "name": "Ipoh E-Waste Collection",
     "type": "ewaste",
     "lat": 4.5975,
     "lng": 101.0901,
-    "address": "Ipoh, Perak",
+    "address": "Medan Kidd, Ipoh, Perak",
     "hours": "Mon-Fri: 9AM-5PM",
-    "accepts": ["computers", "phones", "batteries"]
+    "accepts": ["computers", "phones", "batteries", "monitors"]
   },
   {
-    "id": 7,
-    "name": "Melaka Hospital",
-    "type": "hospital",
+    "id": 26,
+    "name": "JB E-Waste Disposal",
+    "type": "ewaste",
+    "lat": 1.4927,
+    "lng": 103.7414,
+    "address": "Kota Raya, Johor Bahru, Johor",
+    "hours": "Mon-Sat: 8AM-6PM",
+    "accepts": ["electronics", "batteries", "appliances", "phones"]
+  },
+  {
+    "id": 27,
+    "name": "Selangor E-Waste Hub",
+    "type": "ewaste",
+    "lat": 3.0738,
+    "lng": 101.5183,
+    "address": "Section 2, Shah Alam, Selangor",
+    "hours": "Mon-Sat: 9AM-5PM",
+    "accepts": ["computers", "phones", "tablets", "batteries", "appliances", "monitors"]
+  },
+  {
+    "id": 28,
+    "name": "Melaka E-Waste Center",
+    "type": "ewaste",
     "lat": 2.1896,
     "lng": 102.2501,
-    "address": "Melaka City",
-    "hours": "24/7",
-    "phone": "+606-289-2344"
+    "address": "Bukit Baru, Melaka",
+    "hours": "Mon-Fri: 9AM-5PM",
+    "accepts": ["electronics", "batteries", "appliances"]
   },
   {
-    "id": 8,
-    "name": "Emergency Shelter - Kelantan",
+    "id": 29,
+    "name": "Flood Relief Shelter - Selangor",
+    "type": "shelter",
+    "lat": 3.0738,
+    "lng": 101.5183,
+    "address": "Kompleks Sukan Shah Alam, Selangor",
+    "hours": "Emergency only",
+    "capacity": "500 people",
+    "facilities": ["food", "medical", "sleeping"]
+  },
+  {
+    "id": 30,
+    "name": "Kelantan Emergency Shelter",
     "type": "shelter",
     "lat": 6.1256,
     "lng": 102.2381,
-    "address": "Kota Bharu, Kelantan",
+    "address": "Dewan Jubli Perak, Kota Bharu, Kelantan",
     "hours": "Emergency only",
-    "capacity": "300 people"
+    "capacity": "300 people",
+    "facilities": ["food", "medical", "sleeping", "sanitation"]
+  },
+  {
+    "id": 31,
+    "name": "Pahang Flood Shelter",
+    "type": "shelter",
+    "lat": 3.8077,
+    "lng": 103.3260,
+    "address": "Stadium Darulmakmur, Kuantan, Pahang",
+    "hours": "Emergency only",
+    "capacity": "400 people",
+    "facilities": ["food", "medical", "sleeping"]
+  },
+  {
+    "id": 32,
+    "name": "Terengganu Relief Center",
+    "type": "shelter",
+    "lat": 5.3267,
+    "lng": 103.1366,
+    "address": "Kompleks Sukan, Kuala Terengganu, Terengganu",
+    "hours": "Emergency only",
+    "capacity": "350 people",
+    "facilities": ["food", "medical", "sleeping", "sanitation"]
+  },
+  {
+    "id": 33,
+    "name": "Perak Emergency Shelter",
+    "type": "shelter",
+    "lat": 4.5975,
+    "lng": 101.0901,
+    "address": "Stadium Perak, Ipoh, Perak",
+    "hours": "Emergency only",
+    "capacity": "450 people",
+    "facilities": ["food", "medical", "sleeping"]
+  },
+  {
+    "id": 34,
+    "name": "Johor Relief Station",
+    "type": "shelter",
+    "lat": 1.4927,
+    "lng": 103.7414,
+    "address": "Stadium Larkin, Johor Bahru, Johor",
+    "hours": "Emergency only",
+    "capacity": "600 people",
+    "facilities": ["food", "medical", "sleeping", "sanitation"]
   }
 ]
