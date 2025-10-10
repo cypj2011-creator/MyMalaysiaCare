@@ -33,6 +33,8 @@ interface Location {
 const InteractiveMap = () => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const markersLayerRef = useRef<L.LayerGroup | null>(null);
+  const canvasRendererRef = useRef<L.Canvas | null>(null);
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
   const [activeFilters, setActiveFilters] = useState<string[]>([
@@ -97,7 +99,10 @@ const InteractiveMap = () => {
           tags["recycling:electrical_items"] === "yes" ||
           tags["recycling:batteries"] === "yes";
         type = isEwaste ? "ewaste" : "recycling";
-      } else if (tags.emergency === "shelter" || tags.amenity === "shelter") {
+      } else if (
+        tags.emergency === "shelter" ||
+        (tags.amenity === "shelter" && tags.shelter_type !== "public_transport" && tags.shelter_type !== "weather_shelter")
+      ) {
         type = "shelter";
       }
 
@@ -179,6 +184,8 @@ const InteractiveMap = () => {
     // Initialize map
     const map = L.map(mapContainerRef.current).setView([4.2105, 101.9758], 7);
     mapRef.current = map;
+    // High-performance canvas renderer for many points
+    canvasRendererRef.current = L.canvas({ padding: 0.5 });
 
     // Add tile layer
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -197,37 +204,51 @@ const InteractiveMap = () => {
   useEffect(() => {
     if (!mapRef.current || locations.length === 0) return;
 
-    // Clear existing markers
-    mapRef.current.eachLayer((layer) => {
-      if (layer instanceof L.Marker) {
-        mapRef.current?.removeLayer(layer);
-      }
-    });
+    // Remove previous markers layer, if any
+    if (markersLayerRef.current) {
+      mapRef.current.removeLayer(markersLayerRef.current);
+      markersLayerRef.current = null;
+    }
 
-    // Add markers for filtered locations
+    const group = L.layerGroup();
+    group.addTo(mapRef.current);
+    markersLayerRef.current = group;
+
+    // Add markers for filtered locations using a high-performance canvas renderer
     const filteredLocations = locations.filter((loc) =>
       activeFilters.includes(loc.type)
     );
 
-    filteredLocations.forEach((location) => {
-      const markerColor = filterTypes.find((f) => f.id === location.type)?.color || "#10b981";
-      
-      const customIcon = L.divIcon({
-        className: "custom-marker",
-        html: `<div style="background-color: ${markerColor}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-center; font-size: 16px;"></div>`,
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-      });
+    const batchSize = 300;
+    const addBatch = (start: number) => {
+      const end = Math.min(start + batchSize, filteredLocations.length);
+      for (let i = start; i < end; i++) {
+        const location = filteredLocations[i];
+        const markerColor =
+          filterTypes.find((f) => f.id === location.type)?.color || "#10b981";
 
-      const marker = L.marker([location.lat, location.lng], { icon: customIcon })
-        .addTo(mapRef.current!)
-        .on("click", () => {
-          setSelectedLocation(location);
-          mapRef.current?.setView([location.lat, location.lng], 12);
-        });
+        const circle = L.circleMarker([location.lat, location.lng], {
+          renderer: canvasRendererRef.current || undefined,
+          radius: 6,
+          color: "#ffffff",
+          weight: 1,
+          fillColor: markerColor,
+          fillOpacity: 0.9,
+        })
+          .addTo(group)
+          .on("click", () => {
+            setSelectedLocation(location);
+            mapRef.current?.setView([location.lat, location.lng], 12);
+          });
 
-      marker.bindPopup(`<strong>${location.name}</strong><br>${location.address}`);
-    });
+        circle.bindPopup(`<strong>${location.name}</strong><br>${location.address}`);
+      }
+      if (end < filteredLocations.length) {
+        requestAnimationFrame(() => addBatch(end));
+      }
+    };
+
+    addBatch(0);
   }, [locations, activeFilters]);
 
   const toggleFilter = (filterId: string) => {
