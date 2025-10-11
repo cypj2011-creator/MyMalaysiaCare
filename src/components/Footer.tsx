@@ -15,7 +15,7 @@ const Footer = () => {
                 <Leaf className="w-6 h-6 text-white" />
               </div>
               <span className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                MyMalaysia Care+
+                MyMalaysiaCare
               </span>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -93,10 +93,10 @@ const Footer = () => {
 
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
           <p className="font-semibold text-foreground mb-3">
-            Made by CYPJ2011
+            Made by Yeoh Phee Jun and Thang Wei Zen
           </p>
           <p className="mt-2">
-            © {currentYear} MyMalaysia Care+. All rights reserved.
+            © {currentYear} MyMalaysiaCare. All rights reserved.
           </p>
         </div>
       </div>

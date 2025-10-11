@@ -152,25 +152,32 @@ const InteractiveMap = () => {
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      setLoading(true);
       try {
-        setLoading(true);
-        const nationwide = await fetchOverpassNationwide();
-        if (!cancelled && nationwide.length) {
-          setLocations(nationwide);
-          return;
+        // Load local data first for instant display
+        const localRes = await fetch(`${import.meta.env.BASE_URL}data/locations.json`);
+        if (!cancelled && localRes.ok) {
+          const local = await localRes.json();
+          if (Array.isArray(local) && local.length) {
+            setLocations(local);
+            setLoading(false);
+          }
         }
       } catch (e) {
-        console.warn("Nationwide data failed, falling back to bundled locations:", e);
-      } finally {
-        setLoading(false);
+        console.warn("Local locations failed:", e);
       }
 
-      fetch(`${import.meta.env.BASE_URL}data/locations.json`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (!cancelled) setLocations(data);
-        })
-        .catch((err) => console.error("Failed to load locations:", err));
+      // Try to enhance with nationwide data in background
+      try {
+        const nationwide = await fetchOverpassNationwide();
+        if (!cancelled && Array.isArray(nationwide) && nationwide.length) {
+          setLocations(nationwide);
+        }
+      } catch (e) {
+        console.warn("Nationwide data failed:", e);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
     load();
     return () => {
@@ -292,6 +299,15 @@ const InteractiveMap = () => {
           ))}
         </div>
       </Card>
+
+      {loading && (
+        <div className="mb-4 flex justify-center animate-fade-in">
+          <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-3 py-2 rounded-full">
+            <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm">Loading locations...</span>
+          </div>
+        </div>
+      )}
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Map */}

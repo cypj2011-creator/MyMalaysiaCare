@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Camera, Upload, Sparkles, Leaf, Info, Clock } from "lucide-react";
@@ -33,6 +33,8 @@ const RecycleScanner = () => {
   const { toast } = useToast();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const uploadInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -161,34 +163,43 @@ const RecycleScanner = () => {
 
         <Card className="p-4 md:p-8 mb-6 md:mb-8 animate-scale-in">
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <label className="flex-1">
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleImageSelect}
-                className="hidden"
-                disabled={isScanning}
-              />
-              <Button className="w-full h-auto py-4 md:py-6" disabled={isScanning}>
-                <Camera className="mr-2 h-5 w-5" />
-                <span className="text-sm md:text-base">Take Photo</span>
-              </Button>
-            </label>
+            {/* Hidden Inputs */}
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleImageSelect}
+              className="hidden"
+              disabled={isScanning}
+            />
+            <input
+              ref={uploadInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageSelect}
+              className="hidden"
+              disabled={isScanning}
+            />
 
-            <label className="flex-1">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageSelect}
-                className="hidden"
-                disabled={isScanning}
-              />
-              <Button variant="outline" className="w-full h-auto py-4 md:py-6" disabled={isScanning}>
-                <Upload className="mr-2 h-5 w-5" />
-                <span className="text-sm md:text-base">Upload Image</span>
-              </Button>
-            </label>
+            <Button
+              className="flex-1 w-full h-auto py-4 md:py-6"
+              disabled={isScanning}
+              onClick={() => cameraInputRef.current?.click()}
+            >
+              <Camera className="mr-2 h-5 w-5" />
+              <span className="text-sm md:text-base">Take Photo</span>
+            </Button>
+
+            <Button
+              variant="outline"
+              className="flex-1 w-full h-auto py-4 md:py-6"
+              disabled={isScanning}
+              onClick={() => uploadInputRef.current?.click()}
+            >
+              <Upload className="mr-2 h-5 w-5" />
+              <span className="text-sm md:text-base">Upload Image</span>
+            </Button>
           </div>
 
           {selectedImage && (
@@ -272,9 +283,9 @@ const RecycleScanner = () => {
         )}
 
         <div className="mt-6 md:mt-8 p-4 md:p-6 bg-primary/5 rounded-lg animate-fade-in">
-          <h3 className="font-semibold mb-2 text-sm md:text-base">🤖 Powered by Advanced AI</h3>
+          <h3 className="font-semibold mb-2 text-sm md:text-base">🤖 Smart AI Assistance</h3>
           <p className="text-xs md:text-sm text-muted-foreground">
-            Using Google Gemini AI for accurate image recognition. All processing happens securely, and your scan history is saved to your account.
+            Our AI recognizes objects and provides clear recycling guidance. Your scan history is securely saved to your account.
           </p>
         </div>
       </div>

@@ -92,7 +92,7 @@ const Auth = () => {
               <Leaf className="w-8 h-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl">Welcome to MyMalaysia Care+</CardTitle>
+          <CardTitle className="text-2xl">Welcome to MyMalaysiaCare</CardTitle>
           <CardDescription>Sign in or create an account to save your scan history</CardDescription>
         </CardHeader>
         <CardContent>

@@ -2,12 +2,19 @@ import { Link, useLocation } from "react-router-dom";
 import { Leaf, Menu, X, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const [lang, setLang] = useState<string>(() => localStorage.getItem("lang") || "en");
+  const languages = [
+    { code: "en", label: "English", flag: "🇬🇧" },
+    { code: "zh", label: "中文", flag: "🇨🇳" },
+    { code: "ms", label: "Malay", flag: "🇲🇾" },
+  ];
 
   const navItems = [
     { path: "/", label: "Home" },
@@ -30,12 +37,12 @@ const Header = () => {
             <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <span className="font-bold text-base sm:text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words leading-tight">
-            MyMalaysia Care+
+            MyMalaysiaCare
           </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-1">
+        <div className="hidden md:flex items-center space-x-2">
           {navItems.map((item) => (
             <Link key={item.path} to={item.path}>
               <Button
@@ -47,6 +54,28 @@ const Header = () => {
               </Button>
             </Link>
           ))}
+
+          {/* Language Selector */}
+          <div className="ml-2">
+            <Select
+              value={lang}
+              onValueChange={(v) => {
+                setLang(v);
+                localStorage.setItem("lang", v);
+              }}
+            >
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                {languages.map((l) => (
+                  <SelectItem key={l.code} value={l.code}>
+                    <span className="mr-2">{l.flag}</span> {l.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           
           {/* Desktop Auth */}
           {user ? (
@@ -97,6 +126,28 @@ const Header = () => {
                 </Button>
               </Link>
             ))}
+            
+            {/* Mobile Language Selector */}
+            <div className="pt-2">
+              <Select
+                value={lang}
+                onValueChange={(v) => {
+                  setLang(v);
+                  localStorage.setItem("lang", v);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Language" />
+                </SelectTrigger>
+                <SelectContent>
+                  {languages.map((l) => (
+                    <SelectItem key={l.code} value={l.code}>
+                      <span className="mr-2">{l.flag}</span> {l.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             
             {/* Mobile Auth */}
             <div className="pt-4 border-t border-border/40">

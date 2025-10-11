@@ -70,7 +70,7 @@ const Home = () => {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in">
-            MyMalaysia Care+
+            MyMalaysiaCare
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-slide-up">
@@ -93,18 +93,18 @@ const Home = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
-            <Card className="p-4 shadow-custom-md hover:shadow-custom-lg transition-shadow">
-              <div className="text-3xl font-bold text-primary">100%</div>
-              <div className="text-sm text-muted-foreground">Client-Side</div>
+          <div className="grid grid-cols-3 gap-3 max-w-2xl mx-auto">
+            <Card className="p-3 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-2xl sm:text-3xl font-bold text-primary">100%</div>
+              <div className="text-[10px] sm:text-sm text-muted-foreground">Client-Side</div>
             </Card>
-            <Card className="p-4 shadow-custom-md hover:shadow-custom-lg transition-shadow">
-              <div className="text-3xl font-bold text-secondary">AI-Powered</div>
-              <div className="text-sm text-muted-foreground">Smart Scanner</div>
+            <Card className="p-3 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-xl sm:text-3xl font-bold text-secondary">AI-Powered</div>
+              <div className="text-[10px] sm:text-sm text-muted-foreground">Smart Scanner</div>
             </Card>
-            <Card className="p-4 shadow-custom-md hover:shadow-custom-lg transition-shadow">
-              <div className="text-3xl font-bold text-accent">24/7</div>
-              <div className="text-sm text-muted-foreground">Available</div>
+            <Card className="p-3 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-2xl sm:text-3xl font-bold text-accent">24/7</div>
+              <div className="text-[10px] sm:text-sm text-muted-foreground">Available</div>
             </Card>
           </div>
         </div>

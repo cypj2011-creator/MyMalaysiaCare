@@ -17,7 +17,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm your AI-powered MyMalaysia Care+ assistant. Ask me anything about recycling, environmental protection, or disaster safety!",
+      text: "Hello! I'm your AI-powered MyMalaysiaCare assistant. Ask me anything about recycling, environmental protection, or disaster safety!",
       isBot: true,
     },
   ]);
