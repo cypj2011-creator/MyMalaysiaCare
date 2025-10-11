@@ -33,7 +33,7 @@ jobs:
       - name: Build
         env:
           # Vite uses this base to generate correct asset URLs for GH Pages
-          VITE_BASE: "/MyMalaysiaEco/"
+          VITE_BASE: "/MyMalaysiaCare/"
         run: npm run build
 
       - name: Upload artifact

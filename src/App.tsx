@@ -11,6 +11,7 @@ import Protect from "./pages/Protect";
 import Safety from "./pages/Safety";
 import Learn from "./pages/Learn";
 import About from "./pages/About";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -27,6 +28,7 @@ const App = () => (
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/recycle" element={<RecycleScanner />} />
           <Route path="/map" element={<InteractiveMap />} />
           <Route path="/dashboard" element={<Dashboard />} />

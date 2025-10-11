@@ -1,178 +1,78 @@
-import { useState, useRef, useEffect } from "react";
-import { Camera, Upload, Loader2, CheckCircle, AlertCircle, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { toast } from "sonner";
-import * as mobilenet from "@tensorflow-models/mobilenet";
-import * as tf from "@tensorflow/tfjs";
+import { Camera, Upload, Sparkles, Leaf, Info, Clock } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 interface ScanResult {
   category: string;
-  confidence: number;
   recyclable: boolean;
   instructions: string;
   ecoFact: string;
-  aiPrediction: string;
+  confidence: number;
+}
+
+interface ScanHistory {
+  id: string;
+  category: string;
+  recyclable: boolean;
+  instructions: string;
+  eco_fact: string;
+  confidence: number;
+  created_at: string;
 }
 
 const RecycleScanner = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
-  const [result, setResult] = useState<ScanResult | null>(null);
-  const [model, setModel] = useState<mobilenet.MobileNet | null>(null);
-  const [isLoadingModel, setIsLoadingModel] = useState(true);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [scanHistory, setScanHistory] = useState<ScanHistory[]>([]);
+  const { toast } = useToast();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
-  // Load TensorFlow.js MobileNet model
   useEffect(() => {
-    const loadModel = async () => {
-      try {
-        toast.info("Loading AI model...");
-        await tf.ready();
-        const loadedModel = await mobilenet.load();
-        setModel(loadedModel);
-        setIsLoadingModel(false);
-        toast.success("AI model ready!");
-      } catch (error) {
-        console.error("Failed to load model:", error);
-        toast.error("Failed to load AI model");
-        setIsLoadingModel(false);
-      }
-    };
-    loadModel();
-  }, []);
-
-  // Map AI predictions to recycling categories
-  const categorizeItem = (prediction: string): ScanResult => {
-    const lowerPred = prediction.toLowerCase();
-    
-    // Plastic items
-    if (lowerPred.includes("bottle") || lowerPred.includes("plastic") || lowerPred.includes("water bottle")) {
-      return {
-        category: "Plastic Bottle",
-        confidence: 95,
-        recyclable: true,
-        instructions: "Rinse the bottle, remove the cap and label, and place in the recycling bin. Caps can be recycled separately.",
-        ecoFact: "Recycling one plastic bottle saves enough energy to power a 60W light bulb for 3 hours!",
-        aiPrediction: prediction
-      };
-    }
-    
-    // Paper/Cardboard
-    if (lowerPred.includes("paper") || lowerPred.includes("cardboard") || lowerPred.includes("book") || 
-        lowerPred.includes("envelope") || lowerPred.includes("box")) {
-      return {
-        category: "Paper/Cardboard",
-        confidence: 92,
-        recyclable: true,
-        instructions: "Flatten boxes and keep paper clean and dry. Remove any plastic windows or tape before recycling.",
-        ecoFact: "Recycling one ton of paper saves 17 trees and 7,000 gallons of water!",
-        aiPrediction: prediction
-      };
-    }
-    
-    // Glass
-    if (lowerPred.includes("glass") || lowerPred.includes("jar") || lowerPred.includes("wine")) {
-      return {
-        category: "Glass Container",
-        confidence: 94,
-        recyclable: true,
-        instructions: "Rinse the glass container and remove any lids. Glass can be recycled indefinitely without losing quality!",
-        ecoFact: "Glass is 100% recyclable and can be recycled endlessly without loss in quality or purity!",
-        aiPrediction: prediction
-      };
-    }
-    
-    // Metal cans
-    if (lowerPred.includes("can") || lowerPred.includes("tin") || lowerPred.includes("aluminum") || 
-        lowerPred.includes("metal")) {
-      return {
-        category: "Metal Can",
-        confidence: 96,
-        recyclable: true,
-        instructions: "Rinse the can and crush it to save space. Both aluminum and steel cans are recyclable.",
-        ecoFact: "Recycling aluminum cans saves 95% of the energy needed to make new cans from raw materials!",
-        aiPrediction: prediction
-      };
-    }
-    
-    // Electronics
-    if (lowerPred.includes("phone") || lowerPred.includes("computer") || lowerPred.includes("laptop") || 
-        lowerPred.includes("keyboard") || lowerPred.includes("monitor") || lowerPred.includes("electronic")) {
-      return {
-        category: "Electronic Device (E-waste)",
-        confidence: 91,
-        recyclable: true,
-        instructions: "This is e-waste! Take it to a designated e-waste collection center. Never throw electronics in regular trash.",
-        ecoFact: "E-waste contains valuable materials like gold, silver, and copper that can be recovered and reused!",
-        aiPrediction: prediction
-      };
-    }
-    
-    // Organic/Food
-    if (lowerPred.includes("food") || lowerPred.includes("fruit") || lowerPred.includes("vegetable") || 
-        lowerPred.includes("banana") || lowerPred.includes("apple") || lowerPred.includes("orange")) {
-      return {
-        category: "Organic Waste",
-        confidence: 88,
-        recyclable: false,
-        instructions: "This is organic waste. Consider composting it instead of throwing it away. It's great for gardens!",
-        ecoFact: "Composting organic waste reduces methane emissions from landfills and creates nutrient-rich soil!",
-        aiPrediction: prediction
-      };
-    }
-    
-    // Default: Check if it might be recyclable
-    return {
-      category: "Unknown Item",
-      confidence: 70,
-      recyclable: false,
-      instructions: "I'm not sure about this item. Please check with your local recycling guidelines or use our Learn section for more information.",
-      ecoFact: "When in doubt, it's better to check than to contaminate the recycling stream!",
-      aiPrediction: prediction
-    };
-  };
-
-  const predictCategory = async (imageElement: HTMLImageElement): Promise<ScanResult> => {
-    if (!model) {
-      throw new Error("Model not loaded");
-    }
-
-    // Run prediction
-    const predictions = await model.classify(imageElement);
-    
-    if (predictions && predictions.length > 0) {
-      const topPrediction = predictions[0];
-      const result = categorizeItem(topPrediction.className);
-      result.confidence = Math.round(topPrediction.probability * 100);
-      
-      // Save scan to localStorage for dashboard
-      const scans = JSON.parse(localStorage.getItem("recycleScans") || "[]");
-      scans.push({
-        date: new Date().toISOString(),
-        category: result.category,
-        recyclable: result.recyclable,
+    if (!loading && !user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to use the scanner and save your scan history.",
+        variant: "destructive",
       });
-      localStorage.setItem("recycleScans", JSON.stringify(scans));
-      
-      return result;
+      navigate("/auth");
     }
-    
-    throw new Error("No predictions returned");
+  }, [user, loading, navigate, toast]);
+
+  useEffect(() => {
+    if (user) {
+      loadScanHistory();
+    }
+  }, [user]);
+
+  const loadScanHistory = async () => {
+    const { data, error } = await supabase
+      .from("scan_history")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (!error && data) {
+      setScanHistory(data);
+    }
   };
 
   const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target?.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("Please select a valid image file");
-      return;
-    }
-
-    if (isLoadingModel || !model) {
-      toast.error("AI model is still loading, please wait...");
+      toast({
+        title: "Invalid file",
+        description: "Please select an image file",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -180,202 +80,204 @@ const RecycleScanner = () => {
     reader.onload = async (event) => {
       const imageData = event.target?.result as string;
       setSelectedImage(imageData);
-      setResult(null);
-      
-      // Start scanning
-      setIsScanning(true);
-      toast.info("🤖 AI is analyzing your image...");
-      
-      try {
-        // Create image element for TensorFlow
-        const img = new Image();
-        img.src = imageData;
-        
-        await new Promise((resolve) => {
-          img.onload = resolve;
-        });
-        
-        const scanResult = await predictCategory(img);
-        setResult(scanResult);
-        toast.success("✅ Scan complete!");
-      } catch (error) {
-        toast.error("Failed to analyze image");
-        console.error(error);
-      } finally {
-        setIsScanning(false);
-      }
+      await analyzeImage(imageData);
     };
     reader.readAsDataURL(file);
   };
 
-  return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      <div className="text-center mb-12 animate-fade-in px-4">
-        <div className="inline-flex items-center space-x-2 bg-primary/10 px-3 sm:px-4 py-2 rounded-full mb-4">
-          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
-          <span className="text-xs sm:text-sm font-semibold text-primary">Powered by TensorFlow.js AI</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words">
-          RecycAI Scanner
-        </h1>
-        <p className="text-base sm:text-lg text-muted-foreground break-words leading-relaxed max-w-2xl mx-auto">
-          Upload or capture an image to identify if it&apos;s recyclable with real AI
-        </p>
-      </div>
+  const analyzeImage = async (imageData: string) => {
+    setIsScanning(true);
+    setScanResult(null);
 
-      {/* Upload Section */}
-      <Card className="p-8 mb-8 shadow-custom-lg animate-slide-up">
-        <div className="flex flex-col items-center space-y-4">
-          {!selectedImage ? (
-            <>
-              <div className="w-full aspect-video bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-border transition-all hover:border-primary">
-                <div className="text-center p-8">
-                  <Camera className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-muted-foreground animate-float" />
-                  <p className="text-muted-foreground mb-2 font-semibold text-sm sm:text-base break-words px-4">
-                    {isLoadingModel ? "Loading AI model..." : "Ready to scan!"}
-                  </p>
-                  <p className="text-xs sm:text-sm text-muted-foreground break-words px-4">
-                    Upload an image or take a photo
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 w-full">
-                <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="flex-1 gradient-primary"
-                  size="lg"
-                  disabled={isLoadingModel}
-                >
-                  <Upload className="mr-2" />
-                  Upload Image
-                </Button>
-                <Button
-                  onClick={() => cameraInputRef.current?.click()}
-                  className="flex-1 gradient-secondary"
-                  size="lg"
-                  disabled={isLoadingModel}
-                >
-                  <Camera className="mr-2" />
-                  Take Photo
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="w-full aspect-video rounded-lg overflow-hidden animate-bounce-in">
-                <img
-                  src={selectedImage}
-                  alt="Selected item"
-                  className="w-full h-full object-contain bg-muted"
-                />
-              </div>
-              
-              <Button
-                onClick={() => {
-                  setSelectedImage(null);
-                  setResult(null);
-                }}
-                variant="outline"
-                className="w-full"
-              >
-                Scan Another Item
+    try {
+      const { data, error } = await supabase.functions.invoke("analyze-image", {
+        body: { imageData },
+      });
+
+      if (error) throw error;
+
+      const result: ScanResult = {
+        category: data.category,
+        recyclable: data.recyclable,
+        instructions: data.instructions,
+        ecoFact: data.ecoFact,
+        confidence: data.confidence,
+      };
+
+      setScanResult(result);
+
+      if (user) {
+        const { error: insertError } = await supabase.from("scan_history").insert({
+          user_id: user.id,
+          category: result.category,
+          recyclable: result.recyclable,
+          instructions: result.instructions,
+          eco_fact: result.ecoFact,
+          confidence: result.confidence,
+        });
+
+        if (!insertError) {
+          loadScanHistory();
+        }
+      }
+
+      toast({
+        title: "Analysis complete!",
+        description: `Identified as: ${result.category}`,
+      });
+    } catch (error) {
+      console.error("Analysis error:", error);
+      toast({
+        title: "Analysis failed",
+        description: "Please try again with a clearer image.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-12 md:py-20 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <div className="text-center mb-8 md:mb-12 animate-fade-in">
+          <div className="inline-flex items-center space-x-2 bg-primary/10 px-4 py-2 rounded-full mb-4">
+            <Sparkles className="w-5 h-5 text-primary" />
+            <span className="text-sm font-semibold text-primary">Smart AI Recognition</span>
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">RecycAI Scanner</h1>
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
+            Take or upload a photo to instantly identify items and get recycling guidance
+          </p>
+        </div>
+
+        <Card className="p-4 md:p-8 mb-6 md:mb-8 animate-scale-in">
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <label className="flex-1">
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handleImageSelect}
+                className="hidden"
+                disabled={isScanning}
+              />
+              <Button className="w-full h-auto py-4 md:py-6" disabled={isScanning}>
+                <Camera className="mr-2 h-5 w-5" />
+                <span className="text-sm md:text-base">Take Photo</span>
               </Button>
-            </>
+            </label>
+
+            <label className="flex-1">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                className="hidden"
+                disabled={isScanning}
+              />
+              <Button variant="outline" className="w-full h-auto py-4 md:py-6" disabled={isScanning}>
+                <Upload className="mr-2 h-5 w-5" />
+                <span className="text-sm md:text-base">Upload Image</span>
+              </Button>
+            </label>
+          </div>
+
+          {selectedImage && (
+            <div className="mb-6 animate-fade-in">
+              <img
+                src={selectedImage}
+                alt="Selected item"
+                className="w-full max-h-[300px] md:max-h-[400px] object-contain rounded-lg"
+              />
+            </div>
           )}
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageSelect}
-          />
-          <input
-            ref={cameraInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            className="hidden"
-            onChange={handleImageSelect}
-          />
-        </div>
-      </Card>
-
-      {/* Scanning Animation */}
-      {isScanning && (
-        <Card className="p-8 shadow-custom-lg animate-bounce-in">
-          <div className="flex flex-col items-center space-y-4">
-            <Loader2 className="w-12 h-12 animate-spin text-primary" />
-            <p className="text-lg font-semibold">AI is analyzing...</p>
-            <p className="text-muted-foreground text-center">
-              Using TensorFlow.js MobileNet to identify the item
-            </p>
-          </div>
-        </Card>
-      )}
-
-      {/* Results */}
-      {result && !isScanning && (
-        <Card className="p-8 shadow-custom-xl animate-bounce-in">
-          <div className="space-y-6">
-            <div className="flex items-start space-x-4">
-              {result.recyclable ? (
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 animate-bounce-in">
-                  <CheckCircle className="w-6 h-6 text-primary" />
-                </div>
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0 animate-bounce-in">
-                  <AlertCircle className="w-6 h-6 text-destructive" />
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <h2 className="text-xl sm:text-2xl font-bold mb-2 break-words leading-tight">{result.category}</h2>
-                <p className="text-xs sm:text-sm text-muted-foreground mb-3 break-words leading-relaxed">
-                  AI detected: <span className="font-semibold">{result.aiPrediction}</span>
-                </p>
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="text-sm text-muted-foreground">Confidence:</div>
-                  <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
-                    <div
-                      className="h-full gradient-primary transition-all duration-1000"
-                      style={{ width: `${result.confidence}%` }}
-                    />
-                  </div>
-                  <div className="text-sm font-semibold">{result.confidence}%</div>
-                </div>
-                <div className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                  result.recyclable 
-                    ? "bg-primary/10 text-primary" 
-                    : "bg-destructive/10 text-destructive"
-                }`}>
-                  {result.recyclable ? "♻️ Recyclable" : "🚫 Not Recyclable"}
-                </div>
+          {isScanning && (
+            <div className="text-center py-8 md:py-12 animate-fade-in">
+              <div className="inline-flex items-center space-x-3 bg-primary/10 px-6 py-3 rounded-full mb-4">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+                <span className="text-primary font-medium">AI analyzing your item...</span>
               </div>
             </div>
+          )}
 
-            <div className="border-t pt-6 animate-slide-down">
-              <h3 className="font-semibold text-base sm:text-lg mb-2">♻️ Recycling Instructions</h3>
-              <p className="text-muted-foreground text-sm sm:text-base break-words leading-relaxed">{result.instructions}</p>
-            </div>
+          {scanResult && !isScanning && (
+            <div className="space-y-4 md:space-y-6 animate-fade-in">
+              <div className={`p-4 md:p-6 rounded-lg ${scanResult.recyclable ? "bg-green-50 border-2 border-green-500" : "bg-red-50 border-2 border-red-500"}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900">
+                    {scanResult.recyclable ? "♻️ Recyclable" : "⚠️ Non-Recyclable"}
+                  </h3>
+                  <span className="text-xs md:text-sm font-medium text-gray-600">
+                    {Math.round(scanResult.confidence * 100)}% confident
+                  </span>
+                </div>
+                <p className="text-base md:text-lg font-semibold text-gray-800 mb-2">
+                  Category: {scanResult.category}
+                </p>
+              </div>
 
-            <div className="border-t pt-6 bg-muted/30 -m-8 p-8 rounded-b-lg animate-slide-down">
-              <h3 className="font-semibold text-base sm:text-lg mb-2">🌱 Eco Fact</h3>
-              <p className="text-foreground text-sm sm:text-base break-words leading-relaxed">{result.ecoFact}</p>
+              <div className="bg-blue-50 p-4 md:p-6 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2 flex items-center text-sm md:text-base">
+                  <Info className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                  Instructions
+                </h4>
+                <p className="text-blue-800 text-sm md:text-base">{scanResult.instructions}</p>
+              </div>
+
+              <div className="bg-green-50 p-4 md:p-6 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2 flex items-center text-sm md:text-base">
+                  <Leaf className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                  Eco Fact
+                </h4>
+                <p className="text-green-800 text-sm md:text-base">{scanResult.ecoFact}</p>
+              </div>
             </div>
-          </div>
+          )}
         </Card>
-      )}
 
-      {/* Info Section */}
-      <Card className="p-6 mt-8 bg-primary/5 border-primary/20 animate-slide-up">
-        <h3 className="font-semibold mb-2 text-base sm:text-lg">🤖 Real AI Technology</h3>
-        <p className="text-xs sm:text-sm text-muted-foreground break-words leading-relaxed">
-          Our scanner uses Google&apos;s TensorFlow.js with the MobileNet model running directly in your browser. 
-          The AI has been trained on millions of images to recognize everyday objects. All processing happens 
-          on your device - no images are sent to servers, ensuring your privacy!
-        </p>
-      </Card>
+        {scanHistory.length > 0 && (
+          <Card className="p-4 md:p-6 animate-fade-in">
+            <h3 className="text-lg md:text-xl font-bold mb-4 flex items-center">
+              <Clock className="mr-2 h-5 w-5" />
+              Recent Scans
+            </h3>
+            <div className="space-y-3">
+              {scanHistory.map((scan) => (
+                <div key={scan.id} className="p-3 md:p-4 bg-secondary/10 rounded-lg">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm md:text-base truncate">{scan.category}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">
+                        {new Date(scan.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <span className={`text-xs md:text-sm font-medium px-2 py-1 rounded-full whitespace-nowrap ${scan.recyclable ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                      {scan.recyclable ? "♻️ Recyclable" : "⚠️ Non-Recyclable"}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        <div className="mt-6 md:mt-8 p-4 md:p-6 bg-primary/5 rounded-lg animate-fade-in">
+          <h3 className="font-semibold mb-2 text-sm md:text-base">🤖 Powered by Advanced AI</h3>
+          <p className="text-xs md:text-sm text-muted-foreground">
+            Using Google Gemini AI for accurate image recognition. All processing happens securely, and your scan history is saved to your account.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

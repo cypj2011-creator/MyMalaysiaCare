@@ -93,10 +93,10 @@ const Footer = () => {
 
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
           <p className="font-semibold text-foreground mb-3">
-            Created by Yeoh Phee Jun & Thang Wei Zen
+            Made by CYPJ2011
           </p>
           <p className="mt-2">
-            © {currentYear} MyMalaysia Care+. Powered by TensorFlow.js, Leaflet, and Chart.js
+            © {currentYear} MyMalaysia Care+. All rights reserved.
           </p>
         </div>
       </div>

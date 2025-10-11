@@ -78,14 +78,14 @@ const Home = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up">
-            <Link to="/recycle">
-              <Button size="lg" className="gradient-primary text-white shadow-custom-lg hover:shadow-custom-xl transition-all">
+            <Link to="/recycle" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto gradient-primary text-white shadow-custom-lg hover:shadow-custom-xl transition-all">
                 <Camera className="mr-2" size={20} />
                 Try RecycAI Scanner
               </Button>
             </Link>
-            <Link to="/map">
-              <Button size="lg" variant="outline" className="border-2 hover:bg-primary/5">
+            <Link to="/map" className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto border-2 hover:bg-primary/5">
                 <Map className="mr-2" size={20} />
                 Explore Map
               </Button>
