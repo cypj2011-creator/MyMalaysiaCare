@@ -96,18 +96,21 @@ const Home = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-3 max-w-2xl mx-auto">
-            <Card className="p-3 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
-              <div className="text-2xl sm:text-3xl font-bold text-primary">100%</div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Client-Side</div>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-2xl mx-auto px-2">
+            <Card className="p-2 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-xl sm:text-3xl font-bold text-primary">100%</div>
+              <div className="text-[9px] sm:text-sm text-muted-foreground leading-tight">Client-Side</div>
             </Card>
-            <Card className="p-3 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
-              <div className="text-xl sm:text-3xl font-bold text-secondary break-words">{t("aiPowered")}</div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Smart Scanner</div>
+            <Card className="p-2 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-base sm:text-3xl font-bold text-secondary leading-tight">
+                <span className="hidden sm:inline">{t("aiPowered")}</span>
+                <span className="sm:hidden">AI-Powered</span>
+              </div>
+              <div className="text-[9px] sm:text-sm text-muted-foreground leading-tight mt-1">Smart Scanner</div>
             </Card>
-            <Card className="p-3 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
-              <div className="text-2xl sm:text-3xl font-bold text-accent">24/7</div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Available</div>
+            <Card className="p-2 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
+              <div className="text-xl sm:text-3xl font-bold text-accent">24/7</div>
+              <div className="text-[9px] sm:text-sm text-muted-foreground leading-tight">Available</div>
             </Card>
           </div>
         </div>

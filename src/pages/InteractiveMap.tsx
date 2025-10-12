@@ -45,7 +45,7 @@ const InteractiveMap = () => {
     "hospital",
     "shelter",
   ]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const filterTypes = [
     { id: "recycling", label: t("recyclingCenters"), color: "#10b981", icon: "♻️" },
@@ -155,6 +155,7 @@ const InteractiveMap = () => {
     let cancelled = false;
     async function load() {
       setLoading(true);
+      
       try {
         // Load local data first for instant display
         const localRes = await fetch(`${import.meta.env.BASE_URL}data/locations.json`);
@@ -162,7 +163,6 @@ const InteractiveMap = () => {
           const local = await localRes.json();
           if (Array.isArray(local) && local.length) {
             setLocations(local);
-            setLoading(false);
           }
         }
       } catch (e) {
@@ -178,7 +178,9 @@ const InteractiveMap = () => {
       } catch (e) {
         console.warn("Nationwide data failed:", e);
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
     load();
@@ -304,7 +306,7 @@ const InteractiveMap = () => {
 
       {loading && (
         <div className="fixed top-20 right-4 z-[1000] animate-slide-in">
-          <div className="inline-flex items-center space-x-3 bg-primary text-white px-4 py-3 rounded-lg shadow-custom-lg">
+          <div className="inline-flex items-center space-x-3 bg-primary text-white px-4 py-3 rounded-lg shadow-custom-lg backdrop-blur">
             <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
             <span className="text-sm font-medium">{t("loadingLocations")}</span>
           </div>
