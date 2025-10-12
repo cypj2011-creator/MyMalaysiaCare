@@ -11,48 +11,51 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const Home = () => {
+  const { t } = useTranslation();
+
   const features = [
     {
       icon: Camera,
-      title: "RecycAI Scanner",
-      description: "Scan items with AI to identify recyclable materials instantly",
+      title: t("smartRecycling"),
+      description: t("smartRecyclingDesc"),
       link: "/recycle",
       gradient: "gradient-primary",
     },
     {
       icon: Map,
-      title: "Interactive Map",
-      description: "Find recycling centers, e-waste bins, and emergency shelters",
+      title: t("map"),
+      description: t("mapSubtitle"),
       link: "/map",
       gradient: "gradient-secondary",
     },
     {
       icon: BarChart3,
-      title: "Impact Dashboard",
+      title: t("dashboard"),
       description: "Track your recycling progress and environmental impact",
       link: "/dashboard",
       gradient: "gradient-warm",
     },
     {
       icon: Leaf,
-      title: "Protect Environment",
-      description: "Learn practical tips to reduce waste and save resources",
+      title: t("protect"),
+      description: t("protectSubtitle"),
       link: "/protect",
       gradient: "gradient-primary",
     },
     {
       icon: Shield,
-      title: "Safety Guide",
-      description: "Prepare for floods, haze, and other environmental disasters",
+      title: t("safety"),
+      description: t("safetySubtitle"),
       link: "/safety",
       gradient: "gradient-secondary",
     },
     {
       icon: BookOpen,
-      title: "Learn Recycling",
-      description: "Comprehensive guides and FAQs about proper recycling",
+      title: t("learn"),
+      description: t("learnSubtitle"),
       link: "/learn",
       gradient: "gradient-primary",
     },
@@ -74,20 +77,20 @@ const Home = () => {
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-slide-up">
-            Your AI-powered companion for recycling, environmental protection, and disaster safety
+            {t("homeSubtitle")}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up">
             <Link to="/recycle" className="w-full sm:w-auto">
               <Button size="lg" className="w-full sm:w-auto gradient-primary text-white shadow-custom-lg hover:shadow-custom-xl transition-all">
                 <Camera className="mr-2" size={20} />
-                Try RecycAI Scanner
+                {t("recycAI")}
               </Button>
             </Link>
             <Link to="/map" className="w-full sm:w-auto">
               <Button size="lg" variant="outline" className="w-full sm:w-auto border-2 hover:bg-primary/5">
                 <Map className="mr-2" size={20} />
-                Explore Map
+                {t("map")}
               </Button>
             </Link>
           </div>
@@ -99,7 +102,7 @@ const Home = () => {
               <div className="text-[10px] sm:text-sm text-muted-foreground">Client-Side</div>
             </Card>
             <Card className="p-3 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
-              <div className="text-xl sm:text-3xl font-bold text-secondary">AI-Powered</div>
+              <div className="text-xl sm:text-3xl font-bold text-secondary break-words">{t("aiPowered")}</div>
               <div className="text-[10px] sm:text-sm text-muted-foreground">Smart Scanner</div>
             </Card>
             <Card className="p-3 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
@@ -115,10 +118,10 @@ const Home = () => {
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Comprehensive Environmental Tools
+              {t("whyChoose")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to make a positive impact on Malaysia's environment
+              {t("comprehensive")}
             </p>
           </div>
 
@@ -144,14 +147,14 @@ const Home = () => {
           <div className="text-center">
             <Recycle className="w-16 h-16 mx-auto mb-6 animate-float" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Start Making a Difference Today
+              {t("getStarted")}
             </h2>
             <p className="text-lg mb-8 text-white/90">
-              Join thousands of Malaysians protecting our environment with smart technology
+              {t("communityDrivenDesc")}
             </p>
             <Link to="/recycle">
               <Button size="lg" variant="secondary" className="shadow-custom-lg">
-                Get Started
+                {t("getStarted")}
               </Button>
             </Link>
           </div>

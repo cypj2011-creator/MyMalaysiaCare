@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { Leaf, Github, Mail, Heart } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -93,7 +95,7 @@ const Footer = () => {
 
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
           <p className="font-semibold text-foreground mb-3">
-            Made by Yeoh Phee Jun and Thang Wei Zen
+            {t("madeBy")}
           </p>
           <p className="mt-2">
             © {currentYear} MyMalaysiaCare. All rights reserved.

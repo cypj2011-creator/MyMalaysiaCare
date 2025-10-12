@@ -16,15 +16,21 @@ const Header = () => {
     { code: "ms", label: "Malay", flag: "🇲🇾" },
   ];
 
+  const handleLangChange = (v: string) => {
+    setLang(v);
+    localStorage.setItem("lang", v);
+    window.dispatchEvent(new Event("languageChange"));
+  };
+
   const navItems = [
-    { path: "/", label: "Home" },
-    { path: "/recycle", label: "RecycAI" },
-    { path: "/map", label: "Map" },
-    { path: "/dashboard", label: "Dashboard" },
-    { path: "/protect", label: "Protect" },
-    { path: "/safety", label: "Safety" },
-    { path: "/learn", label: "Learn" },
-    { path: "/about", label: "About" },
+    { path: "/", label: "Home", key: "home" },
+    { path: "/recycle", label: "RecycAI", key: "recycAI" },
+    { path: "/map", label: "Map", key: "map" },
+    { path: "/dashboard", label: "Dashboard", key: "dashboard" },
+    { path: "/protect", label: "Protect", key: "protect" },
+    { path: "/safety", label: "Safety", key: "safety" },
+    { path: "/learn", label: "Learn", key: "learn" },
+    { path: "/about", label: "About", key: "about" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -57,13 +63,7 @@ const Header = () => {
 
           {/* Language Selector */}
           <div className="ml-2">
-            <Select
-              value={lang}
-              onValueChange={(v) => {
-                setLang(v);
-                localStorage.setItem("lang", v);
-              }}
-            >
+            <Select value={lang} onValueChange={handleLangChange}>
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Language" />
               </SelectTrigger>
@@ -129,13 +129,7 @@ const Header = () => {
             
             {/* Mobile Language Selector */}
             <div className="pt-2">
-              <Select
-                value={lang}
-                onValueChange={(v) => {
-                  setLang(v);
-                  localStorage.setItem("lang", v);
-                }}
-              >
+              <Select value={lang} onValueChange={handleLangChange}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Language" />
                 </SelectTrigger>

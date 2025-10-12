@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapPin, Navigation, Phone, Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -31,6 +32,7 @@ interface Location {
 }
 
 const InteractiveMap = () => {
+  const { t } = useTranslation();
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
@@ -46,10 +48,10 @@ const InteractiveMap = () => {
   const [loading, setLoading] = useState(false);
 
   const filterTypes = [
-    { id: "recycling", label: "Recycling Centers", color: "#10b981", icon: "♻️" },
-    { id: "ewaste", label: "E-Waste Points", color: "#3b82f6", icon: "🔋" },
-    { id: "hospital", label: "Hospitals", color: "#ef4444", icon: "🏥" },
-    { id: "shelter", label: "Flood Shelters", color: "#f59e0b", icon: "🛡️" },
+    { id: "recycling", label: t("recyclingCenters"), color: "#10b981", icon: "♻️" },
+    { id: "ewaste", label: t("ewastePoints"), color: "#3b82f6", icon: "🔋" },
+    { id: "hospital", label: t("hospitals"), color: "#ef4444", icon: "🏥" },
+    { id: "shelter", label: t("floodShelters"), color: "#f59e0b", icon: "🛡️" },
   ];
 
   // Load nationwide data from OpenStreetMap Overpass API (fallback to bundled JSON)
@@ -275,10 +277,10 @@ const InteractiveMap = () => {
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-8">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-          Interactive Map
+          {t("mapTitle")}
         </h1>
         <p className="text-lg text-muted-foreground">
-          Find recycling centers, e-waste points, hospitals, and emergency shelters
+          {t("mapSubtitle")}
         </p>
       </div>
 
@@ -301,10 +303,10 @@ const InteractiveMap = () => {
       </Card>
 
       {loading && (
-        <div className="mb-4 flex justify-center animate-fade-in">
-          <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-3 py-2 rounded-full">
-            <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm">Loading locations...</span>
+        <div className="fixed top-20 right-4 z-[1000] animate-slide-in">
+          <div className="inline-flex items-center space-x-3 bg-primary text-white px-4 py-3 rounded-lg shadow-custom-lg">
+            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm font-medium">{t("loadingLocations")}</span>
           </div>
         </div>
       )}
@@ -345,7 +347,7 @@ const InteractiveMap = () => {
 
                 {selectedLocation.accepts && (
                   <div className="pt-3 border-t">
-                    <p className="font-semibold mb-2">Accepts:</p>
+                    <p className="font-semibold mb-2">{t("accepts")}</p>
                     <div className="flex flex-wrap gap-2">
                       {selectedLocation.accepts.map((item, index) => (
                         <span
@@ -361,7 +363,7 @@ const InteractiveMap = () => {
 
                 {selectedLocation.capacity && (
                   <div className="pt-3 border-t">
-                    <p className="font-semibold">Capacity: {selectedLocation.capacity}</p>
+                    <p className="font-semibold">{t("capacity")} {selectedLocation.capacity}</p>
                   </div>
                 )}
               </div>
@@ -371,20 +373,20 @@ const InteractiveMap = () => {
                 className="w-full mt-6 gradient-primary"
               >
                 <Navigation className="mr-2" size={18} />
-                Get Directions
+                {t("getDirections")}
               </Button>
             </Card>
           ) : (
             <Card className="p-6 shadow-custom-lg">
               <p className="text-center text-muted-foreground">
-                Click on a marker to view details
+                {t("clickMarker")}
               </p>
             </Card>
           )}
 
           {/* Legend */}
           <Card className="p-6 shadow-custom-md">
-            <h3 className="font-semibold mb-4">Legend</h3>
+            <h3 className="font-semibold mb-4">{t("legend")}</h3>
             <div className="space-y-2">
               {filterTypes.map((filter) => (
                 <div key={filter.id} className="flex items-center space-x-3">
