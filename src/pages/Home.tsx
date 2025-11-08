@@ -103,8 +103,7 @@ const Home = () => {
             </Card>
             <Card className="p-2 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
               <div className="text-base sm:text-3xl font-bold text-secondary leading-tight">
-                <span className="hidden sm:inline">{t("aiPowered")}</span>
-                <span className="sm:hidden">AI-Powered</span>
+                AI-Powered
               </div>
               <div className="text-[9px] sm:text-sm text-muted-foreground leading-tight mt-1">Smart Scanner</div>
             </Card>

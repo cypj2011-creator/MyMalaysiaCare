@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Camera, Upload, Sparkles, Leaf, Info, Clock } from "lucide-react";
+import { Camera, Upload, Sparkles, Leaf, Info, Clock, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface ScanResult {
   category: string;
@@ -26,6 +27,7 @@ interface ScanHistory {
 }
 
 const RecycleScanner = () => {
+  const { t } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
@@ -153,11 +155,11 @@ const RecycleScanner = () => {
         <div className="text-center mb-8 md:mb-12 animate-fade-in">
           <div className="inline-flex items-center space-x-2 bg-primary/10 px-4 py-2 rounded-full mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-primary">Smart AI Recognition</span>
+            <span className="text-sm font-semibold text-primary">{t("smartAIRecognition")}</span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">RecycAI Scanner</h1>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">{t("recycAIScanner")}</h1>
           <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-            Take or upload a photo to instantly identify items and get recycling guidance
+            {t("instantIdentify")}
           </p>
         </div>
 
@@ -188,7 +190,7 @@ const RecycleScanner = () => {
               onClick={() => cameraInputRef.current?.click()}
             >
               <Camera className="mr-2 h-5 w-5" />
-              <span className="text-sm md:text-base">Take Photo</span>
+              <span className="text-sm md:text-base">{t("takePhoto")}</span>
             </Button>
 
             <Button
@@ -198,7 +200,7 @@ const RecycleScanner = () => {
               onClick={() => uploadInputRef.current?.click()}
             >
               <Upload className="mr-2 h-5 w-5" />
-              <span className="text-sm md:text-base">Upload Image</span>
+              <span className="text-sm md:text-base">{t("uploadPhoto")}</span>
             </Button>
           </div>
 
@@ -226,21 +228,21 @@ const RecycleScanner = () => {
               <div className={`p-4 md:p-6 rounded-lg ${scanResult.recyclable ? "bg-green-50 border-2 border-green-500" : "bg-red-50 border-2 border-red-500"}`}>
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-lg md:text-xl font-bold text-gray-900">
-                    {scanResult.recyclable ? "♻️ Recyclable" : "⚠️ Non-Recyclable"}
+                    {scanResult.recyclable ? t("recyclable") : t("nonRecyclable")}
                   </h3>
                   <span className="text-xs md:text-sm font-medium text-gray-600">
-                    {Math.round(scanResult.confidence * 100)}% confident
+                    {Math.round(scanResult.confidence * 100)}% {t("confident")}
                   </span>
                 </div>
                 <p className="text-base md:text-lg font-semibold text-gray-800 mb-2">
-                  Category: {scanResult.category}
+                  {t("category")} {scanResult.category}
                 </p>
               </div>
 
               <div className="bg-blue-50 p-4 md:p-6 rounded-lg">
                 <h4 className="font-semibold text-blue-900 mb-2 flex items-center text-sm md:text-base">
                   <Info className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                  Instructions
+                  {t("instructionsLabel")}
                 </h4>
                 <p className="text-blue-800 text-sm md:text-base">{scanResult.instructions}</p>
               </div>
@@ -248,10 +250,20 @@ const RecycleScanner = () => {
               <div className="bg-green-50 p-4 md:p-6 rounded-lg">
                 <h4 className="font-semibold text-green-900 mb-2 flex items-center text-sm md:text-base">
                   <Leaf className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                  Eco Fact
+                  {t("ecoFactLabel")}
                 </h4>
                 <p className="text-green-800 text-sm md:text-base">{scanResult.ecoFact}</p>
               </div>
+
+              {scanResult.recyclable && (
+                <Button
+                  onClick={() => navigate("/map")}
+                  className="w-full gradient-primary"
+                >
+                  <MapPin className="mr-2 h-5 w-5" />
+                  {t("findNearestCenter")}
+                </Button>
+              )}
             </div>
           )}
         </Card>
@@ -260,7 +272,7 @@ const RecycleScanner = () => {
           <Card className="p-4 md:p-6 animate-fade-in">
             <h3 className="text-lg md:text-xl font-bold mb-4 flex items-center">
               <Clock className="mr-2 h-5 w-5" />
-              Recent Scans
+              {t("scanHistoryTitle")}
             </h3>
             <div className="space-y-3">
               {scanHistory.map((scan) => (
@@ -273,7 +285,7 @@ const RecycleScanner = () => {
                       </p>
                     </div>
                     <span className={`text-xs md:text-sm font-medium px-2 py-1 rounded-full whitespace-nowrap ${scan.recyclable ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-                      {scan.recyclable ? "♻️ Recyclable" : "⚠️ Non-Recyclable"}
+                      {scan.recyclable ? t("recyclable") : t("nonRecyclable")}
                     </span>
                   </div>
                 </div>
@@ -283,9 +295,9 @@ const RecycleScanner = () => {
         )}
 
         <div className="mt-6 md:mt-8 p-4 md:p-6 bg-primary/5 rounded-lg animate-fade-in">
-          <h3 className="font-semibold mb-2 text-sm md:text-base">🤖 Smart AI Assistance</h3>
+          <h3 className="font-semibold mb-2 text-sm md:text-base">{t("smartAIAssistance")}</h3>
           <p className="text-xs md:text-sm text-muted-foreground">
-            Our AI recognizes objects and provides clear recycling guidance. Your scan history is securely saved to your account.
+            {t("aiRecognizes")}
           </p>
         </div>
       </div>

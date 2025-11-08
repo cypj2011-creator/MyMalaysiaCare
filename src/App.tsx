@@ -7,8 +7,6 @@ import Home from "./pages/Home";
 import RecycleScanner from "./pages/RecycleScanner";
 import InteractiveMap from "./pages/InteractiveMap";
 import Dashboard from "./pages/Dashboard";
-import Protect from "./pages/Protect";
-import Safety from "./pages/Safety";
 import Learn from "./pages/Learn";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
@@ -32,8 +30,6 @@ const App = () => (
           <Route path="/recycle" element={<RecycleScanner />} />
           <Route path="/map" element={<InteractiveMap />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/protect" element={<Protect />} />
-          <Route path="/safety" element={<Safety />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />

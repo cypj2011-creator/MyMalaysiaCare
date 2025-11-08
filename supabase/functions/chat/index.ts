@@ -11,35 +11,21 @@ serve(async (req) => {
   }
 
   try {
-    const { message } = await req.json();
+    const { message, language = 'en' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are a helpful AI assistant for MyMalaysia Care+, an environmental protection and recycling app. You help users with:
+    // Language-specific system prompts
+    const systemPrompts = {
+      en: `You are a helpful AI assistant for MyMalaysiaCare, focused on recycling and environmental protection in Malaysia. Answer questions about recycling, eco-friendly practices, and environmental protection. Keep responses concise and practical.`,
+      zh: `您是 MyMalaysiaCare 的AI助手，专注于马来西亚的回收和环境保护。回答有关回收、环保实践和环境保护的问题。保持回答简洁实用。`,
+      ms: `Anda adalah pembantu AI untuk MyMalaysiaCare, memberi tumpuan kepada kitar semula dan perlindungan alam sekitar di Malaysia. Jawab soalan tentang kitar semula, amalan mesra alam, dan perlindungan alam sekitar. Pastikan jawapan ringkas dan praktikal.`
+    };
 
-1. Recycling questions - what items are recyclable, how to recycle properly, recycling centers
-2. Environmental protection - tips for reducing waste, conserving resources, eco-friendly practices
-3. Disaster safety - flood preparedness, haze safety, emergency procedures
-4. E-waste disposal - proper handling of electronics, battery disposal
-5. Using the app features - RecycAI scanner, Interactive Map, Dashboard
-
-Provide clear, concise, and accurate answers. When discussing recycling in Malaysia:
-- Plastic bottles (#1 PET, #2 HDPE) are recyclable - rinse and remove caps
-- Paper and cardboard are recyclable if clean and dry
-- Glass bottles and jars are 100% recyclable
-- Metal cans (aluminum and steel) are recyclable
-- E-waste must go to designated collection centers, never in regular trash
-- For contaminated items (food residue, grease), they cannot be recycled
-
-For emergency contacts in Malaysia:
-- Emergency Services: 999
-- Fire & Rescue: 994
-- Civil Defence: 991
-
-Always be friendly, encouraging, and promote environmental awareness!`;
+    const systemPrompt = systemPrompts[language as keyof typeof systemPrompts] || systemPrompts.en;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
