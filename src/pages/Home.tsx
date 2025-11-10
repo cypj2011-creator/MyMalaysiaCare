@@ -34,23 +34,9 @@ const Home = () => {
     {
       icon: BarChart3,
       title: t("dashboard"),
-      description: "Track your recycling progress and environmental impact",
+      description: t("dashboardDesc"),
       link: "/dashboard",
       gradient: "gradient-warm",
-    },
-    {
-      icon: Leaf,
-      title: t("protect"),
-      description: t("protectSubtitle"),
-      link: "/protect",
-      gradient: "gradient-primary",
-    },
-    {
-      icon: Shield,
-      title: t("safety"),
-      description: t("safetySubtitle"),
-      link: "/safety",
-      gradient: "gradient-secondary",
     },
     {
       icon: BookOpen,

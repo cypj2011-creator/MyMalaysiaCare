@@ -31,14 +31,23 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: "You are an expert recycling and waste management assistant. Analyze images and provide accurate recycling information for Malaysia. Return a JSON object with: category (string), recyclable (boolean), instructions (string), ecoFact (string), confidence (number 0-1)."
+            content: `You are an expert recycling and waste management assistant. Analyze images and provide accurate recycling information for Malaysia. 
+
+IMPORTANT: Always return a JSON object with these exact fields:
+- category: string (e.g., "Plastic Bottle", "Paper", "Metal Can")
+- recyclable: boolean (true or false)
+- instructions: string (clear recycling instructions)
+- ecoFact: string (interesting environmental fact)
+- confidence: number (0.5 to 1.0, where 0.5 is uncertain and 1.0 is very confident)
+
+For unclear or blurry images, still provide your best guess but set confidence to 0.5-0.7. Never refuse to analyze an image.`
           },
           {
             role: "user",
             content: [
               {
                 type: "text",
-                text: "Identify this item and tell me if it's recyclable in Malaysia. Provide category, recycling instructions, and an eco-fact."
+                text: "Identify this item and tell me if it's recyclable in Malaysia. Even if the image is unclear, provide your best analysis. Provide category, recycling instructions, and an eco-fact."
               },
               {
                 type: "image_url",
@@ -72,7 +81,21 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const result = JSON.parse(data.choices[0].message.content);
+    let result = JSON.parse(data.choices[0].message.content);
+    
+    // Ensure confidence is within valid range and not too low
+    if (typeof result.confidence !== 'number' || result.confidence < 0.5) {
+      result.confidence = 0.5;
+    }
+    if (result.confidence > 1.0) {
+      result.confidence = 1.0;
+    }
+    
+    // Ensure all required fields exist
+    if (!result.category) result.category = "Unknown Item";
+    if (typeof result.recyclable !== 'boolean') result.recyclable = false;
+    if (!result.instructions) result.instructions = "Unable to determine recycling instructions. Please consult local recycling guidelines.";
+    if (!result.ecoFact) result.ecoFact = "Proper waste disposal helps protect our environment.";
     
     console.log("AI analysis complete:", result);
 

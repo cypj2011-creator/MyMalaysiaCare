@@ -96,6 +96,9 @@ export const translations = {
     learnTitle: "Learn & Discover",
     learnSubtitle: "Educational resources about recycling, sustainability, and disaster preparedness",
     
+    // Dashboard description
+    dashboardDesc: "Track your recycling progress and environmental impact",
+    
     // ChatBot
     aiAssistant: "AI Assistant",
     askMeAnything: "Ask me anything about recycling and environment!",
@@ -279,6 +282,9 @@ export const translations = {
     learnTitle: "学习与发现",
     learnSubtitle: "有关回收、可持续发展和灾害准备的教育资源",
     
+    // Dashboard description
+    dashboardDesc: "跟踪您的回收进度和环境影响",
+    
     // ChatBot
     aiAssistant: "人工智能助手",
     askMeAnything: "向我询问有关回收和环境的任何问题！",
@@ -461,6 +467,9 @@ export const translations = {
     // Learn
     learnTitle: "Belajar & Temui",
     learnSubtitle: "Sumber pendidikan tentang kitar semula, kemampanan, dan persediaan bencana",
+    
+    // Dashboard description
+    dashboardDesc: "Jejak kemajuan kitar semula dan impak alam sekitar anda",
     
     // ChatBot
     aiAssistant: "Pembantu AI",

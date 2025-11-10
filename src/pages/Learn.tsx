@@ -1,8 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BookOpen, HelpCircle, Recycle, Trash2, Package, Battery } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const Learn = () => {
+  const { t } = useTranslation();
+  
   const categories = [
     {
       icon: Recycle,
@@ -111,10 +114,10 @@ const Learn = () => {
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-12">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words px-2">
-          Learn Recycling
+          {t("learnRecycling")}
         </h1>
         <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto break-words px-4">
-          Comprehensive guide to recycling properly in Malaysia
+          {t("comprehensiveGuide")}
         </p>
       </div>
 
@@ -122,7 +125,7 @@ const Learn = () => {
       <Card className="p-6 mb-12 shadow-custom-lg gradient-primary text-white">
         <div className="flex items-center space-x-3 mb-4">
           <HelpCircle className="w-6 h-6" />
-          <h2 className="text-2xl font-bold">Quick Tips</h2>
+          <h2 className="text-2xl font-bold">{t("quickTips")}</h2>
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
           {quickTips.map((tip, index) => (
@@ -164,7 +167,7 @@ const Learn = () => {
       <div className="grid md:grid-cols-2 gap-6 mt-12">
         <Card className="p-6 shadow-custom-lg">
           <BookOpen className="w-12 h-12 text-primary mb-4" />
-          <h3 className="text-xl font-semibold mb-3">Official Resources</h3>
+          <h3 className="text-xl font-semibold mb-3">{t("officialResources")}</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>• Ministry of Housing and Local Government (KPKT)</li>
             <li>• Department of Environment Malaysia (DoE)</li>
@@ -174,13 +177,13 @@ const Learn = () => {
         </Card>
 
         <Card className="p-6 shadow-custom-lg gradient-secondary text-white">
-          <h3 className="text-xl font-semibold mb-3">Try Our AI Scanner</h3>
+          <h3 className="text-xl font-semibold mb-3">{t("tryAIScanner")}</h3>
           <p className="text-white/90 mb-4">
-            Not sure if something is recyclable? Use our RecycAI Scanner to get instant answers with AI-powered identification!
+            {t("notSureRecyclable")}
           </p>
           <a href="/recycle">
             <button className="w-full py-3 bg-white text-secondary font-semibold rounded-lg hover:bg-white/90 transition-colors">
-              Scan Now
+              {t("scanNow")}
             </button>
           </a>
         </Card>
@@ -188,7 +191,7 @@ const Learn = () => {
 
       {/* Recycling Symbols */}
       <Card className="p-6 mt-6 shadow-custom-md">
-        <h3 className="text-xl font-semibold mb-4">Understanding Recycling Symbols</h3>
+        <h3 className="text-xl font-semibold mb-4">{t("understandingSymbols")}</h3>
         <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center p-4 border rounded-lg">
             <div className="text-4xl mb-2">♻️</div>

@@ -43,15 +43,14 @@ const InteractiveMap = () => {
     "recycling",
     "ewaste",
     "hospital",
-    "shelter",
   ]);
   const [loading, setLoading] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   const filterTypes = [
     { id: "recycling", label: t("recyclingCenters"), color: "#10b981", icon: "♻️" },
     { id: "ewaste", label: t("ewastePoints"), color: "#3b82f6", icon: "🔋" },
     { id: "hospital", label: t("hospitals"), color: "#ef4444", icon: "🏥" },
-    { id: "shelter", label: t("floodShelters"), color: "#f59e0b", icon: "🛡️" },
   ];
 
   // Load nationwide data from OpenStreetMap Overpass API (fallback to bundled JSON)
@@ -68,13 +67,6 @@ const InteractiveMap = () => {
         way["amenity"="recycling"](area.searchArea);
         relation["amenity"="recycling"](area.searchArea);
 
-        node["emergency"="shelter"](area.searchArea);
-        way["emergency"="shelter"](area.searchArea);
-        relation["emergency"="shelter"](area.searchArea);
-
-        node["amenity"="shelter"](area.searchArea);
-        way["amenity"="shelter"](area.searchArea);
-        relation["amenity"="shelter"](area.searchArea);
       );
       out center;
     `;
@@ -101,11 +93,6 @@ const InteractiveMap = () => {
           tags["recycling:electrical_items"] === "yes" ||
           tags["recycling:batteries"] === "yes";
         type = isEwaste ? "ewaste" : "recycling";
-      } else if (
-        tags.emergency === "shelter" ||
-        (tags.amenity === "shelter" && tags.shelter_type !== "public_transport" && tags.shelter_type !== "weather_shelter")
-      ) {
-        type = "shelter";
       }
 
       if (!type) return null;
@@ -132,7 +119,7 @@ const InteractiveMap = () => {
 
       return {
         id: el.id ?? idx,
-        name: tags.name || (type === "hospital" ? "Hospital" : type === "shelter" ? "Shelter" : "Recycling Point"),
+        name: tags.name || (type === "hospital" ? "Hospital" : "Recycling Point"),
         type,
         lat,
         lng,
@@ -155,6 +142,7 @@ const InteractiveMap = () => {
     let cancelled = false;
     async function load() {
       setLoading(true);
+      setLoadingMessage(t("loadingLocations"));
       
       try {
         // Load local data first for instant display
@@ -163,6 +151,7 @@ const InteractiveMap = () => {
           const local = await localRes.json();
           if (Array.isArray(local) && local.length) {
             setLocations(local);
+            setLoadingMessage("Loading rest of the locations...");
           }
         }
       } catch (e) {
@@ -180,6 +169,7 @@ const InteractiveMap = () => {
       } finally {
         if (!cancelled) {
           setLoading(false);
+          setLoadingMessage("");
         }
       }
     }
@@ -187,7 +177,7 @@ const InteractiveMap = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
@@ -304,11 +294,11 @@ const InteractiveMap = () => {
         </div>
       </Card>
 
-      {loading && (
+      {loading && loadingMessage && (
         <div className="fixed top-20 right-4 z-[1000] animate-slide-in">
           <div className="inline-flex items-center space-x-3 bg-primary text-white px-4 py-3 rounded-lg shadow-custom-lg backdrop-blur">
             <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm font-medium">{t("loadingLocations")}</span>
+            <span className="text-sm font-medium">{loadingMessage}</span>
           </div>
         </div>
       )}
