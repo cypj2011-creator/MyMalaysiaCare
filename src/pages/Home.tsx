@@ -54,15 +54,15 @@ const Home = () => {
         <div className="absolute inset-0 gradient-hero opacity-10 -z-10" />
         <div className="container mx-auto text-center max-w-4xl">
           <div className="inline-flex items-center space-x-2 bg-primary/10 px-4 py-2 rounded-full mb-6 animate-scale-in">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-primary">Malaysia Coolest Project 2026</span>
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+            <span className="text-xs sm:text-sm font-semibold text-primary whitespace-nowrap">Malaysia's Coolest Project 2026</span>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in break-words">
             MyMalaysiaCare
           </h1>
           
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-slide-up">
+          <p className="text-base sm:text-xl md:text-2xl text-muted-foreground mb-8 animate-slide-up px-2">
             {t("homeSubtitle")}
           </p>
 
@@ -105,11 +105,11 @@ const Home = () => {
       <section className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 break-words">
               {t("whyChoose")}
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t("comprehensive")}
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
+              {t("aiDescription")}
             </p>
           </div>
 
