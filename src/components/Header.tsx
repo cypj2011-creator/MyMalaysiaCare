@@ -56,7 +56,7 @@ const Header = () => {
                 size="sm"
                 className={isActive(item.path) ? "gradient-primary text-white" : ""}
               >
-                {item.label}
+                {t(item.key as any)}
               </Button>
             </Link>
           ))}
@@ -86,12 +86,12 @@ const Header = () => {
               </div>
               <Button variant="outline" size="sm" onClick={signOut}>
                 <LogOut className="h-4 w-4 lg:mr-2" />
-                <span className="hidden lg:inline">Sign Out</span>
+                <span className="hidden lg:inline">{t("signOut")}</span>
               </Button>
             </div>
           ) : (
             <Link to="/auth" className="ml-4">
-              <Button size="sm">Sign In</Button>
+              <Button size="sm">{t("signIn")}</Button>
             </Link>
           )}
         </div>
@@ -122,7 +122,7 @@ const Header = () => {
                     isActive(item.path) ? "gradient-primary text-white" : ""
                   }`}
                 >
-                  {item.label}
+                  {t(item.key as any)}
                 </Button>
               </Link>
             ))}
@@ -165,7 +165,7 @@ const Header = () => {
                 </div>
               ) : (
                 <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full">Sign In</Button>
+                  <Button className="w-full">{t("signIn")}</Button>
                 </Link>
               )}
             </div>
