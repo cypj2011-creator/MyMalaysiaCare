@@ -160,7 +160,7 @@ const Header = () => {
                     }}
                   >
                     <LogOut className="h-4 w-4 mr-2" />
-                    Sign Out
+                    {t("signOut")}
                   </Button>
                 </div>
               ) : (
