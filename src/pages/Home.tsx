@@ -58,7 +58,7 @@ const Home = () => {
             <span className="text-xs sm:text-sm font-semibold text-primary whitespace-nowrap">Malaysia's Coolest Project 2026</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in break-words">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in whitespace-nowrap">
             MyMalaysiaCare
           </h1>
           
@@ -87,8 +87,8 @@ const Home = () => {
               <div className="text-xl sm:text-3xl font-bold text-primary">100%</div>
               <div className="text-[9px] sm:text-sm text-muted-foreground leading-tight">Client-Side</div>
             </Card>
-            <Card className="p-2 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow">
-              <div className="text-base sm:text-3xl font-bold text-secondary leading-tight">
+            <Card className="p-2 sm:p-4 text-center shadow-custom-md hover:shadow-custom-lg transition-shadow flex flex-col justify-center">
+              <div className="text-sm sm:text-2xl md:text-3xl font-bold text-secondary leading-tight whitespace-nowrap">
                 AI-Powered
               </div>
               <div className="text-[9px] sm:text-sm text-muted-foreground leading-tight mt-1">Smart Scanner</div>
