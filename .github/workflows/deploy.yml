@@ -32,8 +32,10 @@ jobs:
 
       - name: Build
         env:
-          # Vite uses this base to generate correct asset URLs for GH Pages
           VITE_BASE: "/MyMalaysiaCare/"
+          VITE_SUPABASE_PROJECT_ID: "xddakwhrmcihmzcmjtuy"
+          VITE_SUPABASE_URL: "https://xddakwhrmcihmzcmjtuy.supabase.co"
+          VITE_SUPABASE_PUBLISHABLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkZGFrd2hybWNpaG16Y21qdHV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwMTc2MjYsImV4cCI6MjA3NTU5MzYyNn0.phIGVAUPLkvM4h25i3k9bVmI9yACB82G4HLGTlGepWo"
         run: npm run build
 
       - name: Upload artifact
