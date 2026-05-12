@@ -77,7 +77,7 @@ export const translations = {
     haveAccount: "Already have an account?",
     
     // Footer
-    madeBy: "Made by Yeoh Phee Jun and Thang Wei Zen",
+    madeBy: "Made by Yeoh Phee Jun, Lim Yee Keat and Poh Zhi Xuen",
     
     // About
     aboutTitle: "About MyMalaysiaCare",
@@ -147,7 +147,7 @@ export const translations = {
     builtWith: "Built with modern, cutting-edge web technologies for the best user experience",
     competition: "Malaysia Coolest Project 2026",
     createdBy: "Created by",
-    madeByCreators: "Yeoh Phee Jun & Thang Wei Zen",
+    madeByCreators: "Yeoh Phee Jun & Lim Yee Keat & Poh Zhi Xuen",
     builtByStudents: "Built by passionate students who believe technology can solve environmental challenges.",
     madeWithLove: "Made with ❤️ for Malaysia",
     joinMovement: "Join the Movement",
@@ -263,7 +263,7 @@ export const translations = {
     haveAccount: "已有账户？",
     
     // Footer
-    madeBy: "由 Yeoh Phee Jun 和 Thang Wei Zen 制作",
+    madeBy: "由 Yeoh Phee Jun、Lim Yee Keat 和 Poh Zhi Xuen 制作",
     
     // About
     aboutTitle: "关于 MyMalaysiaCare",
@@ -333,7 +333,7 @@ export const translations = {
     builtWith: "使用现代尖端网络技术构建，以获得最佳用户体验",
     competition: "马来西亚最酷项目 2026",
     createdBy: "创建者",
-    madeByCreators: "Yeoh Phee Jun 和 Thang Wei Zen",
+    madeByCreators: "Yeoh Phee Jun、Lim Yee Keat 和 Poh Zhi Xuen",
     builtByStudents: "由相信技术可以解决环境挑战的热情学生构建。",
     madeWithLove: "用 ❤️ 为马来西亚制作",
     joinMovement: "加入运动",
@@ -449,7 +449,7 @@ export const translations = {
     haveAccount: "Sudah mempunyai akaun?",
     
     // Footer
-    madeBy: "Dibuat oleh Yeoh Phee Jun dan Thang Wei Zen",
+    madeBy: "Dibuat oleh Yeoh Phee Jun, Lim Yee Keat dan Poh Zhi Xuen",
     
     // About
     aboutTitle: "Tentang MyMalaysiaCare",
@@ -519,7 +519,7 @@ export const translations = {
     builtWith: "Dibina dengan teknologi web moden dan canggih untuk pengalaman pengguna terbaik",
     competition: "Projek Paling Keren Malaysia 2026",
     createdBy: "Dicipta oleh",
-    madeByCreators: "Yeoh Phee Jun & Thang Wei Zen",
+    madeByCreators: "Yeoh Phee Jun & Lim Yee Keat & Poh Zhi Xuen",
     builtByStudents: "Dibina oleh pelajar bersemangat yang percaya teknologi boleh menyelesaikan cabaran alam sekitar.",
     madeWithLove: "Dibuat dengan ❤️ untuk Malaysia",
     joinMovement: "Sertai Pergerakan",

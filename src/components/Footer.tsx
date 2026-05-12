@@ -52,16 +52,6 @@ const Footer = () => {
             <h3 className="font-semibold mb-3">Resources</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link to="/protect" className="hover:text-primary transition-colors">
-                  Environment Tips
-                </Link>
-              </li>
-              <li>
-                <Link to="/safety" className="hover:text-primary transition-colors">
-                  Safety Guide
-                </Link>
-              </li>
-              <li>
                 <Link to="/learn" className="hover:text-primary transition-colors">
                   Learn Recycling
                 </Link>
