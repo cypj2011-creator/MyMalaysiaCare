@@ -4,13 +4,11 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
-import { useTranslation } from "@/hooks/useTranslation";
 
 const Header = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
-  const { t } = useTranslation();
   const [lang, setLang] = useState<string>(() => localStorage.getItem("lang") || "en");
   const languages = [
     { code: "en", label: "English", flag: "🇬🇧" },
@@ -56,7 +54,7 @@ const Header = () => {
                 size="sm"
                 className={isActive(item.path) ? "gradient-primary text-white" : ""}
               >
-                {t(item.key as any)}
+                {item.label}
               </Button>
             </Link>
           ))}
@@ -86,12 +84,12 @@ const Header = () => {
               </div>
               <Button variant="outline" size="sm" onClick={signOut}>
                 <LogOut className="h-4 w-4 lg:mr-2" />
-                <span className="hidden lg:inline">{t("signOut")}</span>
+                <span className="hidden lg:inline">Sign Out</span>
               </Button>
             </div>
           ) : (
             <Link to="/auth" className="ml-4">
-              <Button size="sm">{t("signIn")}</Button>
+              <Button size="sm">Sign In</Button>
             </Link>
           )}
         </div>
@@ -122,7 +120,7 @@ const Header = () => {
                     isActive(item.path) ? "gradient-primary text-white" : ""
                   }`}
                 >
-                  {t(item.key as any)}
+                  {item.label}
                 </Button>
               </Link>
             ))}
@@ -160,12 +158,12 @@ const Header = () => {
                     }}
                   >
                     <LogOut className="h-4 w-4 mr-2" />
-                    {t("signOut")}
+                    Sign Out
                   </Button>
                 </div>
               ) : (
                 <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full">{t("signIn")}</Button>
+                  <Button className="w-full">Sign In</Button>
                 </Link>
               )}
             </div>
