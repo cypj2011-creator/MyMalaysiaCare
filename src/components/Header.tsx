@@ -11,9 +11,9 @@ const Header = () => {
   const { user, signOut } = useAuth();
   const [lang, setLang] = useState<string>(() => localStorage.getItem("lang") || "en");
   const languages = [
-    { code: "en", label: "English", flag: "🇬🇧" },
-    { code: "zh", label: "中文", flag: "🇨🇳" },
-    { code: "ms", label: "Malay", flag: "🇲🇾" },
+    { code: "en", label: "English" },
+    { code: "zh", label: "中文" },
+    { code: "ms", label: "Malay" },
   ];
 
   const handleLangChange = (v: string) => {
