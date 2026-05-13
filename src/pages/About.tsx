@@ -75,14 +75,18 @@ const About = () => {
         <h2 className="text-3xl font-bold mb-6 text-center">{t("theChallenge")}</h2>
         <div className="grid md:grid-cols-3 gap-6">
           <Card className="p-6 shadow-custom-lg">
-            <div className="text-4xl mb-4">📊</div>
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+              <BarChart3 className="w-6 h-6 text-primary" />
+            </div>
             <h3 className="text-xl font-semibold mb-2 break-words">{t("lowRecyclingRate")}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed break-words">
               {t("lowRecyclingDesc")}
             </p>
           </Card>
           <Card className="p-6 shadow-custom-lg">
-            <div className="text-4xl mb-4">🗑️</div>
+            <div className="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center mb-4">
+              <Trash2 className="w-6 h-6 text-secondary" />
+            </div>
             <h3 className="text-xl font-semibold mb-2 break-words">{t("risingWaste")}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed break-words">
               {t("risingWasteDesc")}
