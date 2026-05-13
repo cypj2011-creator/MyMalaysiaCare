@@ -111,17 +111,22 @@ const About = () => {
       <div className="mb-12">
         <h2 className="text-3xl font-bold mb-6 text-center">{t("ourGoals")}</h2>
         <div className="grid md:grid-cols-2 gap-6">
-          {goals.map((goal, index) => (
-            <Card key={index} className="p-6 shadow-custom-lg">
-              <div className="flex items-start space-x-4">
-                <div className="text-4xl flex-shrink-0">{goal.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-semibold mb-2 break-words">{goal.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed break-words">{goal.description}</p>
+          {goals.map((goal, index) => {
+            const GoalIcon = goal.icon;
+            return (
+              <Card key={index} className="p-6 shadow-custom-lg">
+                <div className="flex items-start space-x-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <GoalIcon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-semibold mb-2 break-words">{goal.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed break-words">{goal.description}</p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       </div>
 
