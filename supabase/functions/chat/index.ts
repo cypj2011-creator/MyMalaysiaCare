@@ -18,11 +18,17 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
+    const cleanMessage = (value: string) => value
+      .replace(/\*\*\s*\.\s*\*\*/g, ".")
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+
     // Language-specific system prompts
     const systemPrompts = {
-      en: `You are a helpful AI assistant for MyMalaysiaCare, focused on recycling and environmental protection in Malaysia. Answer questions about recycling, eco-friendly practices, and environmental protection. Keep responses concise and practical.`,
-      zh: `您是 MyMalaysiaCare 的AI助手，专注于马来西亚的回收和环境保护。回答有关回收、环保实践和环境保护的问题。保持回答简洁实用。`,
-      ms: `Anda adalah pembantu AI untuk MyMalaysiaCare, memberi tumpuan kepada kitar semula dan perlindungan alam sekitar di Malaysia. Jawab soalan tentang kitar semula, amalan mesra alam, dan perlindungan alam sekitar. Pastikan jawapan ringkas dan praktikal.`
+      en: `You are a helpful AI assistant for MyMalaysiaCare, focused on recycling and environmental protection in Malaysia. Answer clearly and directly about recycling, eco-friendly practices, and environmental protection. Keep responses concise and practical. Do not use markdown bold markers.`,
+      zh: `您是 MyMalaysiaCare 的AI助手，专注于马来西亚的回收和环境保护。请直接回答有关回收、环保实践和环境保护的问题，保持简洁实用，不要使用 Markdown 粗体符号。`,
+      ms: `Anda adalah pembantu AI untuk MyMalaysiaCare, memberi tumpuan kepada kitar semula dan perlindungan alam sekitar di Malaysia. Jawab secara jelas tentang kitar semula, amalan mesra alam, dan perlindungan alam sekitar. Pastikan ringkas dan praktikal. Jangan gunakan simbol tebal Markdown.`
     };
 
     const systemPrompt = systemPrompts[language as keyof typeof systemPrompts] || systemPrompts.en;
@@ -76,7 +82,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const aiMessage = data.choices?.[0]?.message?.content || "I'm sorry, I couldn't generate a response.";
+    const aiMessage = cleanMessage(data.choices?.[0]?.message?.content || "I'm sorry, I couldn't generate a response.");
 
     return new Response(
       JSON.stringify({ message: aiMessage }), 
