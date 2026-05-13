@@ -151,31 +151,32 @@ const InteractiveMap = () => {
       
       try {
         // Load local data first for instant display
-        const localRes = await fetch(`${import.meta.env.BASE_URL}data/locations.json`);
+        const localRes = await fetchWithTimeout(`${import.meta.env.BASE_URL}data/locations.json`, {}, 2500);
         if (!cancelled && localRes.ok) {
           const local = await localRes.json();
           if (Array.isArray(local) && local.length) {
             setLocations(local);
-            setLoadingMessage("Loading rest of the locations...");
+            setLoading(false);
+            setLoadingMessage("");
           }
         }
       } catch (e) {
         console.warn("Local locations failed:", e);
       }
 
-      // Try to enhance with nationwide data in background
+      if (!cancelled) {
+        setLoading(false);
+        setLoadingMessage("");
+      }
+
+      // Try to enhance with nationwide data in background without blocking the map
       try {
         const nationwide = await fetchOverpassNationwide();
         if (!cancelled && Array.isArray(nationwide) && nationwide.length) {
-          setLocations(nationwide);
+          setLocations((current) => (current.length ? current : nationwide));
         }
       } catch (e) {
         console.warn("Nationwide data failed:", e);
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-          setLoadingMessage("");
-        }
       }
     }
     load();
