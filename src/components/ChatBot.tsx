@@ -237,6 +237,7 @@ const ChatBot = () => {
               size="icon"
               variant={isRecording ? "destructive" : "outline"}
               disabled={isLoading}
+              aria-label={isRecording ? "Stop recording" : "Start recording"}
             >
               {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
             </Button>
@@ -245,6 +246,7 @@ const ChatBot = () => {
               size="icon"
               className="gradient-primary"
               disabled={isLoading || isRecording}
+              aria-label="Send message"
             >
               {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
             </Button>
