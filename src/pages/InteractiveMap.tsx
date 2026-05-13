@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MapPin, Navigation, Phone, Clock, Recycle, Battery, Hospital } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,34 +47,39 @@ const InteractiveMap = () => {
   const [loading, setLoading] = useState(true);
   const [loadingMessage, setLoadingMessage] = useState("");
 
-  const filterTypes = [
+  const filterTypes = useMemo(() => [
     { id: "recycling", label: t("recyclingCenters"), color: "#10b981", Icon: Recycle },
     { id: "ewaste", label: t("ewastePoints"), color: "#3b82f6", Icon: Battery },
     { id: "hospital", label: t("hospitals"), color: "#ef4444", Icon: Hospital },
-  ];
+  ], [t]);
 
-  // Load nationwide data from OpenStreetMap Overpass API (fallback to bundled JSON)
+  const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeoutMs = 4000) => {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetch(url, { ...options, signal: controller.signal });
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
+  };
+
+  // Load a small, fast OpenStreetMap enhancement only after local data is visible
   const fetchOverpassNationwide = async (): Promise<Location[]> => {
     const query = `
-      [out:json][timeout:120];
+      [out:json][timeout:8];
       area["ISO3166-1"="MY"][admin_level=2]->.searchArea;
       (
         node["amenity"="hospital"](area.searchArea);
-        way["amenity"="hospital"](area.searchArea);
-        relation["amenity"="hospital"](area.searchArea);
-
         node["amenity"="recycling"](area.searchArea);
-        way["amenity"="recycling"](area.searchArea);
-        relation["amenity"="recycling"](area.searchArea);
-
       );
-      out center;
+      );
+      out center 450;
     `;
-    const resp = await fetch("https://overpass-api.de/api/interpreter", {
+    const resp = await fetchWithTimeout("https://overpass-api.de/api/interpreter", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       body: `data=${encodeURIComponent(query)}`,
-    });
+    }, 4000);
     if (!resp.ok) throw new Error(`Overpass error ${resp.status}`);
     const data = await resp.json();
     const elements = Array.isArray(data?.elements) ? data.elements : [];
