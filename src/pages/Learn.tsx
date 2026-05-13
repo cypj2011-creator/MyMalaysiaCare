@@ -102,12 +102,12 @@ const Learn = () => {
   ];
 
   const quickTips = [
-    "♻️ Clean, Dry, Empty: The golden rule of recycling",
-    "🔍 Use our RecycAI Scanner when in doubt",
-    "📦 Flatten boxes to save space",
-    "🚫 When in doubt, throw it out (contamination hurts recycling)",
-    "♻️ Recycle symbols matter: Look for #1 and #2 plastics",
-    "🌍 Every item recycled makes a difference",
+    "Clean, Dry, Empty: The golden rule of recycling",
+    "Use our RecycAI Scanner when in doubt",
+    "Flatten boxes to save space",
+    "When in doubt, throw it out (contamination hurts recycling)",
+    "Recycle symbols matter: Look for #1 and #2 plastics",
+    "Every item recycled makes a difference",
   ];
 
   return (
