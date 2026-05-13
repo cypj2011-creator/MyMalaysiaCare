@@ -194,22 +194,30 @@ const Learn = () => {
         <h3 className="text-xl font-semibold mb-4">{t("understandingSymbols")}</h3>
         <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center p-4 border rounded-lg">
-            <div className="text-4xl mb-2">♻️</div>
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
+              <Recycle className="w-5 h-5 text-primary" />
+            </div>
             <div className="font-semibold text-sm">#1 PET</div>
             <div className="text-xs text-muted-foreground">Water bottles</div>
           </div>
           <div className="text-center p-4 border rounded-lg">
-            <div className="text-4xl mb-2">♻️</div>
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
+              <Recycle className="w-5 h-5 text-primary" />
+            </div>
             <div className="font-semibold text-sm">#2 HDPE</div>
             <div className="text-xs text-muted-foreground">Milk jugs</div>
           </div>
           <div className="text-center p-4 border rounded-lg">
-            <div className="text-4xl mb-2">♻️</div>
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
+              <Recycle className="w-5 h-5 text-primary" />
+            </div>
             <div className="font-semibold text-sm">#5 PP</div>
             <div className="text-xs text-muted-foreground">Yogurt containers</div>
           </div>
           <div className="text-center p-4 border rounded-lg">
-            <div className="text-4xl mb-2">📄</div>
+            <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-2">
+              <Package className="w-5 h-5 text-secondary" />
+            </div>
             <div className="font-semibold text-sm">Paper</div>
             <div className="text-xs text-muted-foreground">Cardboard, newspaper</div>
           </div>
