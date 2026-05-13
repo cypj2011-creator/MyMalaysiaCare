@@ -30,6 +30,13 @@ const ChatBot = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
+  const cleanBotText = (text: string) =>
+    text
+      .replace(/\*\*\s*\.\s*\*\*/g, ".")
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -146,7 +153,7 @@ const ChatBot = () => {
       } else {
         const botMessage: Message = {
           id: messages.length + 2,
-          text: data.message || "I'm sorry, I couldn't generate a response.",
+          text: cleanBotText(data.message || "I'm sorry, I couldn't generate a response."),
           isBot: true,
         };
         setMessages((prev) => [...prev, botMessage]);
@@ -230,6 +237,7 @@ const ChatBot = () => {
               size="icon"
               variant={isRecording ? "destructive" : "outline"}
               disabled={isLoading}
+              aria-label={isRecording ? "Stop recording" : "Start recording"}
             >
               {isRecording ? <MicOff size={18} /> : <Mic size={18} />}
             </Button>
@@ -238,6 +246,7 @@ const ChatBot = () => {
               size="icon"
               className="gradient-primary"
               disabled={isLoading || isRecording}
+              aria-label="Send message"
             >
               {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
             </Button>

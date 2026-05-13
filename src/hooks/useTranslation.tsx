@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { translations, Language, TranslationKey } from "@/translations";
 
 export const useTranslation = () => {
@@ -24,9 +24,9 @@ export const useTranslation = () => {
     };
   }, []);
 
-  const t = (key: TranslationKey): string => {
+  const t = useCallback((key: TranslationKey): string => {
     return translations[lang][key] || translations.en[key] || key;
-  };
+  }, [lang]);
 
   return { t, lang };
 };
