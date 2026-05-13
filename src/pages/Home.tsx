@@ -4,10 +4,8 @@ import {
   Map, 
   BarChart3, 
   Leaf, 
-  Shield, 
   BookOpen,
   Recycle,
-  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -53,11 +51,6 @@ const Home = () => {
       <section className="relative py-20 px-4 overflow-hidden">
         <div className="absolute inset-0 gradient-hero opacity-10 -z-10" />
         <div className="container mx-auto text-center max-w-4xl">
-          <div className="inline-flex items-center space-x-2 bg-primary/10 px-4 py-2 rounded-full mb-6 animate-scale-in">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold text-primary">Malaysia Coolest Project 2026</span>
-          </div>
-          
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in">
             MyMalaysiaCare
           </h1>
@@ -133,7 +126,7 @@ const Home = () => {
       <section className="py-16 px-4">
         <Card className="container mx-auto max-w-4xl p-8 md:p-12 shadow-custom-xl gradient-hero text-white">
           <div className="text-center">
-            <Recycle className="w-16 h-16 mx-auto mb-6 animate-float" />
+            <Recycle className="w-16 h-16 mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               {t("getStarted")}
             </h2>
