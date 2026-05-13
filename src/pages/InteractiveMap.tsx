@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin, Navigation, Phone, Clock } from "lucide-react";
+import { MapPin, Navigation, Phone, Clock, Recycle, Battery, Hospital } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -48,9 +48,9 @@ const InteractiveMap = () => {
   const [loadingMessage, setLoadingMessage] = useState("");
 
   const filterTypes = [
-    { id: "recycling", label: t("recyclingCenters"), color: "#10b981", icon: "♻️" },
-    { id: "ewaste", label: t("ewastePoints"), color: "#3b82f6", icon: "🔋" },
-    { id: "hospital", label: t("hospitals"), color: "#ef4444", icon: "🏥" },
+    { id: "recycling", label: t("recyclingCenters"), color: "#10b981", Icon: Recycle },
+    { id: "ewaste", label: t("ewastePoints"), color: "#3b82f6", Icon: Battery },
+    { id: "hospital", label: t("hospitals"), color: "#ef4444", Icon: Hospital },
   ];
 
   // Load nationwide data from OpenStreetMap Overpass API (fallback to bundled JSON)
@@ -279,18 +279,21 @@ const InteractiveMap = () => {
       {/* Filters */}
       <Card className="p-4 mb-6 shadow-custom-md">
         <div className="flex flex-wrap gap-2">
-          {filterTypes.map((filter) => (
-            <Button
-              key={filter.id}
-              onClick={() => toggleFilter(filter.id)}
-              variant={activeFilters.includes(filter.id) ? "default" : "outline"}
-              size="sm"
-              className={activeFilters.includes(filter.id) ? "gradient-primary" : ""}
-            >
-              <span className="mr-2">{filter.icon}</span>
-              {filter.label}
-            </Button>
-          ))}
+          {filterTypes.map((filter) => {
+            const FilterIcon = filter.Icon;
+            return (
+              <Button
+                key={filter.id}
+                onClick={() => toggleFilter(filter.id)}
+                variant={activeFilters.includes(filter.id) ? "default" : "outline"}
+                size="sm"
+                className={activeFilters.includes(filter.id) ? "gradient-primary" : ""}
+              >
+                <FilterIcon className="mr-2" size={16} />
+                {filter.label}
+              </Button>
+            );
+          })}
         </div>
       </Card>
 

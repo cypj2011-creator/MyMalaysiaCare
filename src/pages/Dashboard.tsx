@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { TrendingUp, Recycle, Award, TreePine } from "lucide-react";
+import { TrendingUp, Recycle, Award, TreePine, Droplets, Zap, Trophy } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 
 interface Scan {
@@ -179,21 +179,27 @@ const Dashboard = () => {
             <h2 className="text-lg sm:text-xl font-semibold mb-4 break-words">{t("impactSummary")}</h2>
             <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
               <div className="text-center p-4 bg-primary/5 rounded-lg">
-                <div className="text-3xl sm:text-4xl mb-2">💧</div>
+                <div className="flex justify-center mb-2">
+                  <Droplets className="w-8 h-8 text-primary" />
+                </div>
                 <div className="text-xl sm:text-2xl font-bold text-primary mb-1 break-words">
                   {Math.round(Number(stats.recyclableCount) * 1.5)}L
                 </div>
                 <div className="text-xs sm:text-sm text-muted-foreground break-words">{t("waterSaved")}</div>
               </div>
               <div className="text-center p-4 bg-secondary/5 rounded-lg">
-                <div className="text-3xl sm:text-4xl mb-2">⚡</div>
+                <div className="flex justify-center mb-2">
+                  <Zap className="w-8 h-8 text-secondary" />
+                </div>
                 <div className="text-xl sm:text-2xl font-bold text-secondary mb-1 break-words">
                   {Math.round(Number(stats.recyclableCount) * 0.8)} kWh
                 </div>
                 <div className="text-xs sm:text-sm text-muted-foreground break-words">{t("energySaved")}</div>
               </div>
               <div className="text-center p-4 bg-accent/5 rounded-lg">
-                <div className="text-3xl sm:text-4xl mb-2">🏆</div>
+                <div className="flex justify-center mb-2">
+                  <Trophy className="w-8 h-8 text-accent" />
+                </div>
                 <div className="text-xl sm:text-2xl font-bold text-accent mb-1 break-words">
                   Level {Math.floor(Number(stats.totalScans) / 10) + 1}
                 </div>

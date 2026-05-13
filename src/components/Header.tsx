@@ -11,9 +11,9 @@ const Header = () => {
   const { user, signOut } = useAuth();
   const [lang, setLang] = useState<string>(() => localStorage.getItem("lang") || "en");
   const languages = [
-    { code: "en", label: "English", flag: "🇬🇧" },
-    { code: "zh", label: "中文", flag: "🇨🇳" },
-    { code: "ms", label: "Malay", flag: "🇲🇾" },
+    { code: "en", label: "English" },
+    { code: "zh", label: "中文" },
+    { code: "ms", label: "Malay" },
   ];
 
   const handleLangChange = (v: string) => {
@@ -68,7 +68,7 @@ const Header = () => {
               <SelectContent>
                 {languages.map((l) => (
                   <SelectItem key={l.code} value={l.code}>
-                    <span className="mr-2">{l.flag}</span> {l.label}
+                    {l.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -134,7 +134,7 @@ const Header = () => {
                 <SelectContent>
                   {languages.map((l) => (
                     <SelectItem key={l.code} value={l.code}>
-                      <span className="mr-2">{l.flag}</span> {l.label}
+                      {l.label}
                     </SelectItem>
                   ))}
                 </SelectContent>

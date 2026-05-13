@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Leaf, Lightbulb, Users, Target, Award, Code } from "lucide-react";
+import { Leaf, Lightbulb, Users, Target, Award, Code, Recycle, Trash2, BarChart3, Monitor } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 
 const About = () => {
@@ -34,17 +34,17 @@ const About = () => {
 
   const goals = [
     {
-      icon: "♻️",
+      icon: Recycle,
       title: t("increaseRecycling"),
       description: t("increaseRecyclingDesc")
     },
     {
-      icon: "🌱",
+      icon: Leaf,
       title: t("envEducation"),
       description: t("envEducationDesc")
     },
     {
-      icon: "📱",
+      icon: Monitor,
       title: t("techForGood"),
       description: t("techForGoodDesc")
     },
@@ -63,7 +63,7 @@ const About = () => {
 
       {/* Hero Mission */}
       <Card className="p-8 md:p-12 mb-12 shadow-custom-xl gradient-hero text-white text-center">
-        <Leaf className="w-16 h-16 mx-auto mb-6 animate-float" />
+        <Leaf className="w-16 h-16 mx-auto mb-6" />
         <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("ourMissionTitle")}</h2>
         <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
           {t("missionDescription")}
@@ -75,14 +75,18 @@ const About = () => {
         <h2 className="text-3xl font-bold mb-6 text-center">{t("theChallenge")}</h2>
         <div className="grid md:grid-cols-3 gap-6">
           <Card className="p-6 shadow-custom-lg">
-            <div className="text-4xl mb-4">📊</div>
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+              <BarChart3 className="w-6 h-6 text-primary" />
+            </div>
             <h3 className="text-xl font-semibold mb-2 break-words">{t("lowRecyclingRate")}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed break-words">
               {t("lowRecyclingDesc")}
             </p>
           </Card>
           <Card className="p-6 shadow-custom-lg">
-            <div className="text-4xl mb-4">🗑️</div>
+            <div className="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center mb-4">
+              <Trash2 className="w-6 h-6 text-secondary" />
+            </div>
             <h3 className="text-xl font-semibold mb-2 break-words">{t("risingWaste")}</h3>
             <p className="text-muted-foreground text-sm leading-relaxed break-words">
               {t("risingWasteDesc")}
@@ -111,17 +115,22 @@ const About = () => {
       <div className="mb-12">
         <h2 className="text-3xl font-bold mb-6 text-center">{t("ourGoals")}</h2>
         <div className="grid md:grid-cols-2 gap-6">
-          {goals.map((goal, index) => (
-            <Card key={index} className="p-6 shadow-custom-lg">
-              <div className="flex items-start space-x-4">
-                <div className="text-4xl flex-shrink-0">{goal.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-semibold mb-2 break-words">{goal.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed break-words">{goal.description}</p>
+          {goals.map((goal, index) => {
+            const GoalIcon = goal.icon;
+            return (
+              <Card key={index} className="p-6 shadow-custom-lg">
+                <div className="flex items-start space-x-4">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <GoalIcon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl font-semibold mb-2 break-words">{goal.title}</h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed break-words">{goal.description}</p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       </div>
 
