@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Leaf, Lightbulb, Users, Target, Award, Code } from "lucide-react";
+import { Leaf, Lightbulb, Users, Target, Award, Code, Recycle, Trash2, BarChart3, Monitor } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 
 const About = () => {
