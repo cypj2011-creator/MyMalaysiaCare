@@ -256,7 +256,7 @@ const InteractiveMap = () => {
     };
 
     addBatch(0);
-  }, [locations, activeFilters]);
+  }, [locations, activeFilters, filterTypes]);
 
   const toggleFilter = (filterId: string) => {
     setActiveFilters((prev) =>
