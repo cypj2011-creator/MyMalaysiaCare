@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MapPin, Navigation, Phone, Clock, Recycle, Battery, Hospital } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -53,7 +53,7 @@ const InteractiveMap = () => {
     { id: "hospital", label: t("hospitals"), color: "#ef4444", Icon: Hospital },
   ], [t]);
 
-  const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeoutMs = 4000) => {
+  const fetchWithTimeout = useCallback(async (url: string, options: RequestInit = {}, timeoutMs = 4000) => {
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -61,10 +61,10 @@ const InteractiveMap = () => {
     } finally {
       window.clearTimeout(timeoutId);
     }
-  };
+  }, []);
 
   // Load a small, fast OpenStreetMap enhancement only after local data is visible
-  const fetchOverpassNationwide = async (): Promise<Location[]> => {
+  const fetchOverpassNationwide = useCallback(async (): Promise<Location[]> => {
     const query = `
       [out:json][timeout:8];
       area["ISO3166-1"="MY"][admin_level=2]->.searchArea;
@@ -141,7 +141,7 @@ const InteractiveMap = () => {
       if (loc) out.push(loc);
     }
     return out;
-  };
+  }, [fetchWithTimeout]);
 
   useEffect(() => {
     let cancelled = false;
@@ -183,7 +183,7 @@ const InteractiveMap = () => {
     return () => {
       cancelled = true;
     };
-  }, [t]);
+  }, [t, fetchWithTimeout, fetchOverpassNationwide]);
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
