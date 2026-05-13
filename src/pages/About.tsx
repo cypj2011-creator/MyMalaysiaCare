@@ -34,17 +34,17 @@ const About = () => {
 
   const goals = [
     {
-      icon: "♻️",
+      icon: Recycle,
       title: t("increaseRecycling"),
       description: t("increaseRecyclingDesc")
     },
     {
-      icon: "🌱",
+      icon: Leaf,
       title: t("envEducation"),
       description: t("envEducationDesc")
     },
     {
-      icon: "📱",
+      icon: Monitor,
       title: t("techForGood"),
       description: t("techForGoodDesc")
     },
