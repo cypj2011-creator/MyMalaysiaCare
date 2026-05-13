@@ -68,7 +68,7 @@ const Header = () => {
               <SelectContent>
                 {languages.map((l) => (
                   <SelectItem key={l.code} value={l.code}>
-                    <span className="mr-2">{l.flag}</span> {l.label}
+                    {l.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -134,7 +134,7 @@ const Header = () => {
                 <SelectContent>
                   {languages.map((l) => (
                     <SelectItem key={l.code} value={l.code}>
-                      <span className="mr-2">{l.flag}</span> {l.label}
+                      {l.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
