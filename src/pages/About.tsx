@@ -63,7 +63,7 @@ const About = () => {
 
       {/* Hero Mission */}
       <Card className="p-8 md:p-12 mb-12 shadow-custom-xl gradient-hero text-white text-center">
-        <Leaf className="w-16 h-16 mx-auto mb-6 animate-float" />
+        <Leaf className="w-16 h-16 mx-auto mb-6" />
         <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("ourMissionTitle")}</h2>
         <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
           {t("missionDescription")}
