@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { TrendingUp, Recycle, Award, TreePine } from "lucide-react";
+import { TrendingUp, Recycle, Award, TreePine, Droplets, Zap, Trophy } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 
 interface Scan {
