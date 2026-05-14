@@ -66,20 +66,36 @@ const InteractiveMap = () => {
   // Load a small, fast OpenStreetMap enhancement only after local data is visible
   const fetchOverpassNationwide = useCallback(async (): Promise<Location[]> => {
     const query = `
-      [out:json][timeout:8];
+      [out:json][timeout:25];
       area["ISO3166-1"="MY"][admin_level=2]->.searchArea;
       (
         node["amenity"="hospital"](area.searchArea);
+        way["amenity"="hospital"](area.searchArea);
         node["amenity"="recycling"](area.searchArea);
+        way["amenity"="recycling"](area.searchArea);
+        node["amenity"="clinic"](area.searchArea);
       );
-      );
-      out center 450;
+      out center 2000;
     `;
-    const resp = await fetchWithTimeout("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-      body: `data=${encodeURIComponent(query)}`,
-    }, 4000);
+    const endpoints = [
+      "https://overpass-api.de/api/interpreter",
+      "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.openstreetmap.ru/api/interpreter",
+    ];
+    let resp: Response | null = null;
+    for (const url of endpoints) {
+      try {
+        resp = await fetchWithTimeout(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+          body: `data=${encodeURIComponent(query)}`,
+        }, 12000);
+        if (resp.ok) break;
+      } catch (e) {
+        resp = null;
+      }
+    }
+    if (!resp || !resp.ok) throw new Error(`Overpass error`);
     if (!resp.ok) throw new Error(`Overpass error ${resp.status}`);
     const data = await resp.json();
     const elements = Array.isArray(data?.elements) ? data.elements : [];
