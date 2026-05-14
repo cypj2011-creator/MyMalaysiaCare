@@ -66,20 +66,36 @@ const InteractiveMap = () => {
   // Load a small, fast OpenStreetMap enhancement only after local data is visible
   const fetchOverpassNationwide = useCallback(async (): Promise<Location[]> => {
     const query = `
-      [out:json][timeout:8];
+      [out:json][timeout:25];
       area["ISO3166-1"="MY"][admin_level=2]->.searchArea;
       (
         node["amenity"="hospital"](area.searchArea);
+        way["amenity"="hospital"](area.searchArea);
         node["amenity"="recycling"](area.searchArea);
+        way["amenity"="recycling"](area.searchArea);
+        node["amenity"="clinic"](area.searchArea);
       );
-      );
-      out center 450;
+      out center 2000;
     `;
-    const resp = await fetchWithTimeout("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-      body: `data=${encodeURIComponent(query)}`,
-    }, 4000);
+    const endpoints = [
+      "https://overpass-api.de/api/interpreter",
+      "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass.openstreetmap.ru/api/interpreter",
+    ];
+    let resp: Response | null = null;
+    for (const url of endpoints) {
+      try {
+        resp = await fetchWithTimeout(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+          body: `data=${encodeURIComponent(query)}`,
+        }, 12000);
+        if (resp.ok) break;
+      } catch (e) {
+        resp = null;
+      }
+    }
+    if (!resp || !resp.ok) throw new Error(`Overpass error`);
     if (!resp.ok) throw new Error(`Overpass error ${resp.status}`);
     const data = await resp.json();
     const elements = Array.isArray(data?.elements) ? data.elements : [];
@@ -91,7 +107,7 @@ const InteractiveMap = () => {
       if (typeof lat !== "number" || typeof lng !== "number") return null;
 
       let type: string | null = null;
-      if (tags.amenity === "hospital") type = "hospital";
+      if (tags.amenity === "hospital" || tags.amenity === "clinic") type = "hospital";
       else if (tags.amenity === "recycling") {
         const isEwaste =
           tags["recycling:electronics"] === "yes" ||
@@ -169,11 +185,24 @@ const InteractiveMap = () => {
         setLoadingMessage("");
       }
 
-      // Try to enhance with nationwide data in background without blocking the map
+      // Try to enhance with nationwide data in background — merge with local data
       try {
         const nationwide = await fetchOverpassNationwide();
         if (!cancelled && Array.isArray(nationwide) && nationwide.length) {
-          setLocations((current) => (current.length ? current : nationwide));
+          setLocations((current) => {
+            const seen = new Set(
+              current.map((l) => `${l.lat.toFixed(4)},${l.lng.toFixed(4)}`)
+            );
+            const merged = [...current];
+            let nextId = current.length ? Math.max(...current.map((l) => l.id)) + 1 : 1;
+            for (const loc of nationwide) {
+              const key = `${loc.lat.toFixed(4)},${loc.lng.toFixed(4)}`;
+              if (seen.has(key)) continue;
+              seen.add(key);
+              merged.push({ ...loc, id: nextId++ });
+            }
+            return merged;
+          });
         }
       } catch (e) {
         console.warn("Nationwide data failed:", e);
