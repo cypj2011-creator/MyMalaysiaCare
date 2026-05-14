@@ -107,7 +107,7 @@ const InteractiveMap = () => {
       if (typeof lat !== "number" || typeof lng !== "number") return null;
 
       let type: string | null = null;
-      if (tags.amenity === "hospital") type = "hospital";
+      if (tags.amenity === "hospital" || tags.amenity === "clinic") type = "hospital";
       else if (tags.amenity === "recycling") {
         const isEwaste =
           tags["recycling:electronics"] === "yes" ||
@@ -185,11 +185,24 @@ const InteractiveMap = () => {
         setLoadingMessage("");
       }
 
-      // Try to enhance with nationwide data in background without blocking the map
+      // Try to enhance with nationwide data in background — merge with local data
       try {
         const nationwide = await fetchOverpassNationwide();
         if (!cancelled && Array.isArray(nationwide) && nationwide.length) {
-          setLocations((current) => (current.length ? current : nationwide));
+          setLocations((current) => {
+            const seen = new Set(
+              current.map((l) => `${l.lat.toFixed(4)},${l.lng.toFixed(4)}`)
+            );
+            const merged = [...current];
+            let nextId = current.length ? Math.max(...current.map((l) => l.id)) + 1 : 1;
+            for (const loc of nationwide) {
+              const key = `${loc.lat.toFixed(4)},${loc.lng.toFixed(4)}`;
+              if (seen.has(key)) continue;
+              seen.add(key);
+              merged.push({ ...loc, id: nextId++ });
+            }
+            return merged;
+          });
         }
       } catch (e) {
         console.warn("Nationwide data failed:", e);
