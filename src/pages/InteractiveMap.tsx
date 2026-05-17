@@ -63,103 +63,23 @@ const InteractiveMap = () => {
     }
   }, []);
 
-  // Load a small, fast OpenStreetMap enhancement only after local data is visible
-  const fetchOverpassNationwide = useCallback(async (): Promise<Location[]> => {
-    const query = `
-      [out:json][timeout:60];
-      area["ISO3166-1"="MY"][admin_level=2]->.searchArea;
-      (
-        node["amenity"="hospital"](area.searchArea);
-        way["amenity"="hospital"](area.searchArea);
-        node["amenity"="clinic"](area.searchArea);
-        node["amenity"="recycling"](area.searchArea);
-        way["amenity"="recycling"](area.searchArea);
-      );
-      out center;
-    `;
-    const endpoints = [
-      "https://overpass.kumi.systems/api/interpreter",
-      "https://overpass-api.de/api/interpreter",
-      "https://overpass.openstreetmap.ru/api/interpreter",
-    ];
-    let resp: Response | null = null;
+  const mergeLocations = useCallback((incoming: Location[]) => {
+    if (!incoming.length) return;
+    setLocations((current) => {
+      const seen = new Set(current.map((l) => `${l.lat.toFixed(5)},${l.lng.toFixed(5)},${l.type}`));
+      const merged = [...current];
+      let nextId = current.length ? Math.max(...current.map((l) => l.id)) + 1 : 1;
 
-    for (const endpoint of endpoints) {
-      try {
-        const r = await fetchWithTimeout(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-          body: `data=${encodeURIComponent(query)}`,
-        }, 45000);
-        if (r.ok) { resp = r; break; }
-      } catch (e) {
-        continue;
-      }
-    }
-
-    if (!resp || !resp.ok) return [];
-
-    const data = await resp.json().catch(() => null);
-    const elements = Array.isArray(data?.elements) ? data.elements : [];
-
-    const toLocation = (el: any, idx: number): Location | null => {
-      const tags = el.tags || {};
-      const lat = el.lat ?? el.center?.lat;
-      const lng = el.lon ?? el.center?.lon;
-      if (typeof lat !== "number" || typeof lng !== "number") return null;
-
-      let type: string | null = null;
-      if (tags.amenity === "hospital" || tags.amenity === "clinic") type = "hospital";
-      else if (tags.amenity === "recycling") {
-        const isEwaste =
-          tags["recycling:electronics"] === "yes" ||
-          tags["recycling:electrical_items"] === "yes" ||
-          tags["recycling:batteries"] === "yes";
-        type = isEwaste ? "ewaste" : "recycling";
+      for (const loc of incoming) {
+        const key = `${loc.lat.toFixed(5)},${loc.lng.toFixed(5)},${loc.type}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        merged.push({ ...loc, id: nextId++ });
       }
 
-      if (!type) return null;
-
-      const address =
-        tags["addr:full"] ||
-        [tags["addr:housenumber"], tags["addr:street"], tags["addr:city"], tags["addr:state"]]
-          .filter(Boolean)
-          .join(", ") ||
-        "Malaysia";
-
-      const accepts: string[] | undefined =
-        type === "recycling" || type === "ewaste"
-          ? ([
-              tags["recycling:glass"] === "yes" && "glass",
-              tags["recycling:paper"] === "yes" && "paper",
-              tags["recycling:plastic"] === "yes" && "plastic",
-              tags["recycling:metal"] === "yes" && "metal",
-              tags["recycling:cardboard"] === "yes" && "cardboard",
-              (tags["recycling:electronics"] === "yes" || tags["recycling:electrical_items"] === "yes") && "electronics",
-              tags["recycling:batteries"] === "yes" && "batteries",
-            ].filter(Boolean) as string[])
-          : undefined;
-
-      return {
-        id: el.id ?? idx,
-        name: tags.name || (type === "hospital" ? "Hospital" : "Recycling Point"),
-        type,
-        lat,
-        lng,
-        address,
-        hours: tags.opening_hours,
-        phone: tags.phone || tags["contact:phone"],
-        accepts,
-      };
-    };
-
-    const out: Location[] = [];
-    for (let i = 0; i < elements.length; i++) {
-      const loc = toLocation(elements[i], i);
-      if (loc) out.push(loc);
-    }
-    return out;
-  }, [fetchWithTimeout]);
+      return merged;
+    });
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -179,24 +99,12 @@ const InteractiveMap = () => {
         console.warn("Local locations failed:", e);
       }
 
-      // Keep "Location loading" notification visible while fetching nationwide data
+      // Keep "Location loading" notification visible while adding Malaysia-wide locations
       try {
-        const nationwide = await fetchOverpassNationwide();
-        if (!cancelled && Array.isArray(nationwide) && nationwide.length) {
-          setLocations((current) => {
-            const seen = new Set(
-              current.map((l) => `${l.lat.toFixed(4)},${l.lng.toFixed(4)}`)
-            );
-            const merged = [...current];
-            let nextId = current.length ? Math.max(...current.map((l) => l.id)) + 1 : 1;
-            for (const loc of nationwide) {
-              const key = `${loc.lat.toFixed(4)},${loc.lng.toFixed(4)}`;
-              if (seen.has(key)) continue;
-              seen.add(key);
-              merged.push({ ...loc, id: nextId++ });
-            }
-            return merged;
-          });
+        const malaysiaRes = await fetchWithTimeout(`${import.meta.env.BASE_URL}data/malaysia-osm-locations.json`, {}, 8000);
+        if (!cancelled && malaysiaRes.ok) {
+          const malaysiaLocations = await malaysiaRes.json();
+          if (Array.isArray(malaysiaLocations)) mergeLocations(malaysiaLocations);
         }
       } catch (e) {
         console.warn("Nationwide data failed:", e);
@@ -211,7 +119,7 @@ const InteractiveMap = () => {
     return () => {
       cancelled = true;
     };
-  }, [t, fetchWithTimeout, fetchOverpassNationwide]);
+  }, [t, fetchWithTimeout, mergeLocations]);
 
   useEffect(() => {
     const ensureRouteBase = () => {
