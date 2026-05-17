@@ -8,6 +8,3 @@ verify_jwt = false
 
 [functions.transcribe-audio]
 verify_jwt = false
-
-[functions.malaysia-locations]
-verify_jwt = false
