@@ -66,28 +66,38 @@ const InteractiveMap = () => {
   // Load a small, fast OpenStreetMap enhancement only after local data is visible
   const fetchOverpassNationwide = useCallback(async (): Promise<Location[]> => {
     const query = `
-      [out:json][timeout:12];
+      [out:json][timeout:60];
       area["ISO3166-1"="MY"][admin_level=2]->.searchArea;
       (
         node["amenity"="hospital"](area.searchArea);
+        way["amenity"="hospital"](area.searchArea);
+        node["amenity"="clinic"](area.searchArea);
         node["amenity"="recycling"](area.searchArea);
+        way["amenity"="recycling"](area.searchArea);
       );
-      out center 500;
+      out center;
     `;
-    const endpoint = "https://overpass.kumi.systems/api/interpreter";
-    let resp: Response;
+    const endpoints = [
+      "https://overpass.kumi.systems/api/interpreter",
+      "https://overpass-api.de/api/interpreter",
+      "https://overpass.openstreetmap.ru/api/interpreter",
+    ];
+    let resp: Response | null = null;
 
-    try {
-      resp = await fetchWithTimeout(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-        body: `data=${encodeURIComponent(query)}`,
-      }, 6000);
-    } catch (e) {
-      return [];
+    for (const endpoint of endpoints) {
+      try {
+        const r = await fetchWithTimeout(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+          body: `data=${encodeURIComponent(query)}`,
+        }, 45000);
+        if (r.ok) { resp = r; break; }
+      } catch (e) {
+        continue;
+      }
     }
 
-    if (!resp.ok) return [];
+    if (!resp || !resp.ok) return [];
 
     const data = await resp.json().catch(() => null);
     const elements = Array.isArray(data?.elements) ? data.elements : [];
@@ -158,26 +168,18 @@ const InteractiveMap = () => {
       setLoadingMessage(t("loadingLocations"));
       
       try {
-        // Load local data first for instant display
         const localRes = await fetchWithTimeout(`${import.meta.env.BASE_URL}data/locations.json`, {}, 2500);
         if (!cancelled && localRes.ok) {
           const local = await localRes.json();
           if (Array.isArray(local) && local.length) {
             setLocations(local);
-            setLoading(false);
-            setLoadingMessage("");
           }
         }
       } catch (e) {
         console.warn("Local locations failed:", e);
       }
 
-      if (!cancelled) {
-        setLoading(false);
-        setLoadingMessage("");
-      }
-
-      // Try to enhance with nationwide data in background — merge with local data
+      // Keep "Location loading" notification visible while fetching nationwide data
       try {
         const nationwide = await fetchOverpassNationwide();
         if (!cancelled && Array.isArray(nationwide) && nationwide.length) {
@@ -198,6 +200,11 @@ const InteractiveMap = () => {
         }
       } catch (e) {
         console.warn("Nationwide data failed:", e);
+      }
+
+      if (!cancelled) {
+        setLoading(false);
+        setLoadingMessage("");
       }
     }
     load();
