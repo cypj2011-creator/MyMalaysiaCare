@@ -3,7 +3,6 @@ import { MapPin, Navigation, Phone, Clock, Recycle, Battery, Hospital } from "lu
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
-import { supabase } from "@/integrations/supabase/client";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -64,19 +63,6 @@ const InteractiveMap = () => {
     }
   }, []);
 
-  const malaysiaSearchAreas = useMemo(() => [
-    { name: "Northern Peninsula", bbox: "5.05,99.55,6.85,101.25" },
-    { name: "Perak", bbox: "3.65,100.35,5.75,101.85" },
-    { name: "Klang Valley", bbox: "2.65,100.85,3.95,102.15" },
-    { name: "Southern Peninsula", bbox: "1.15,101.65,2.95,104.35" },
-    { name: "East Coast Peninsula", bbox: "3.55,101.65,6.35,103.75" },
-    { name: "West Sabah", bbox: "4.65,115.05,6.85,116.75" },
-    { name: "East Sabah", bbox: "4.05,116.55,7.35,119.45" },
-    { name: "West Sarawak", bbox: "0.75,109.45,2.45,111.95" },
-    { name: "Central Sarawak", bbox: "1.25,111.55,3.75,114.25" },
-    { name: "North Sarawak", bbox: "2.55,113.75,5.15,115.75" },
-  ], []);
-
   const mergeLocations = useCallback((incoming: Location[]) => {
     if (!incoming.length) return;
     setLocations((current) => {
@@ -93,34 +79,6 @@ const InteractiveMap = () => {
 
       return merged;
     });
-  }, []);
-
-  const fetchOverpassArea = useCallback(async (bbox: string, areaIndex: number): Promise<Location[]> => {
-    const { data, error } = await supabase.functions.invoke("malaysia-locations", {
-      body: { bbox },
-    });
-
-    if (error || !Array.isArray(data?.locations)) return [];
-
-    return data.locations
-      .filter((loc: Partial<Location>) =>
-        typeof loc.name === "string" &&
-        typeof loc.type === "string" &&
-        typeof loc.lat === "number" &&
-        typeof loc.lng === "number" &&
-        typeof loc.address === "string"
-      )
-      .map((loc: Partial<Location>, idx: number) => ({
-        id: areaIndex * 100000 + idx + 1000,
-        name: loc.name!,
-        type: loc.type!,
-        lat: loc.lat!,
-        lng: loc.lng!,
-        address: loc.address!,
-        hours: loc.hours,
-        phone: loc.phone,
-        accepts: loc.accepts,
-      }));
   }, []);
 
   useEffect(() => {
@@ -141,14 +99,12 @@ const InteractiveMap = () => {
         console.warn("Local locations failed:", e);
       }
 
-      // Keep "Location loading" notification visible while fetching all Malaysia areas
+      // Keep "Location loading" notification visible while adding Malaysia-wide locations
       try {
-        for (let i = 0; i < malaysiaSearchAreas.length; i++) {
-          if (cancelled) break;
-          const areaLocations = await fetchOverpassArea(malaysiaSearchAreas[i].bbox, i);
-          if (!cancelled) {
-            mergeLocations(areaLocations);
-          }
+        const malaysiaRes = await fetchWithTimeout(`${import.meta.env.BASE_URL}data/malaysia-osm-locations.json`, {}, 8000);
+        if (!cancelled && malaysiaRes.ok) {
+          const malaysiaLocations = await malaysiaRes.json();
+          if (Array.isArray(malaysiaLocations)) mergeLocations(malaysiaLocations);
         }
       } catch (e) {
         console.warn("Nationwide data failed:", e);
@@ -163,7 +119,7 @@ const InteractiveMap = () => {
     return () => {
       cancelled = true;
     };
-  }, [t, fetchWithTimeout, fetchOverpassArea, malaysiaSearchAreas, mergeLocations]);
+  }, [t, fetchWithTimeout, mergeLocations]);
 
   useEffect(() => {
     const ensureRouteBase = () => {
