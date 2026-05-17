@@ -63,19 +63,100 @@ const InteractiveMap = () => {
     }
   }, []);
 
-  // Load a small, fast OpenStreetMap enhancement only after local data is visible
-  const fetchOverpassNationwide = useCallback(async (): Promise<Location[]> => {
+  const malaysiaSearchAreas = useMemo(() => [
+    { name: "Northern Peninsula", bbox: "5.05,99.55,6.85,101.25" },
+    { name: "Perak", bbox: "3.65,100.35,5.75,101.85" },
+    { name: "Klang Valley", bbox: "2.65,100.85,3.95,102.15" },
+    { name: "Southern Peninsula", bbox: "1.15,101.65,2.95,104.35" },
+    { name: "East Coast Peninsula", bbox: "3.55,101.65,6.35,103.75" },
+    { name: "West Sabah", bbox: "4.65,115.05,6.85,116.75" },
+    { name: "East Sabah", bbox: "4.05,116.55,7.35,119.45" },
+    { name: "West Sarawak", bbox: "0.75,109.45,2.45,111.95" },
+    { name: "Central Sarawak", bbox: "1.25,111.55,3.75,114.25" },
+    { name: "North Sarawak", bbox: "2.55,113.75,5.15,115.75" },
+  ], []);
+
+  const mapOverpassElement = useCallback((el: any, idx: number): Location | null => {
+    const tags = el.tags || {};
+    const lat = el.lat ?? el.center?.lat;
+    const lng = el.lon ?? el.center?.lon;
+    if (typeof lat !== "number" || typeof lng !== "number") return null;
+
+    let type: string | null = null;
+    if (tags.amenity === "hospital" || tags.amenity === "clinic") type = "hospital";
+    else if (tags.amenity === "recycling") {
+      const isEwaste =
+        tags["recycling:electronics"] === "yes" ||
+        tags["recycling:electrical_items"] === "yes" ||
+        tags["recycling:batteries"] === "yes";
+      type = isEwaste ? "ewaste" : "recycling";
+    }
+
+    if (!type) return null;
+
+    const address =
+      tags["addr:full"] ||
+      [tags["addr:housenumber"], tags["addr:street"], tags["addr:city"], tags["addr:state"]]
+        .filter(Boolean)
+        .join(", ") ||
+      "Malaysia";
+
+    const accepts: string[] | undefined =
+      type === "recycling" || type === "ewaste"
+        ? ([
+            tags["recycling:glass"] === "yes" && "glass",
+            tags["recycling:paper"] === "yes" && "paper",
+            tags["recycling:plastic"] === "yes" && "plastic",
+            tags["recycling:metal"] === "yes" && "metal",
+            tags["recycling:cardboard"] === "yes" && "cardboard",
+            (tags["recycling:electronics"] === "yes" || tags["recycling:electrical_items"] === "yes") && "electronics",
+            tags["recycling:batteries"] === "yes" && "batteries",
+          ].filter(Boolean) as string[])
+        : undefined;
+
+    return {
+      id: typeof el.id === "number" ? el.id : idx,
+      name: tags.name || (type === "hospital" ? "Hospital / Clinic" : "Recycling Point"),
+      type,
+      lat,
+      lng,
+      address,
+      hours: tags.opening_hours,
+      phone: tags.phone || tags["contact:phone"],
+      accepts,
+    };
+  }, []);
+
+  const mergeLocations = useCallback((incoming: Location[]) => {
+    if (!incoming.length) return;
+    setLocations((current) => {
+      const seen = new Set(current.map((l) => `${l.lat.toFixed(5)},${l.lng.toFixed(5)},${l.type}`));
+      const merged = [...current];
+      let nextId = current.length ? Math.max(...current.map((l) => l.id)) + 1 : 1;
+
+      for (const loc of incoming) {
+        const key = `${loc.lat.toFixed(5)},${loc.lng.toFixed(5)},${loc.type}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        merged.push({ ...loc, id: nextId++ });
+      }
+
+      return merged;
+    });
+  }, []);
+
+  const fetchOverpassArea = useCallback(async (bbox: string, areaIndex: number): Promise<Location[]> => {
     const query = `
-      [out:json][timeout:60];
-      area["ISO3166-1"="MY"][admin_level=2]->.searchArea;
+      [out:json][timeout:25];
       (
-        node["amenity"="hospital"](area.searchArea);
-        way["amenity"="hospital"](area.searchArea);
-        node["amenity"="clinic"](area.searchArea);
-        node["amenity"="recycling"](area.searchArea);
-        way["amenity"="recycling"](area.searchArea);
+        node["amenity"="hospital"](${bbox});
+        way["amenity"="hospital"](${bbox});
+        node["amenity"="clinic"](${bbox});
+        way["amenity"="clinic"](${bbox});
+        node["amenity"="recycling"](${bbox});
+        way["amenity"="recycling"](${bbox});
       );
-      out center;
+      out center 10000;
     `;
     const endpoints = [
       "https://overpass.kumi.systems/api/interpreter",
@@ -90,7 +171,7 @@ const InteractiveMap = () => {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
           body: `data=${encodeURIComponent(query)}`,
-        }, 45000);
+        }, 18000);
         if (r.ok) { resp = r; break; }
       } catch (e) {
         continue;
@@ -102,64 +183,13 @@ const InteractiveMap = () => {
     const data = await resp.json().catch(() => null);
     const elements = Array.isArray(data?.elements) ? data.elements : [];
 
-    const toLocation = (el: any, idx: number): Location | null => {
-      const tags = el.tags || {};
-      const lat = el.lat ?? el.center?.lat;
-      const lng = el.lon ?? el.center?.lon;
-      if (typeof lat !== "number" || typeof lng !== "number") return null;
-
-      let type: string | null = null;
-      if (tags.amenity === "hospital" || tags.amenity === "clinic") type = "hospital";
-      else if (tags.amenity === "recycling") {
-        const isEwaste =
-          tags["recycling:electronics"] === "yes" ||
-          tags["recycling:electrical_items"] === "yes" ||
-          tags["recycling:batteries"] === "yes";
-        type = isEwaste ? "ewaste" : "recycling";
-      }
-
-      if (!type) return null;
-
-      const address =
-        tags["addr:full"] ||
-        [tags["addr:housenumber"], tags["addr:street"], tags["addr:city"], tags["addr:state"]]
-          .filter(Boolean)
-          .join(", ") ||
-        "Malaysia";
-
-      const accepts: string[] | undefined =
-        type === "recycling" || type === "ewaste"
-          ? ([
-              tags["recycling:glass"] === "yes" && "glass",
-              tags["recycling:paper"] === "yes" && "paper",
-              tags["recycling:plastic"] === "yes" && "plastic",
-              tags["recycling:metal"] === "yes" && "metal",
-              tags["recycling:cardboard"] === "yes" && "cardboard",
-              (tags["recycling:electronics"] === "yes" || tags["recycling:electrical_items"] === "yes") && "electronics",
-              tags["recycling:batteries"] === "yes" && "batteries",
-            ].filter(Boolean) as string[])
-          : undefined;
-
-      return {
-        id: el.id ?? idx,
-        name: tags.name || (type === "hospital" ? "Hospital" : "Recycling Point"),
-        type,
-        lat,
-        lng,
-        address,
-        hours: tags.opening_hours,
-        phone: tags.phone || tags["contact:phone"],
-        accepts,
-      };
-    };
-
     const out: Location[] = [];
     for (let i = 0; i < elements.length; i++) {
-      const loc = toLocation(elements[i], i);
+      const loc = mapOverpassElement(elements[i], areaIndex * 100000 + i);
       if (loc) out.push(loc);
     }
     return out;
-  }, [fetchWithTimeout]);
+  }, [fetchWithTimeout, mapOverpassElement]);
 
   useEffect(() => {
     let cancelled = false;
