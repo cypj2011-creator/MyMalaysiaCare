@@ -168,26 +168,18 @@ const InteractiveMap = () => {
       setLoadingMessage(t("loadingLocations"));
       
       try {
-        // Load local data first for instant display
         const localRes = await fetchWithTimeout(`${import.meta.env.BASE_URL}data/locations.json`, {}, 2500);
         if (!cancelled && localRes.ok) {
           const local = await localRes.json();
           if (Array.isArray(local) && local.length) {
             setLocations(local);
-            setLoading(false);
-            setLoadingMessage("");
           }
         }
       } catch (e) {
         console.warn("Local locations failed:", e);
       }
 
-      if (!cancelled) {
-        setLoading(false);
-        setLoadingMessage("");
-      }
-
-      // Try to enhance with nationwide data in background — merge with local data
+      // Keep "Location loading" notification visible while fetching nationwide data
       try {
         const nationwide = await fetchOverpassNationwide();
         if (!cancelled && Array.isArray(nationwide) && nationwide.length) {
@@ -208,6 +200,11 @@ const InteractiveMap = () => {
         }
       } catch (e) {
         console.warn("Nationwide data failed:", e);
+      }
+
+      if (!cancelled) {
+        setLoading(false);
+        setLoadingMessage("");
       }
     }
     load();
