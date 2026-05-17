@@ -3,6 +3,7 @@ import { MapPin, Navigation, Phone, Clock, Recycle, Battery, Hospital } from "lu
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
+import { supabase } from "@/integrations/supabase/client";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -76,57 +77,6 @@ const InteractiveMap = () => {
     { name: "North Sarawak", bbox: "2.55,113.75,5.15,115.75" },
   ], []);
 
-  const mapOverpassElement = useCallback((el: any, idx: number): Location | null => {
-    const tags = el.tags || {};
-    const lat = el.lat ?? el.center?.lat;
-    const lng = el.lon ?? el.center?.lon;
-    if (typeof lat !== "number" || typeof lng !== "number") return null;
-
-    let type: string | null = null;
-    if (tags.amenity === "hospital" || tags.amenity === "clinic") type = "hospital";
-    else if (tags.amenity === "recycling") {
-      const isEwaste =
-        tags["recycling:electronics"] === "yes" ||
-        tags["recycling:electrical_items"] === "yes" ||
-        tags["recycling:batteries"] === "yes";
-      type = isEwaste ? "ewaste" : "recycling";
-    }
-
-    if (!type) return null;
-
-    const address =
-      tags["addr:full"] ||
-      [tags["addr:housenumber"], tags["addr:street"], tags["addr:city"], tags["addr:state"]]
-        .filter(Boolean)
-        .join(", ") ||
-      "Malaysia";
-
-    const accepts: string[] | undefined =
-      type === "recycling" || type === "ewaste"
-        ? ([
-            tags["recycling:glass"] === "yes" && "glass",
-            tags["recycling:paper"] === "yes" && "paper",
-            tags["recycling:plastic"] === "yes" && "plastic",
-            tags["recycling:metal"] === "yes" && "metal",
-            tags["recycling:cardboard"] === "yes" && "cardboard",
-            (tags["recycling:electronics"] === "yes" || tags["recycling:electrical_items"] === "yes") && "electronics",
-            tags["recycling:batteries"] === "yes" && "batteries",
-          ].filter(Boolean) as string[])
-        : undefined;
-
-    return {
-      id: typeof el.id === "number" ? el.id : idx,
-      name: tags.name || (type === "hospital" ? "Hospital / Clinic" : "Recycling Point"),
-      type,
-      lat,
-      lng,
-      address,
-      hours: tags.opening_hours,
-      phone: tags.phone || tags["contact:phone"],
-      accepts,
-    };
-  }, []);
-
   const mergeLocations = useCallback((incoming: Location[]) => {
     if (!incoming.length) return;
     setLocations((current) => {
@@ -146,50 +96,32 @@ const InteractiveMap = () => {
   }, []);
 
   const fetchOverpassArea = useCallback(async (bbox: string, areaIndex: number): Promise<Location[]> => {
-    const query = `
-      [out:json][timeout:25];
-      (
-        node["amenity"="hospital"](${bbox});
-        way["amenity"="hospital"](${bbox});
-        node["amenity"="clinic"](${bbox});
-        way["amenity"="clinic"](${bbox});
-        node["amenity"="recycling"](${bbox});
-        way["amenity"="recycling"](${bbox});
-      );
-      out center 10000;
-    `;
-    const endpoints = [
-      "https://overpass.kumi.systems/api/interpreter",
-      "https://overpass-api.de/api/interpreter",
-      "https://overpass.openstreetmap.ru/api/interpreter",
-    ];
-    let resp: Response | null = null;
+    const { data, error } = await supabase.functions.invoke("malaysia-locations", {
+      body: { bbox },
+    });
 
-    for (const endpoint of endpoints) {
-      try {
-        const r = await fetchWithTimeout(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-          body: `data=${encodeURIComponent(query)}`,
-        }, 18000);
-        if (r.ok) { resp = r; break; }
-      } catch (e) {
-        continue;
-      }
-    }
+    if (error || !Array.isArray(data?.locations)) return [];
 
-    if (!resp || !resp.ok) return [];
-
-    const data = await resp.json().catch(() => null);
-    const elements = Array.isArray(data?.elements) ? data.elements : [];
-
-    const out: Location[] = [];
-    for (let i = 0; i < elements.length; i++) {
-      const loc = mapOverpassElement(elements[i], areaIndex * 100000 + i);
-      if (loc) out.push(loc);
-    }
-    return out;
-  }, [fetchWithTimeout, mapOverpassElement]);
+    return data.locations
+      .filter((loc: Partial<Location>) =>
+        typeof loc.name === "string" &&
+        typeof loc.type === "string" &&
+        typeof loc.lat === "number" &&
+        typeof loc.lng === "number" &&
+        typeof loc.address === "string"
+      )
+      .map((loc: Partial<Location>, idx: number) => ({
+        id: areaIndex * 100000 + idx + 1000,
+        name: loc.name!,
+        type: loc.type!,
+        lat: loc.lat!,
+        lng: loc.lng!,
+        address: loc.address!,
+        hours: loc.hours,
+        phone: loc.phone,
+        accepts: loc.accepts,
+      }));
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
