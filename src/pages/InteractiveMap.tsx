@@ -209,24 +209,14 @@ const InteractiveMap = () => {
         console.warn("Local locations failed:", e);
       }
 
-      // Keep "Location loading" notification visible while fetching nationwide data
+      // Keep "Location loading" notification visible while fetching all Malaysia areas
       try {
-        const nationwide = await fetchOverpassNationwide();
-        if (!cancelled && Array.isArray(nationwide) && nationwide.length) {
-          setLocations((current) => {
-            const seen = new Set(
-              current.map((l) => `${l.lat.toFixed(4)},${l.lng.toFixed(4)}`)
-            );
-            const merged = [...current];
-            let nextId = current.length ? Math.max(...current.map((l) => l.id)) + 1 : 1;
-            for (const loc of nationwide) {
-              const key = `${loc.lat.toFixed(4)},${loc.lng.toFixed(4)}`;
-              if (seen.has(key)) continue;
-              seen.add(key);
-              merged.push({ ...loc, id: nextId++ });
-            }
-            return merged;
-          });
+        for (let i = 0; i < malaysiaSearchAreas.length; i++) {
+          if (cancelled) break;
+          const areaLocations = await fetchOverpassArea(malaysiaSearchAreas[i].bbox, i);
+          if (!cancelled) {
+            mergeLocations(areaLocations);
+          }
         }
       } catch (e) {
         console.warn("Nationwide data failed:", e);
@@ -241,7 +231,7 @@ const InteractiveMap = () => {
     return () => {
       cancelled = true;
     };
-  }, [t, fetchWithTimeout, fetchOverpassNationwide]);
+  }, [t, fetchWithTimeout, fetchOverpassArea, malaysiaSearchAreas, mergeLocations]);
 
   useEffect(() => {
     const ensureRouteBase = () => {
