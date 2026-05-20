@@ -156,53 +156,66 @@ const InteractiveMap = () => {
   }, []);
 
   useEffect(() => {
-    if (!mapRef.current || locations.length === 0) return;
+    const map = mapRef.current;
+    if (!map || locations.length === 0) return;
 
-    // Remove previous markers layer, if any
-    if (markersLayerRef.current) {
-      mapRef.current.removeLayer(markersLayerRef.current);
-      markersLayerRef.current = null;
-    }
-
-    const group = L.layerGroup();
-    group.addTo(mapRef.current);
-    markersLayerRef.current = group;
-
-    // Add markers for filtered locations using a high-performance canvas renderer
     const filteredLocations = locations.filter((loc) =>
       activeFilters.includes(loc.type)
     );
+    const colorByType: Record<string, string> = Object.fromEntries(
+      filterTypes.map((f) => [f.id, f.color])
+    );
 
-    const batchSize = 300;
-    const addBatch = (start: number) => {
-      const end = Math.min(start + batchSize, filteredLocations.length);
-      for (let i = start; i < end; i++) {
-        const location = filteredLocations[i];
-        const markerColor =
-          filterTypes.find((f) => f.id === location.type)?.color || "#10b981";
+    const render = () => {
+      if (markersLayerRef.current) {
+        map.removeLayer(markersLayerRef.current);
+        markersLayerRef.current = null;
+      }
 
+      const bounds = map.getBounds().pad(0.2);
+      const zoom = map.getZoom();
+      const radius = zoom >= 13 ? 7 : zoom >= 10 ? 5 : zoom >= 8 ? 4 : 3;
+
+      // Cap markers visible at once for snappy zoom
+      const visible: Location[] = [];
+      for (const loc of filteredLocations) {
+        if (bounds.contains([loc.lat, loc.lng])) {
+          visible.push(loc);
+          if (visible.length >= 1500) break;
+        }
+      }
+
+      const group = L.layerGroup();
+      for (const location of visible) {
         const circle = L.circleMarker([location.lat, location.lng], {
           renderer: canvasRendererRef.current || undefined,
-          radius: 6,
+          radius,
           color: "#ffffff",
           weight: 1,
-          fillColor: markerColor,
+          fillColor: colorByType[location.type] || "#10b981",
           fillOpacity: 0.9,
-        })
-          .addTo(group)
-          .on("click", () => {
-            setSelectedLocation(location);
-            mapRef.current?.setView([location.lat, location.lng], 12);
-          });
-
+        }).on("click", () => {
+          setSelectedLocation(location);
+        });
         circle.bindPopup(`<strong>${location.name}</strong><br>${location.address}`);
+        group.addLayer(circle);
       }
-      if (end < filteredLocations.length) {
-        requestAnimationFrame(() => addBatch(end));
-      }
+      group.addTo(map);
+      markersLayerRef.current = group;
     };
 
-    addBatch(0);
+    let raf = 0;
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(render);
+    };
+
+    render();
+    map.on("moveend zoomend", schedule);
+    return () => {
+      cancelAnimationFrame(raf);
+      map.off("moveend zoomend", schedule);
+    };
   }, [locations, activeFilters, filterTypes]);
 
   const toggleFilter = (filterId: string) => {
