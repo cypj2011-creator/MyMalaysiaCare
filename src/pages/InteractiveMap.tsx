@@ -166,55 +166,38 @@ const InteractiveMap = () => {
       filterTypes.map((f) => [f.id, f.color])
     );
 
-    const render = () => {
+    // Render ALL locations once into a single canvas layer.
+    // circleMarker keeps a constant pixel size — it does NOT jump because
+    // we never re-add markers on zoom; Leaflet's canvas renderer redraws
+    // them in lockstep with the map's zoom animation.
+    if (markersLayerRef.current) {
+      map.removeLayer(markersLayerRef.current);
+      markersLayerRef.current = null;
+    }
+
+    const group = L.layerGroup();
+    for (const location of filteredLocations) {
+      const circle = L.circleMarker([location.lat, location.lng], {
+        renderer: canvasRendererRef.current || undefined,
+        radius: 5,
+        color: "#ffffff",
+        weight: 1,
+        fillColor: colorByType[location.type] || "#10b981",
+        fillOpacity: 0.9,
+      }).on("click", () => {
+        setSelectedLocation(location);
+      });
+      circle.bindPopup(`<strong>${location.name}</strong><br>${location.address}`);
+      group.addLayer(circle);
+    }
+    group.addTo(map);
+    markersLayerRef.current = group;
+
+    return () => {
       if (markersLayerRef.current) {
         map.removeLayer(markersLayerRef.current);
         markersLayerRef.current = null;
       }
-
-      const bounds = map.getBounds().pad(0.2);
-      const zoom = map.getZoom();
-      const radius = zoom >= 13 ? 7 : zoom >= 10 ? 5 : zoom >= 8 ? 4 : 3;
-
-      // Cap markers visible at once for snappy zoom
-      const visible: Location[] = [];
-      for (const loc of filteredLocations) {
-        if (bounds.contains([loc.lat, loc.lng])) {
-          visible.push(loc);
-          if (visible.length >= 1500) break;
-        }
-      }
-
-      const group = L.layerGroup();
-      for (const location of visible) {
-        const circle = L.circleMarker([location.lat, location.lng], {
-          renderer: canvasRendererRef.current || undefined,
-          radius,
-          color: "#ffffff",
-          weight: 1,
-          fillColor: colorByType[location.type] || "#10b981",
-          fillOpacity: 0.9,
-        }).on("click", () => {
-          setSelectedLocation(location);
-        });
-        circle.bindPopup(`<strong>${location.name}</strong><br>${location.address}`);
-        group.addLayer(circle);
-      }
-      group.addTo(map);
-      markersLayerRef.current = group;
-    };
-
-    let raf = 0;
-    const schedule = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(render);
-    };
-
-    render();
-    map.on("moveend zoomend", schedule);
-    return () => {
-      cancelAnimationFrame(raf);
-      map.off("moveend zoomend", schedule);
     };
   }, [locations, activeFilters, filterTypes]);
 
