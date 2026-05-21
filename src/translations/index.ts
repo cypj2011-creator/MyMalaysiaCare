@@ -45,7 +45,7 @@ export const translations = {
     
     // Map
     mapTitle: "Interactive Map",
-    mapSubtitle: "Find recycling centers, e-waste points, hospitals, and emergency shelters",
+    mapSubtitle: "Find recycling centers, e-waste drop-off points, and hospitals across Malaysia",
     recyclingCenters: "Recycling Centers",
     ewastePoints: "E-Waste Points",
     hospitals: "Hospitals",
