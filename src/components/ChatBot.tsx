@@ -188,6 +188,8 @@ const ChatBot = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-custom-lg gradient-primary z-50 animate-float"
         size="icon"
+        aria-label={isOpen ? "Close chat assistant" : "Open chat assistant"}
+        aria-expanded={isOpen}
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
       </Button>
