@@ -200,7 +200,7 @@ export const translations = {
     
     // Home Page
     homeHero: "赋能马来西亚迈向可持续未来",
-    homeSubtitle: "您的一站式回收、灾害防护和社区安全平台",
+    homeSubtitle: "您的智能回收一站式平台,为更绿色的马来西亚",
     getStarted: "开始使用",
     learnMore: "了解更多",
     aiPowered: "100% 人工智能驱动",
