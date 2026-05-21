@@ -175,13 +175,16 @@ const InteractiveMap = () => {
 
     const group = L.layerGroup();
     for (const location of filteredLocations) {
-      const circle = L.circleMarker([location.lat, location.lng], {
+      // L.circle uses a radius in METERS — it scales smoothly with the map's
+      // zoom animation (no jumping, no delay). Canvas renderer keeps it fast
+      // even with thousands of points.
+      const circle = L.circle([location.lat, location.lng], {
         renderer: canvasRendererRef.current || undefined,
-        radius: 5,
+        radius: 250,
         color: "#ffffff",
         weight: 1,
         fillColor: colorByType[location.type] || "#10b981",
-        fillOpacity: 0.9,
+        fillOpacity: 0.85,
       }).on("click", () => {
         setSelectedLocation(location);
       });
