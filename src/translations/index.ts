@@ -417,7 +417,7 @@ export const translations = {
     
     // Map
     mapTitle: "Peta Interaktif",
-    mapSubtitle: "Cari pusat kitar semula, titik e-waste, hospital, dan tempat perlindungan kecemasan",
+    mapSubtitle: "Cari pusat kitar semula, titik pelupusan e-waste, dan hospital di seluruh Malaysia",
     recyclingCenters: "Pusat Kitar Semula",
     ewastePoints: "Titik E-Waste",
     hospitals: "Hospital",
