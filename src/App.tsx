@@ -35,18 +35,20 @@ const App = () => (
       <Sonner />
       <HashRouter>
         <Header />
-        <Suspense fallback={<AppFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/recycle" element={<RecycleScanner />} />
-            <Route path="/map" element={<InteractiveMap />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/learn" element={<Learn />} />
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <main className="pb-24">
+          <Suspense fallback={<AppFallback />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/recycle" element={<RecycleScanner />} />
+              <Route path="/map" element={<InteractiveMap />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/learn" element={<Learn />} />
+              <Route path="/about" element={<About />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </main>
         <Footer />
         <ChatBot />
       </HashRouter>
