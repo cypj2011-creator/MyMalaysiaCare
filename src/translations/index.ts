@@ -386,7 +386,7 @@ export const translations = {
     
     // Home Page
     homeHero: "Memperkasa Malaysia untuk Masa Depan Mampan",
-    homeSubtitle: "Platform sehenti anda untuk kitar semula, perlindungan bencana, dan keselamatan komuniti",
+    homeSubtitle: "Platform sehenti anda untuk kitar semula pintar demi Malaysia yang lebih hijau",
     getStarted: "Mulakan",
     learnMore: "Ketahui Lebih Lanjut",
     aiPowered: "100% Dikuasai AI",
