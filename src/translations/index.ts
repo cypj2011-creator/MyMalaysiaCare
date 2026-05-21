@@ -14,7 +14,7 @@ export const translations = {
     
     // Home Page
     homeHero: "Empowering Malaysia for a Sustainable Future",
-    homeSubtitle: "Your all-in-one platform for recycling, disaster protection, and community safety",
+    homeSubtitle: "Your all-in-one platform for smart recycling and a greener Malaysia",
     getStarted: "Get Started",
     learnMore: "Learn More",
     aiPowered: "100% AI Powered",
