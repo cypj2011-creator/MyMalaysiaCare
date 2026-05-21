@@ -94,7 +94,7 @@ export const translations = {
     
     // Learn
     learnTitle: "Learn & Discover",
-    learnSubtitle: "Educational resources about recycling, sustainability, and disaster preparedness",
+    learnSubtitle: "Educational resources about recycling and sustainability in Malaysia",
     
     // Dashboard description
     dashboardDesc: "Track your recycling progress and environmental impact",
