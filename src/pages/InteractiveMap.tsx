@@ -42,7 +42,6 @@ const InteractiveMap = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([
     "recycling",
     "ewaste",
-    "hospital",
   ]);
   const [loading, setLoading] = useState(true);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -50,7 +49,6 @@ const InteractiveMap = () => {
   const filterTypes = useMemo(() => [
     { id: "recycling", label: t("recyclingCenters"), color: "#10b981", Icon: Recycle },
     { id: "ewaste", label: t("ewastePoints"), color: "#3b82f6", Icon: Battery },
-    { id: "hospital", label: t("hospitals"), color: "#ef4444", Icon: Hospital },
   ], [t]);
 
   const fetchWithTimeout = useCallback(async (url: string, options: RequestInit = {}, timeoutMs = 4000) => {
