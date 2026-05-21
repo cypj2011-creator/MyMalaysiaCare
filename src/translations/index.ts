@@ -280,7 +280,7 @@ export const translations = {
     
     // Learn
     learnTitle: "学习与发现",
-    learnSubtitle: "有关回收、可持续发展和灾害准备的教育资源",
+    learnSubtitle: "有关马来西亚回收和可持续发展的教育资源",
     
     // Dashboard description
     dashboardDesc: "跟踪您的回收进度和环境影响",
