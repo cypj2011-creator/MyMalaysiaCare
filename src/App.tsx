@@ -20,12 +20,12 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const queryClient = new QueryClient();
 
 const AppFallback = () => (
-  <main className="min-h-[60vh] flex items-center justify-center bg-background">
+  <div className="min-h-[60vh] flex items-center justify-center bg-background">
     <div className="flex items-center gap-3 text-primary">
       <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
       <span className="text-sm font-medium">Loading MyMalaysiaCare...</span>
     </div>
-  </main>
+  </div>
 );
 
 const App = () => (
@@ -35,18 +35,20 @@ const App = () => (
       <Sonner />
       <HashRouter>
         <Header />
-        <Suspense fallback={<AppFallback />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/recycle" element={<RecycleScanner />} />
-            <Route path="/map" element={<InteractiveMap />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/learn" element={<Learn />} />
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <main className="pb-24">
+          <Suspense fallback={<AppFallback />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/recycle" element={<RecycleScanner />} />
+              <Route path="/map" element={<InteractiveMap />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/learn" element={<Learn />} />
+              <Route path="/about" element={<About />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </main>
         <Footer />
         <ChatBot />
       </HashRouter>

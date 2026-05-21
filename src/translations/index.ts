@@ -14,7 +14,7 @@ export const translations = {
     
     // Home Page
     homeHero: "Empowering Malaysia for a Sustainable Future",
-    homeSubtitle: "Your all-in-one platform for recycling, disaster protection, and community safety",
+    homeSubtitle: "Your all-in-one platform for smart recycling and a greener Malaysia",
     getStarted: "Get Started",
     learnMore: "Learn More",
     aiPowered: "100% AI Powered",
@@ -45,7 +45,7 @@ export const translations = {
     
     // Map
     mapTitle: "Interactive Map",
-    mapSubtitle: "Find recycling centers, e-waste points, hospitals, and emergency shelters",
+    mapSubtitle: "Find recycling centers, e-waste drop-off points, and hospitals across Malaysia",
     recyclingCenters: "Recycling Centers",
     ewastePoints: "E-Waste Points",
     hospitals: "Hospitals",
@@ -94,7 +94,7 @@ export const translations = {
     
     // Learn
     learnTitle: "Learn & Discover",
-    learnSubtitle: "Educational resources about recycling, sustainability, and disaster preparedness",
+    learnSubtitle: "Educational resources about recycling and sustainability in Malaysia",
     
     // Dashboard description
     dashboardDesc: "Track your recycling progress and environmental impact",
@@ -200,7 +200,7 @@ export const translations = {
     
     // Home Page
     homeHero: "赋能马来西亚迈向可持续未来",
-    homeSubtitle: "您的一站式回收、灾害防护和社区安全平台",
+    homeSubtitle: "您的智能回收一站式平台,为更绿色的马来西亚",
     getStarted: "开始使用",
     learnMore: "了解更多",
     aiPowered: "100% 人工智能驱动",
@@ -231,7 +231,7 @@ export const translations = {
     
     // Map
     mapTitle: "交互式地图",
-    mapSubtitle: "查找回收中心、电子废物点、医院和紧急避难所",
+    mapSubtitle: "查找马来西亚各地的回收中心、电子废物回收点和医院",
     recyclingCenters: "回收中心",
     ewastePoints: "电子废物点",
     hospitals: "医院",
@@ -280,7 +280,7 @@ export const translations = {
     
     // Learn
     learnTitle: "学习与发现",
-    learnSubtitle: "有关回收、可持续发展和灾害准备的教育资源",
+    learnSubtitle: "有关马来西亚回收和可持续发展的教育资源",
     
     // Dashboard description
     dashboardDesc: "跟踪您的回收进度和环境影响",
@@ -386,7 +386,7 @@ export const translations = {
     
     // Home Page
     homeHero: "Memperkasa Malaysia untuk Masa Depan Mampan",
-    homeSubtitle: "Platform sehenti anda untuk kitar semula, perlindungan bencana, dan keselamatan komuniti",
+    homeSubtitle: "Platform sehenti anda untuk kitar semula pintar demi Malaysia yang lebih hijau",
     getStarted: "Mulakan",
     learnMore: "Ketahui Lebih Lanjut",
     aiPowered: "100% Dikuasai AI",
@@ -417,7 +417,7 @@ export const translations = {
     
     // Map
     mapTitle: "Peta Interaktif",
-    mapSubtitle: "Cari pusat kitar semula, titik e-waste, hospital, dan tempat perlindungan kecemasan",
+    mapSubtitle: "Cari pusat kitar semula, titik pelupusan e-waste, dan hospital di seluruh Malaysia",
     recyclingCenters: "Pusat Kitar Semula",
     ewastePoints: "Titik E-Waste",
     hospitals: "Hospital",
@@ -466,7 +466,7 @@ export const translations = {
     
     // Learn
     learnTitle: "Belajar & Temui",
-    learnSubtitle: "Sumber pendidikan tentang kitar semula, kemampanan, dan persediaan bencana",
+    learnSubtitle: "Sumber pendidikan tentang kitar semula dan kemampanan di Malaysia",
     
     // Dashboard description
     dashboardDesc: "Jejak kemajuan kitar semula dan impak alam sekitar anda",
