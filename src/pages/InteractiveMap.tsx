@@ -164,10 +164,9 @@ const InteractiveMap = () => {
       filterTypes.map((f) => [f.id, f.color])
     );
 
-    // Render ALL locations once into a single canvas layer.
-    // circleMarker keeps a constant pixel size — it does NOT jump because
-    // we never re-add markers on zoom; Leaflet's canvas renderer redraws
-    // them in lockstep with the map's zoom animation.
+    // Render ALL locations once into a single SVG layer.
+    // circleMarker on the default SVG renderer scales smoothly together with
+    // the map during the zoom animation (no canvas redraw lag, no jumping).
     if (markersLayerRef.current) {
       map.removeLayer(markersLayerRef.current);
       markersLayerRef.current = null;
@@ -175,16 +174,12 @@ const InteractiveMap = () => {
 
     const group = L.layerGroup();
     for (const location of filteredLocations) {
-      // L.circle uses a radius in METERS — it scales smoothly with the map's
-      // zoom animation (no jumping, no delay). Canvas renderer keeps it fast
-      // even with thousands of points.
-      const circle = L.circle([location.lat, location.lng], {
-        renderer: canvasRendererRef.current || undefined,
-        radius: 250,
+      const circle = L.circleMarker([location.lat, location.lng], {
+        radius: 6,
         color: "#ffffff",
-        weight: 1,
+        weight: 1.5,
         fillColor: colorByType[location.type] || "#10b981",
-        fillOpacity: 0.85,
+        fillOpacity: 0.95,
       }).on("click", () => {
         setSelectedLocation(location);
       });
