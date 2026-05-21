@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { MapPin, Navigation, Phone, Clock, Recycle, Battery, Hospital } from "lucide-react";
+import { MapPin, Navigation, Phone, Clock, Recycle, Battery } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -42,7 +42,6 @@ const InteractiveMap = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([
     "recycling",
     "ewaste",
-    "hospital",
   ]);
   const [loading, setLoading] = useState(true);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -50,7 +49,6 @@ const InteractiveMap = () => {
   const filterTypes = useMemo(() => [
     { id: "recycling", label: t("recyclingCenters"), color: "#10b981", Icon: Recycle },
     { id: "ewaste", label: t("ewastePoints"), color: "#3b82f6", Icon: Battery },
-    { id: "hospital", label: t("hospitals"), color: "#ef4444", Icon: Hospital },
   ], [t]);
 
   const fetchWithTimeout = useCallback(async (url: string, options: RequestInit = {}, timeoutMs = 4000) => {
@@ -166,10 +164,9 @@ const InteractiveMap = () => {
       filterTypes.map((f) => [f.id, f.color])
     );
 
-    // Render ALL locations once into a single canvas layer.
-    // circleMarker keeps a constant pixel size — it does NOT jump because
-    // we never re-add markers on zoom; Leaflet's canvas renderer redraws
-    // them in lockstep with the map's zoom animation.
+    // Render ALL locations once into a single SVG layer.
+    // circleMarker on the default SVG renderer scales smoothly together with
+    // the map during the zoom animation (no canvas redraw lag, no jumping).
     if (markersLayerRef.current) {
       map.removeLayer(markersLayerRef.current);
       markersLayerRef.current = null;
@@ -178,12 +175,11 @@ const InteractiveMap = () => {
     const group = L.layerGroup();
     for (const location of filteredLocations) {
       const circle = L.circleMarker([location.lat, location.lng], {
-        renderer: canvasRendererRef.current || undefined,
-        radius: 5,
+        radius: 6,
         color: "#ffffff",
-        weight: 1,
+        weight: 1.5,
         fillColor: colorByType[location.type] || "#10b981",
-        fillOpacity: 0.9,
+        fillOpacity: 0.95,
       }).on("click", () => {
         setSelectedLocation(location);
       });

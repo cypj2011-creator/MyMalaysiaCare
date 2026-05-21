@@ -45,7 +45,7 @@ export const translations = {
     
     // Map
     mapTitle: "Interactive Map",
-    mapSubtitle: "Find recycling centers, e-waste drop-off points, and hospitals across Malaysia",
+    mapSubtitle: "Find recycling centers and e-waste drop-off points across Malaysia",
     recyclingCenters: "Recycling Centers",
     ewastePoints: "E-Waste Points",
     hospitals: "Hospitals",
@@ -231,7 +231,7 @@ export const translations = {
     
     // Map
     mapTitle: "交互式地图",
-    mapSubtitle: "查找马来西亚各地的回收中心、电子废物回收点和医院",
+    mapSubtitle: "查找马来西亚各地的回收中心和电子废物回收点",
     recyclingCenters: "回收中心",
     ewastePoints: "电子废物点",
     hospitals: "医院",
@@ -417,7 +417,7 @@ export const translations = {
     
     // Map
     mapTitle: "Peta Interaktif",
-    mapSubtitle: "Cari pusat kitar semula, titik pelupusan e-waste, dan hospital di seluruh Malaysia",
+    mapSubtitle: "Cari pusat kitar semula dan titik pelupusan e-waste di seluruh Malaysia",
     recyclingCenters: "Pusat Kitar Semula",
     ewastePoints: "Titik E-Waste",
     hospitals: "Hospital",
