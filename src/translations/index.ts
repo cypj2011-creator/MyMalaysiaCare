@@ -466,7 +466,7 @@ export const translations = {
     
     // Learn
     learnTitle: "Belajar & Temui",
-    learnSubtitle: "Sumber pendidikan tentang kitar semula, kemampanan, dan persediaan bencana",
+    learnSubtitle: "Sumber pendidikan tentang kitar semula dan kemampanan di Malaysia",
     
     // Dashboard description
     dashboardDesc: "Jejak kemajuan kitar semula dan impak alam sekitar anda",
