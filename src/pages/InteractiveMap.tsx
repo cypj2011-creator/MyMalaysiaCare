@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { MapPin, Navigation, Phone, Clock, Recycle, Battery, Hospital } from "lucide-react";
+import { MapPin, Navigation, Phone, Clock, Recycle, Battery } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
