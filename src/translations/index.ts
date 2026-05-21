@@ -231,7 +231,7 @@ export const translations = {
     
     // Map
     mapTitle: "交互式地图",
-    mapSubtitle: "查找马来西亚各地的回收中心、电子废物回收点和医院",
+    mapSubtitle: "查找马来西亚各地的回收中心和电子废物回收点",
     recyclingCenters: "回收中心",
     ewastePoints: "电子废物点",
     hospitals: "医院",
