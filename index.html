@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Security headers (meta-equivalent; HSTS / X-Content-Type-Options must be set by the hosting layer) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://ai.gateway.lovable.dev https://*.tile.openstreetmap.org https://nominatim.openstreetmap.org; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="geolocation=(self), microphone=(self), camera=(self), payment=(), usb=(), interest-cohort=()" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
     <title>MyMalaysia Care+ | AI-Powered Environmental Protection</title>
     <meta name="description" content="Malaysia's smartest recycling companion. Scan items with AI, find recycling centers, learn environmental protection, and access disaster safety guides." />
     <meta name="author" content="MyMalaysia Care+ Team" />
