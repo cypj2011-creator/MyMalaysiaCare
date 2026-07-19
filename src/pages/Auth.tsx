@@ -60,17 +60,8 @@ const Auth = () => {
 
     const cleanEmail = email.trim().toLowerCase();
 
-    if (password.length < 8) {
-      toast({
-        title: "Password too short",
-        description: "Use at least 8 characters with a mix of letters and numbers.",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
-
     const { data, error } = await supabase.auth.signUp({
+
       email: cleanEmail,
       password,
       options: {
