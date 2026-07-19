@@ -60,17 +60,8 @@ const Auth = () => {
 
     const cleanEmail = email.trim().toLowerCase();
 
-    if (password.length < 8) {
-      toast({
-        title: "Password too short",
-        description: "Use at least 8 characters with a mix of letters and numbers.",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
-
     const { data, error } = await supabase.auth.signUp({
+
       email: cleanEmail,
       password,
       options: {
@@ -202,15 +193,11 @@ const Auth = () => {
                   <Input
                     id="signup-password"
                     type="password"
-                    placeholder="At least 8 characters"
+                    placeholder="Enter a password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={8}
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Use 8+ characters. Avoid common passwords like "password123".
-                  </p>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Creating account..." : t("signUpButton")}
