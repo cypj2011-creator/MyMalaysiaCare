@@ -193,15 +193,11 @@ const Auth = () => {
                   <Input
                     id="signup-password"
                     type="password"
-                    placeholder="At least 8 characters"
+                    placeholder="Enter a password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={8}
                   />
-                  <p className="text-xs text-muted-foreground">
-                    Use 8+ characters. Avoid common passwords like "password123".
-                  </p>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Creating account..." : t("signUpButton")}
