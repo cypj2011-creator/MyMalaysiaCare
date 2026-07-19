@@ -34,30 +34,80 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const friendlyError = (message: string, code?: string) => {
+    const m = (message || "").toLowerCase();
+    if (code === "weak_password" || m.includes("pwned") || m.includes("leaked") || m.includes("weak password") || m.includes("compromised")) {
+      return "That password has appeared in known data breaches. Please choose a stronger, unique password (mix of letters, numbers & symbols).";
+    }
+    if (code === "invalid_credentials" || m.includes("invalid login")) {
+      return "Wrong email or password. If you don't have an account yet, tap Sign Up.";
+    }
+    if (m.includes("already registered") || m.includes("user already") || code === "user_already_exists") {
+      return "This email is already registered. Try signing in instead.";
+    }
+    if (m.includes("email") && m.includes("invalid")) {
+      return "Please enter a valid email address.";
+    }
+    if (code === "over_email_send_rate_limit" || m.includes("rate limit")) {
+      return "Too many attempts. Please wait a moment and try again.";
+    }
+    return message || "Something went wrong. Please try again.";
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
-      email,
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (password.length < 8) {
+      toast({
+        title: "Password too short",
+        description: "Use at least 8 characters with a mix of letters and numbers.",
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email: cleanEmail,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`
-      }
+        emailRedirectTo: `${window.location.origin}/`,
+      },
     });
 
     if (error) {
       toast({
         title: "Sign up failed",
-        description: error.message,
+        description: friendlyError(error.message, (error as any).code),
         variant: "destructive",
       });
-    } else {
-      toast({
-        title: "Success!",
-        description: "Account created successfully. You're now logged in.",
-      });
+      setLoading(false);
+      return;
     }
+
+    // If email confirmation is required, no session is returned — try signing in anyway
+    if (!data.session) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
+      if (signInError) {
+        toast({
+          title: "Account created",
+          description: "Please check your email to confirm your account, then sign in.",
+        });
+        setLoading(false);
+        return;
+      }
+    }
+
+    toast({
+      title: "Welcome!",
+      description: "Account created successfully. You're now logged in.",
+    });
     setLoading(false);
   };
 
@@ -65,15 +115,17 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
+    const cleanEmail = email.trim().toLowerCase();
+
     const { error } = await supabase.auth.signInWithPassword({
-      email,
+      email: cleanEmail,
       password,
     });
 
     if (error) {
       toast({
         title: "Sign in failed",
-        description: error.message,
+        description: friendlyError(error.message, (error as any).code),
         variant: "destructive",
       });
     } else {
@@ -150,12 +202,15 @@ const Auth = () => {
                   <Input
                     id="signup-password"
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="At least 8 characters"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    minLength={6}
+                    minLength={8}
                   />
+                  <p className="text-xs text-muted-foreground">
+                    Use 8+ characters. Avoid common passwords like "password123".
+                  </p>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Creating account..." : t("signUpButton")}
