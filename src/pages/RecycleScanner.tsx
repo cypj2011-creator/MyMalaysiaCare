@@ -67,8 +67,33 @@ const RecycleScanner = () => {
     }
   };
 
+  const compressImage = (dataUrl: string, maxDim = 1024, quality = 0.85): Promise<string> =>
+    new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return resolve(dataUrl);
+        ctx.drawImage(img, 0, 0, w, h);
+        try {
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        } catch {
+          resolve(dataUrl);
+        }
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+
   const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
+    // Reset so selecting the same file again re-triggers change
+    if (e.target) e.target.value = "";
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
@@ -82,63 +107,91 @@ const RecycleScanner = () => {
 
     const reader = new FileReader();
     reader.onload = async (event) => {
-      const imageData = event.target?.result as string;
+      const raw = event.target?.result as string;
+      const imageData = await compressImage(raw);
       setSelectedImage(imageData);
       await analyzeImage(imageData);
     };
+    reader.onerror = () => {
+      toast({ title: "Could not read image", description: "Please try another photo.", variant: "destructive" });
+    };
     reader.readAsDataURL(file);
+  };
+
+  const invokeAnalyze = async (imageData: string) => {
+    // Retry up to 3 times with backoff for transient failures
+    let lastErr: unknown = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const { data, error } = await supabase.functions.invoke("analyze-image", {
+          body: { imageData },
+        });
+        if (error) throw error;
+        if (!data || (data as any).error) throw new Error((data as any)?.error || "No data");
+        return data;
+      } catch (err) {
+        lastErr = err;
+        console.warn(`analyze-image attempt ${attempt + 1} failed`, err);
+        await new Promise((r) => setTimeout(r, 600 * (attempt + 1)));
+      }
+    }
+    throw lastErr;
   };
 
   const analyzeImage = async (imageData: string) => {
     setIsScanning(true);
     setScanResult(null);
 
+    let result: ScanResult;
+    let usedFallback = false;
+
     try {
-      const { data, error } = await supabase.functions.invoke("analyze-image", {
-        body: { imageData },
-      });
-
-      if (error) throw error;
-
-      const result: ScanResult = {
-        category: data.category,
-        recyclable: data.recyclable,
-        instructions: data.instructions,
-        ecoFact: data.ecoFact,
-        confidence: data.confidence,
+      const data = await invokeAnalyze(imageData);
+      result = {
+        category: data.category ?? "Unknown Item",
+        recyclable: typeof data.recyclable === "boolean" ? data.recyclable : false,
+        instructions:
+          data.instructions ??
+          "Rinse the item, remove any non-recyclable parts, and take it to your nearest recycling centre.",
+        ecoFact: data.ecoFact ?? "Recycling one item helps reduce landfill waste and conserves natural resources.",
+        confidence: typeof data.confidence === "number" ? data.confidence : 0.6,
       };
-
-      setScanResult(result);
-
-      if (user) {
-        const { error: insertError } = await supabase.from("scan_history").insert({
-          user_id: user.id,
-          category: result.category,
-          recyclable: result.recyclable,
-          instructions: result.instructions,
-          eco_fact: result.ecoFact,
-          confidence: result.confidence,
-        });
-
-        if (!insertError) {
-          loadScanHistory();
-        }
-      }
-
-      toast({
-        title: "Analysis complete!",
-        description: `Identified as: ${result.category}`,
-      });
     } catch (error) {
-      console.error("Analysis error:", error);
-      toast({
-        title: "Analysis failed",
-        description: "Please try again with a clearer image.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsScanning(false);
+      console.error("Analysis error (using fallback):", error);
+      usedFallback = true;
+      result = {
+        category: "Unidentified Item",
+        recyclable: true,
+        instructions:
+          "We couldn't reach the AI service right now. General tip: clean the item, separate materials (plastic, paper, metal, glass), and drop it off at a recycling centre near you.",
+        ecoFact: "Even a single recycled bottle saves enough energy to power a lightbulb for hours.",
+        confidence: 0.5,
+      };
     }
+
+    setScanResult(result);
+
+    if (user && !usedFallback) {
+      const { error: insertError } = await supabase.from("scan_history").insert({
+        user_id: user.id,
+        category: result.category,
+        recyclable: result.recyclable,
+        instructions: result.instructions,
+        eco_fact: result.ecoFact,
+        confidence: result.confidence,
+      });
+      if (!insertError) loadScanHistory();
+    }
+
+    toast({
+      title: usedFallback ? "Showing offline guidance" : "Analysis complete!",
+      description: usedFallback
+        ? "AI service was busy — general recycling tips shown below."
+        : `Identified as: ${result.category}`,
+      variant: usedFallback ? "default" : "default",
+    });
+
+    setIsScanning(false);
   };
 
   if (loading) {
