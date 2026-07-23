@@ -61,14 +61,14 @@ const Home = () => {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up">
             <Link to="/recycle" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto gradient-primary text-white shadow-custom-lg hover:shadow-custom-xl transition-all">
-                <Camera className="mr-2" size={20} />
+              <Button size="lg" className="w-full sm:w-auto gradient-primary text-white shadow-custom-lg hover:shadow-custom-xl transition-all py-6 text-lg px-8">
+                <Camera className="mr-3" size={24} />
                 {t("recycAI")}
               </Button>
             </Link>
             <Link to="/map" className="w-full sm:w-auto">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto border-2 hover:bg-primary/5">
-                <Map className="mr-2" size={20} />
+              <Button size="lg" variant="outline" className="w-full sm:w-auto border-2 hover:bg-primary/5 py-6 text-lg px-8">
+                <Map className="mr-3" size={24} />
                 {t("map")}
               </Button>
             </Link>
