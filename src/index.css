@@ -175,75 +175,52 @@ All colors MUST be HSL.
   }
   
   .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: none;
   }
-  
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-  
+
   .animate-glow {
-    animation: glow 2s ease-in-out infinite;
+    animation: none;
   }
-  
-  @keyframes glow {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.7;
-    }
-  }
-  
+
   .animate-slide-down {
-    animation: slideDown 0.3s ease-out forwards;
+    animation: slideDown 0.2s ease-out forwards;
   }
-  
+
   @keyframes slideDown {
     from {
       opacity: 0;
-      transform: translateY(-10px);
+      transform: translateY(-6px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  
+
   .animate-bounce-in {
-    animation: bounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation: bounceIn 0.25s ease-out;
   }
-  
+
   @keyframes bounceIn {
-    0% {
+    from {
       opacity: 0;
-      transform: scale(0.3);
+      transform: scale(0.96);
     }
-    50% {
+    to {
       opacity: 1;
-      transform: scale(1.05);
-    }
-    70% {
-      transform: scale(0.9);
-    }
-    100% {
       transform: scale(1);
     }
   }
-  
-  /* Smooth accordion animations */
-  [data-state="open"] {
-    animation: accordionSlideDown 0.3s cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* Smooth accordion animations (scoped to radix accordion only) */
+  [data-radix-accordion-content][data-state="open"] {
+    animation: accordionSlideDown 0.2s ease-out;
   }
-  
-  [data-state="closed"] {
-    animation: accordionSlideUp 0.2s cubic-bezier(0.87, 0, 0.13, 1);
+
+  [data-radix-accordion-content][data-state="closed"] {
+    animation: accordionSlideUp 0.15s ease-out;
   }
+
   
   @keyframes accordionSlideDown {
     from {
