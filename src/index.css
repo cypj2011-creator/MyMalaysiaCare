@@ -3,14 +3,24 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply transition-all duration-300 ease-out;
+  a, button, input, textarea, select, [role="button"] {
+    transition: color 150ms ease-out, background-color 150ms ease-out,
+      border-color 150ms ease-out, opacity 150ms ease-out,
+      transform 150ms ease-out, box-shadow 150ms ease-out;
   }
-  
+
   html {
     @apply scroll-smooth;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
+
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
