@@ -183,6 +183,25 @@ export const translations = {
     notSureRecyclable: "Not sure if something is recyclable? Use our RecycAI Scanner to get instant answers with AI-powered identification!",
     scanNow: "Scan Now",
     understandingSymbols: "Understanding Recycling Symbols",
+
+    // Leaderboard
+    leaderboard: "Leaderboard",
+    leaderboardTitle: "Recycling Leaderboard",
+    leaderboardSubtitle: "Earn 1 point for every recyclable item you scan. Climb the ranks!",
+    loadingLeaderboard: "Loading rankings...",
+    noPlayersYet: "No one has scored yet. Be the first!",
+    you: "you",
+    points: "pts",
+    yourPoints: "Your Points",
+
+    // Username
+    username: "Username",
+    editUsername: "Edit Username",
+    saveUsername: "Save",
+    cancel: "Cancel",
+    usernameSaved: "Username updated",
+    usernameTaken: "That username is already taken",
+    usernamePlaceholder: "Choose a username",
   },
   
   zh: {
@@ -369,6 +388,25 @@ export const translations = {
     notSureRecyclable: "不确定某物是否可回收？使用我们的 RecycAI 扫描仪通过人工智能驱动的识别获得即时答案！",
     scanNow: "立即扫描",
     understandingSymbols: "了解回收符号",
+
+    // Leaderboard
+    leaderboard: "排行榜",
+    leaderboardTitle: "回收排行榜",
+    leaderboardSubtitle: "每扫描一件可回收物品即可获得 1 分。攀登排名！",
+    loadingLeaderboard: "加载排名中...",
+    noPlayersYet: "还没有人得分。成为第一人！",
+    you: "您",
+    points: "分",
+    yourPoints: "您的积分",
+
+    // Username
+    username: "用户名",
+    editUsername: "编辑用户名",
+    saveUsername: "保存",
+    cancel: "取消",
+    usernameSaved: "用户名已更新",
+    usernameTaken: "该用户名已被使用",
+    usernamePlaceholder: "选择一个用户名",
   },
   
   ms: {
@@ -555,6 +593,25 @@ export const translations = {
     notSureRecyclable: "Tidak pasti sama ada sesuatu boleh dikitar semula? Gunakan Pengimbas RecycAI kami untuk mendapatkan jawapan segera dengan pengenalan yang dikuasai AI!",
     scanNow: "Imbas Sekarang",
     understandingSymbols: "Memahami Simbol Kitar Semula",
+
+    // Leaderboard
+    leaderboard: "Papan Pendahulu",
+    leaderboardTitle: "Papan Pendahulu Kitar Semula",
+    leaderboardSubtitle: "Dapatkan 1 mata untuk setiap item boleh dikitar semula yang anda imbas. Naik pangkat!",
+    loadingLeaderboard: "Memuatkan kedudukan...",
+    noPlayersYet: "Belum ada sesiapa mendapat mata. Jadilah yang pertama!",
+    you: "anda",
+    points: "mata",
+    yourPoints: "Mata Anda",
+
+    // Username
+    username: "Nama Pengguna",
+    editUsername: "Edit Nama Pengguna",
+    saveUsername: "Simpan",
+    cancel: "Batal",
+    usernameSaved: "Nama pengguna dikemas kini",
+    usernameTaken: "Nama pengguna itu sudah digunakan",
+    usernamePlaceholder: "Pilih nama pengguna",
   },
 };
 
