@@ -41,6 +41,9 @@ const Dashboard = () => {
   const [scans, setScans] = useState<Scan[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadingData, setLoadingData] = useState(true);
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -68,7 +71,7 @@ const Dashboard = () => {
       } else {
         // self-heal in case the trigger missed creating one
         await supabase.from("profiles").insert({ id: user.id, email: user.email ?? "" });
-        setProfile({ id: user.id, email: user.email ?? "", created_at: new Date().toISOString() });
+        setProfile({ id: user.id, email: user.email ?? "", username: null, created_at: new Date().toISOString() });
       }
 
       if (scanError) {
@@ -88,8 +91,32 @@ const Dashboard = () => {
 
   const totalScans = scans.length;
   const recyclableCount = scans.filter((s) => s.recyclable).length;
-  const carbonSaved = Math.round(recyclableCount * 2.5 * 10) / 10;
-  const treesEquivalent = Math.round(carbonSaved / 20);
+  const points = recyclableCount; // 1 point per recyclable scan
+  // Realistic per-item averages (household mix: bottles, cans, paper, cardboard)
+  const carbonSaved = Math.round(recyclableCount * 1.1 * 10) / 10; // kg CO2
+  const waterSaved = Math.round(recyclableCount * 13);              // liters
+  const energySaved = Math.round(recyclableCount * 0.6 * 10) / 10;  // kWh
+  const treesEquivalent = Math.round((carbonSaved / 21) * 10) / 10; // 1 mature tree ≈ 21kg CO2/yr
+
+  const handleSaveUsername = async () => {
+    if (!user) return;
+    const clean = nameDraft.trim();
+    if (!clean) { setEditingName(false); return; }
+    setSavingName(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ username: clean })
+      .eq("id", user.id);
+    setSavingName(false);
+    if (error) {
+      const msg = /duplicate|unique/i.test(error.message) ? t("usernameTaken") : error.message;
+      toast({ title: "Error", description: msg, variant: "destructive" });
+      return;
+    }
+    setProfile((p) => (p ? { ...p, username: clean } : p));
+    setEditingName(false);
+    toast({ title: t("usernameSaved") });
+  };
 
   const getCategoryData = () => {
     const categories: Record<string, number> = {};
