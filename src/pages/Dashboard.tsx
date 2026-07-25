@@ -151,32 +151,63 @@ const Dashboard = () => {
   const memberSince = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString("en-MY", { year: "numeric", month: "long", day: "numeric" })
     : "—";
-  const initial = (profile?.email || user.email || "?").charAt(0).toUpperCase();
+  const displayName = profile?.username?.trim() || (profile?.email || user.email || "").split("@")[0] || "User";
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
     <div className="container mx-auto px-4 py-12">
       {/* Account Header */}
       <Card className="p-6 mb-8 shadow-custom-lg">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
+          <div className="flex items-center gap-4 min-w-0 flex-1">
+            <Avatar className="h-16 w-16 flex-shrink-0">
               <AvatarFallback className="gradient-primary text-white text-xl font-bold">
                 {initial}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
-                <UserIcon className="w-5 h-5 text-primary" />
-                My Account
-              </h1>
+            <div className="min-w-0 flex-1">
+              {editingName ? (
+                <div className="flex items-center gap-2 mb-2">
+                  <Input
+                    autoFocus
+                    value={nameDraft}
+                    onChange={(e) => setNameDraft(e.target.value)}
+                    placeholder={t("usernamePlaceholder")}
+                    className="max-w-xs"
+                    maxLength={30}
+                  />
+                  <Button size="sm" onClick={handleSaveUsername} disabled={savingName}>
+                    <Check className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setEditingName(false)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <h1 className="text-2xl font-bold flex items-center gap-2 flex-wrap">
+                  <UserIcon className="w-5 h-5 text-primary" />
+                  <span className="truncate">{displayName}</span>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => { setNameDraft(profile?.username ?? ""); setEditingName(true); }}
+                    aria-label={t("editUsername")}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                </h1>
+              )}
               <div className="text-sm text-muted-foreground flex flex-col sm:flex-row sm:gap-4 mt-1">
-                <span className="flex items-center gap-1"><Mail className="w-4 h-4" /> {profile?.email || user.email}</span>
-                <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Joined {memberSince}</span>
+                <span className="flex items-center gap-1 truncate"><Mail className="w-4 h-4 flex-shrink-0" /> {profile?.email || user.email}</span>
+                <span className="flex items-center gap-1"><Calendar className="w-4 h-4 flex-shrink-0" /> {memberSince}</span>
+              </div>
+              <div className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                <Trophy className="w-4 h-4" /> {t("yourPoints")}: {points}
               </div>
             </div>
           </div>
           <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="w-4 h-4 mr-2" /> Sign out
+            <LogOut className="w-4 h-4 mr-2" /> {t("signOut")}
           </Button>
         </div>
       </Card>
@@ -279,12 +310,12 @@ const Dashboard = () => {
             <div className="grid sm:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-primary/5 rounded-lg">
                 <Droplets className="w-8 h-8 text-primary mx-auto mb-2" />
-                <div className="text-2xl font-bold text-primary">{Math.round(recyclableCount * 1.5)}L</div>
+                <div className="text-2xl font-bold text-primary">{waterSaved}L</div>
                 <div className="text-sm text-muted-foreground">{t("waterSaved")}</div>
               </div>
               <div className="text-center p-4 bg-secondary/5 rounded-lg">
                 <Zap className="w-8 h-8 text-secondary mx-auto mb-2" />
-                <div className="text-2xl font-bold text-secondary">{Math.round(recyclableCount * 0.8)} kWh</div>
+                <div className="text-2xl font-bold text-secondary">{energySaved} kWh</div>
                 <div className="text-sm text-muted-foreground">{t("energySaved")}</div>
               </div>
               <div className="text-center p-4 bg-accent/5 rounded-lg">
