@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
@@ -8,7 +9,7 @@ import {
 } from "recharts";
 import {
   TrendingUp, Recycle, Award, TreePine, Droplets, Zap, Trophy,
-  LogOut, User as UserIcon, Mail, Calendar,
+  LogOut, User as UserIcon, Mail, Calendar, Pencil, Check, X,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
@@ -27,6 +28,7 @@ interface Scan {
 interface Profile {
   id: string;
   email: string;
+  username: string | null;
   created_at: string;
 }
 
