@@ -27,6 +27,7 @@ const Header = () => {
     { path: "/recycle", label: "RecycAI", key: "recycAI" },
     { path: "/map", label: "Map", key: "map" },
     { path: "/dashboard", label: "Dashboard", key: "dashboard" },
+    { path: "/leaderboard", label: "Leaderboard", key: "leaderboard" },
     { path: "/learn", label: "Learn", key: "learn" },
     { path: "/about", label: "About", key: "about" },
   ];

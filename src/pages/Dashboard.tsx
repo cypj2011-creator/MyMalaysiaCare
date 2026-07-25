@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
@@ -8,7 +9,7 @@ import {
 } from "recharts";
 import {
   TrendingUp, Recycle, Award, TreePine, Droplets, Zap, Trophy,
-  LogOut, User as UserIcon, Mail, Calendar,
+  LogOut, User as UserIcon, Mail, Calendar, Pencil, Check, X,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAuth } from "@/hooks/useAuth";
@@ -27,6 +28,7 @@ interface Scan {
 interface Profile {
   id: string;
   email: string;
+  username: string | null;
   created_at: string;
 }
 
@@ -39,6 +41,9 @@ const Dashboard = () => {
   const [scans, setScans] = useState<Scan[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loadingData, setLoadingData] = useState(true);
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState("");
+  const [savingName, setSavingName] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -66,7 +71,7 @@ const Dashboard = () => {
       } else {
         // self-heal in case the trigger missed creating one
         await supabase.from("profiles").insert({ id: user.id, email: user.email ?? "" });
-        setProfile({ id: user.id, email: user.email ?? "", created_at: new Date().toISOString() });
+        setProfile({ id: user.id, email: user.email ?? "", username: null, created_at: new Date().toISOString() });
       }
 
       if (scanError) {
@@ -86,8 +91,32 @@ const Dashboard = () => {
 
   const totalScans = scans.length;
   const recyclableCount = scans.filter((s) => s.recyclable).length;
-  const carbonSaved = Math.round(recyclableCount * 2.5 * 10) / 10;
-  const treesEquivalent = Math.round(carbonSaved / 20);
+  const points = recyclableCount; // 1 point per recyclable scan
+  // Realistic per-item averages (household mix: bottles, cans, paper, cardboard)
+  const carbonSaved = Math.round(recyclableCount * 1.1 * 10) / 10; // kg CO2
+  const waterSaved = Math.round(recyclableCount * 13);              // liters
+  const energySaved = Math.round(recyclableCount * 0.6 * 10) / 10;  // kWh
+  const treesEquivalent = Math.round((carbonSaved / 21) * 10) / 10; // 1 mature tree ≈ 21kg CO2/yr
+
+  const handleSaveUsername = async () => {
+    if (!user) return;
+    const clean = nameDraft.trim();
+    if (!clean) { setEditingName(false); return; }
+    setSavingName(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ username: clean })
+      .eq("id", user.id);
+    setSavingName(false);
+    if (error) {
+      const msg = /duplicate|unique/i.test(error.message) ? t("usernameTaken") : error.message;
+      toast({ title: "Error", description: msg, variant: "destructive" });
+      return;
+    }
+    setProfile((p) => (p ? { ...p, username: clean } : p));
+    setEditingName(false);
+    toast({ title: t("usernameSaved") });
+  };
 
   const getCategoryData = () => {
     const categories: Record<string, number> = {};
@@ -122,32 +151,63 @@ const Dashboard = () => {
   const memberSince = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString("en-MY", { year: "numeric", month: "long", day: "numeric" })
     : "—";
-  const initial = (profile?.email || user.email || "?").charAt(0).toUpperCase();
+  const displayName = profile?.username?.trim() || (profile?.email || user.email || "").split("@")[0] || "User";
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
     <div className="container mx-auto px-4 py-12">
       {/* Account Header */}
       <Card className="p-6 mb-8 shadow-custom-lg">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
+          <div className="flex items-center gap-4 min-w-0 flex-1">
+            <Avatar className="h-16 w-16 flex-shrink-0">
               <AvatarFallback className="gradient-primary text-white text-xl font-bold">
                 {initial}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <h1 className="text-2xl font-bold flex items-center gap-2">
-                <UserIcon className="w-5 h-5 text-primary" />
-                My Account
-              </h1>
+            <div className="min-w-0 flex-1">
+              {editingName ? (
+                <div className="flex items-center gap-2 mb-2">
+                  <Input
+                    autoFocus
+                    value={nameDraft}
+                    onChange={(e) => setNameDraft(e.target.value)}
+                    placeholder={t("usernamePlaceholder")}
+                    className="max-w-xs"
+                    maxLength={30}
+                  />
+                  <Button size="sm" onClick={handleSaveUsername} disabled={savingName}>
+                    <Check className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setEditingName(false)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <h1 className="text-2xl font-bold flex items-center gap-2 flex-wrap">
+                  <UserIcon className="w-5 h-5 text-primary" />
+                  <span className="truncate">{displayName}</span>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => { setNameDraft(profile?.username ?? ""); setEditingName(true); }}
+                    aria-label={t("editUsername")}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                </h1>
+              )}
               <div className="text-sm text-muted-foreground flex flex-col sm:flex-row sm:gap-4 mt-1">
-                <span className="flex items-center gap-1"><Mail className="w-4 h-4" /> {profile?.email || user.email}</span>
-                <span className="flex items-center gap-1"><Calendar className="w-4 h-4" /> Joined {memberSince}</span>
+                <span className="flex items-center gap-1 truncate"><Mail className="w-4 h-4 flex-shrink-0" /> {profile?.email || user.email}</span>
+                <span className="flex items-center gap-1"><Calendar className="w-4 h-4 flex-shrink-0" /> {memberSince}</span>
+              </div>
+              <div className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                <Trophy className="w-4 h-4" /> {t("yourPoints")}: {points}
               </div>
             </div>
           </div>
           <Button variant="outline" onClick={handleSignOut}>
-            <LogOut className="w-4 h-4 mr-2" /> Sign out
+            <LogOut className="w-4 h-4 mr-2" /> {t("signOut")}
           </Button>
         </div>
       </Card>
@@ -250,12 +310,12 @@ const Dashboard = () => {
             <div className="grid sm:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-primary/5 rounded-lg">
                 <Droplets className="w-8 h-8 text-primary mx-auto mb-2" />
-                <div className="text-2xl font-bold text-primary">{Math.round(recyclableCount * 1.5)}L</div>
+                <div className="text-2xl font-bold text-primary">{waterSaved}L</div>
                 <div className="text-sm text-muted-foreground">{t("waterSaved")}</div>
               </div>
               <div className="text-center p-4 bg-secondary/5 rounded-lg">
                 <Zap className="w-8 h-8 text-secondary mx-auto mb-2" />
-                <div className="text-2xl font-bold text-secondary">{Math.round(recyclableCount * 0.8)} kWh</div>
+                <div className="text-2xl font-bold text-secondary">{energySaved} kWh</div>
                 <div className="text-sm text-muted-foreground">{t("energySaved")}</div>
               </div>
               <div className="text-center p-4 bg-accent/5 rounded-lg">
