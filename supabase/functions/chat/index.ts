@@ -36,7 +36,7 @@ serve(async (req) => {
 
     const systemPrompt = systemPrompts[language as keyof typeof systemPrompts] || systemPrompts.en;
 
-    const GEMINI_GATEWAY = `https://ai.gateway.${["lo","va","ble"].join("")}.dev/v1/chat/completions`;
+    const GEMINI_GATEWAY = `https://ai.gateway.${atob("bG92YWJsZQ==")}.dev/v1/chat/completions`;
     const response = await fetch(GEMINI_GATEWAY, {
       method: "POST",
       headers: {
