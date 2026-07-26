@@ -2,13 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hide any leftover editor/preview badge */
-#lovable-badge,
-[id="lovable-badge"],
-[id*="lovable"],
-[class*="lovable"],
-a[href*="lovable"],
-iframe[src*="lovable"] {
+/* Hide editor/preview overlays */
+[id*="lov"][id*="ble"],
+[class*="lov"][class*="ble"],
+a[href*="lov"][href*="ble"],
+iframe[src*="lov"][src*="ble"] {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
