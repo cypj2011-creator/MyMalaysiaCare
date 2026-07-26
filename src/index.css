@@ -4,7 +4,11 @@
 
 /* Hide any leftover editor/preview badge */
 #lovable-badge,
-[id="lovable-badge"] {
+[id="lovable-badge"],
+[id*="lovable"],
+[class*="lovable"],
+a[href*="lovable"],
+iframe[src*="lovable"] {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
