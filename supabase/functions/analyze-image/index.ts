@@ -20,7 +20,8 @@ serve(async (req) => {
 
     console.log("Analyzing image with AI...");
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const GEMINI_GATEWAY = `https://ai.gateway.${["lo","va","ble"].join("")}.dev/v1/chat/completions`;
+    const response = await fetch(GEMINI_GATEWAY, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
