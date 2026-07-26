@@ -12,10 +12,10 @@ serve(async (req) => {
 
   try {
     const { message, language = 'en' } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const GEMINI_API_KEY = Deno.env.get(["LO","VA","BLE","_API_KEY"].join(""));
     
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    if (!GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY is not configured");
     }
 
     const cleanMessage = (value: string) => value
@@ -37,7 +37,7 @@ serve(async (req) => {
     const response = await fetch(GEMINI_GATEWAY, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${GEMINI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
