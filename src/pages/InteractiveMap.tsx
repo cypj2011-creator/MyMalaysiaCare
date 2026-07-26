@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { MapPin, Navigation, Phone, Clock, Recycle, Battery } from "lucide-react";
+import { MapPin, Navigation, Phone, Clock, Recycle, Battery, LocateFixed } from "lucide-react";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -210,6 +211,42 @@ const InteractiveMap = () => {
     window.open(url, "_blank");
   };
 
+  const userMarkerRef = useRef<L.Marker | null>(null);
+  const userCircleRef = useRef<L.Circle | null>(null);
+  const [locating, setLocating] = useState(false);
+
+  const locateMe = useCallback(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (!("geolocation" in navigator)) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        if (userMarkerRef.current) userMarkerRef.current.remove();
+        if (userCircleRef.current) userCircleRef.current.remove();
+        userMarkerRef.current = L.marker([latitude, longitude]).addTo(map).bindPopup("You are here");
+        userCircleRef.current = L.circle([latitude, longitude], {
+          radius: accuracy,
+          color: "#3b82f6",
+          fillColor: "#3b82f6",
+          fillOpacity: 0.15,
+          weight: 1,
+        }).addTo(map);
+        map.setView([latitude, longitude], 14);
+        setLocating(false);
+      },
+      (err) => {
+        setLocating(false);
+        toast.error(err.code === err.PERMISSION_DENIED ? "Location permission denied" : "Could not get your location");
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-8">
@@ -239,6 +276,16 @@ const InteractiveMap = () => {
               </Button>
             );
           })}
+          <Button
+            onClick={locateMe}
+            variant="outline"
+            size="sm"
+            disabled={locating}
+            className="ml-auto"
+          >
+            <LocateFixed className="mr-2" size={16} />
+            {locating ? "Locating..." : "My Location"}
+          </Button>
         </div>
       </Card>
 

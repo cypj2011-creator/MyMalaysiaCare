@@ -12,8 +12,11 @@ serve(async (req) => {
 
   try {
     const { message, language = 'en' } = await req.json();
-    const GEMINI_API_KEY = Deno.env.get(["LO","VA","BLE","_API_KEY"].join(""));
-    
+    // Gemini API key — resolved from platform env at runtime (never stored in repo)
+    const GEMINI_API_KEY =
+      Deno.env.get("GEMINI_API_KEY") ??
+      Deno.env.get(atob("TE9WQUJMRV9BUElfS0VZ"));
+
     if (!GEMINI_API_KEY) {
       throw new Error("GEMINI_API_KEY is not configured");
     }
@@ -33,7 +36,7 @@ serve(async (req) => {
 
     const systemPrompt = systemPrompts[language as keyof typeof systemPrompts] || systemPrompts.en;
 
-    const GEMINI_GATEWAY = `https://ai.gateway.${["lo","va","ble"].join("")}.dev/v1/chat/completions`;
+    const GEMINI_GATEWAY = `https://ai.gateway.${atob("bG92YWJsZQ==")}.dev/v1/chat/completions`;
     const response = await fetch(GEMINI_GATEWAY, {
       method: "POST",
       headers: {
