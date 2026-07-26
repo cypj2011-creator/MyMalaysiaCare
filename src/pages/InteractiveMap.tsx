@@ -276,6 +276,16 @@ const InteractiveMap = () => {
               </Button>
             );
           })}
+          <Button
+            onClick={locateMe}
+            variant="outline"
+            size="sm"
+            disabled={locating}
+            className="ml-auto"
+          >
+            <LocateFixed className="mr-2" size={16} />
+            {locating ? "Locating..." : "My Location"}
+          </Button>
         </div>
       </Card>
 
