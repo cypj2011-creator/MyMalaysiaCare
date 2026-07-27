@@ -79,6 +79,7 @@ export type Database = {
       get_leaderboard_counts: {
         Args: never
         Returns: {
+          display_name: string
           points: number
           user_id: string
         }[]
