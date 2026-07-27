@@ -7,16 +7,9 @@ import { useAuth } from "@/hooks/useAuth";
 
 interface Row {
   user_id: string;
-  username: string | null;
-  email: string | null;
+  display_name: string;
   points: number;
 }
-
-const displayName = (r: Row) => {
-  if (r.username && r.username.trim()) return r.username.trim();
-  if (r.email) return r.email.split("@")[0];
-  return "Anonymous";
-};
 
 const Leaderboard = () => {
   const { t } = useTranslation();
@@ -27,23 +20,12 @@ const Leaderboard = () => {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const [{ data: profiles }, { data: counts }] = await Promise.all([
-        supabase.from("profiles").select("id, username, email"),
-        (supabase as any).rpc("get_leaderboard_counts"),
-      ]);
-
-      const countMap = new Map<string, number>();
-      (counts ?? []).forEach((c: any) => {
-        countMap.set(c.user_id, Number(c.points) ?? 0);
-      });
-
-      const merged: Row[] = (profiles ?? []).map((p: any) => ({
-        user_id: p.id,
-        username: p.username,
-        email: p.email,
-        points: countMap.get(p.id) ?? 0,
+      const { data } = await (supabase as any).rpc("get_leaderboard_counts");
+      const merged: Row[] = (data ?? []).map((c: any) => ({
+        user_id: c.user_id,
+        display_name: c.display_name || "Anonymous",
+        points: Number(c.points) ?? 0,
       }));
-
       merged.sort((a, b) => b.points - a.points);
       setRows(merged);
       setLoading(false);
@@ -85,7 +67,7 @@ const Leaderboard = () => {
                   <div className="w-8 flex justify-center">{rankIcon(i)}</div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold truncate">
-                      {displayName(r)}
+                      {r.display_name}
                       {isMe && <span className="ml-2 text-xs text-primary">({t("you")})</span>}
                     </p>
                   </div>
