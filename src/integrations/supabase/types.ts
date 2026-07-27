@@ -76,7 +76,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_leaderboard_counts: {
+        Args: never
+        Returns: {
+          points: number
+          user_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
