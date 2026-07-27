@@ -27,21 +27,21 @@ const Leaderboard = () => {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const [{ data: profiles }, { data: scans }] = await Promise.all([
+      const [{ data: profiles }, { data: counts }] = await Promise.all([
         supabase.from("profiles").select("id, username, email"),
-        supabase.from("scan_history").select("user_id, recyclable"),
+        (supabase as any).rpc("get_leaderboard_counts"),
       ]);
 
-      const counts = new Map<string, number>();
-      (scans ?? []).forEach((s: any) => {
-        if (s.recyclable) counts.set(s.user_id, (counts.get(s.user_id) ?? 0) + 1);
+      const countMap = new Map<string, number>();
+      (counts ?? []).forEach((c: any) => {
+        countMap.set(c.user_id, Number(c.points) ?? 0);
       });
 
       const merged: Row[] = (profiles ?? []).map((p: any) => ({
         user_id: p.id,
         username: p.username,
         email: p.email,
-        points: counts.get(p.id) ?? 0,
+        points: countMap.get(p.id) ?? 0,
       }));
 
       merged.sort((a, b) => b.points - a.points);
