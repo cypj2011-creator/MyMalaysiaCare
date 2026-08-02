@@ -76,6 +76,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_leaderboard: {
+        Args: never
+        Returns: {
+          points: number
+          user_id: string
+          username: string
+        }[]
+      }
       get_leaderboard_counts: {
         Args: never
         Returns: {
