@@ -128,6 +128,24 @@ const Auth = () => {
     setLoading(false);
   };
 
+  const handleGuest = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInAnonymously();
+    if (error) {
+      toast({
+        title: "Guest sign in failed",
+        description: friendlyError(error.message, (error as any).code),
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed in as guest",
+        description: "You're browsing anonymously. Your scans are saved to this guest account.",
+      });
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 px-4 py-20">
       <Card className="w-full max-w-md animate-scale-in">
