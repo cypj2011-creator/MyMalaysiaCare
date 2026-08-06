@@ -111,6 +111,15 @@ const Dashboard = () => {
 
   const handleSaveUsername = async () => {
     if (!user) return;
+    if (isGuest) {
+      toast({
+        title: "Guest account",
+        description: "Create a full account to set a username.",
+        variant: "destructive",
+      });
+      setEditingName(false);
+      return;
+    }
     const clean = nameDraft.trim();
     if (!clean) { setEditingName(false); return; }
     setSavingName(true);
