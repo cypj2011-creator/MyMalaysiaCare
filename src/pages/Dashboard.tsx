@@ -111,6 +111,15 @@ const Dashboard = () => {
 
   const handleSaveUsername = async () => {
     if (!user) return;
+    if (isGuest) {
+      toast({
+        title: "Guest account",
+        description: "Create a full account to set a username.",
+        variant: "destructive",
+      });
+      setEditingName(false);
+      return;
+    }
     const clean = nameDraft.trim();
     if (!clean) { setEditingName(false); return; }
     setSavingName(true);
@@ -198,14 +207,16 @@ const Dashboard = () => {
                 <h1 className="text-2xl font-bold flex items-center gap-2 flex-wrap">
                   <UserIcon className="w-5 h-5 text-primary" />
                   <span className="truncate">{displayName}</span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => { setNameDraft(profile?.username ?? ""); setEditingName(true); }}
-                    aria-label={t("editUsername")}
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </Button>
+                  {!isGuest && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => { setNameDraft(profile?.username ?? ""); setEditingName(true); }}
+                      aria-label={t("editUsername")}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                  )}
                 </h1>
               )}
               <div className="text-sm text-muted-foreground flex flex-col sm:flex-row sm:gap-4 mt-1">
