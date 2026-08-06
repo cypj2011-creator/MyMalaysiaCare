@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, X } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
@@ -33,17 +33,8 @@ const GuestUpgradeNotice = () => {
   return (
     <Dialog open={open} onOpenChange={(v) => (!v ? dismiss() : setOpen(true))}>
       <DialogContent
-        hideClose
         className="w-[90vw] max-w-2xl sm:max-w-3xl min-h-[60vh] flex flex-col items-center justify-center text-center gap-6 p-8"
       >
-        <button
-          onClick={dismiss}
-          aria-label="Dismiss"
-          className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground hover:bg-muted transition-colors"
-        >
-          <X className="h-5 w-5" />
-        </button>
-
         <div className="rounded-full bg-primary/10 p-5">
           <Sparkles className="h-10 w-10 text-primary" />
         </div>
