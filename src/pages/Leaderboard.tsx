@@ -21,11 +21,16 @@ const Leaderboard = () => {
     (async () => {
       setLoading(true);
       const { data } = await (supabase as any).rpc("get_leaderboard_counts");
-      const merged: Row[] = (data ?? []).map((c: any) => ({
-        user_id: c.user_id,
-        display_name: c.display_name || "Anonymous",
-        points: Number(c.points) ?? 0,
-      }));
+      const merged: Row[] = (data ?? [])
+        .filter((c: any) => {
+          const name = (c.display_name ?? "").trim();
+          return name !== "" && name.toLowerCase() !== "anonymous";
+        })
+        .map((c: any) => ({
+          user_id: c.user_id,
+          display_name: c.display_name,
+          points: Number(c.points) ?? 0,
+        }));
       merged.sort((a, b) => b.points - a.points);
       setRows(merged);
       setLoading(false);
