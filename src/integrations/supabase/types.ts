@@ -76,6 +76,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_stale_guest_accounts: { Args: never; Returns: undefined }
       get_leaderboard: {
         Args: never
         Returns: {
