@@ -48,4 +48,9 @@ export const useGuestCleanup = () => {
   }, []);
 };
 
-export { supabase };
+
+
+export const GuestSessionCleanup = () => {
+  useGuestCleanup();
+  return null;
+};
