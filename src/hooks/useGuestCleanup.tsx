@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-guest`;
 
