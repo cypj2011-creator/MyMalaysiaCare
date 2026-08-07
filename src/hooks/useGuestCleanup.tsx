@@ -39,15 +39,11 @@ export const useGuestCleanup = () => {
       }
     };
 
-    const onVisibility = () => {
-      if (document.visibilityState === "hidden") handler();
-    };
-
     window.addEventListener("pagehide", handler);
-    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("beforeunload", handler);
     return () => {
       window.removeEventListener("pagehide", handler);
-      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("beforeunload", handler);
     };
   }, []);
 };
