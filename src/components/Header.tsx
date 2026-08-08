@@ -1,14 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
-import { Leaf, Menu, X, LogOut, User } from "lucide-react";
+import { Leaf, Menu, X, LogOut, User, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 
 const Header = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [lang, setLang] = useState<string>(() => localStorage.getItem("lang") || "en");
   const languages = [
     { code: "en", label: "English" },
