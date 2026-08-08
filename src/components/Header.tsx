@@ -1,14 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
-import { Leaf, Menu, X, LogOut, User } from "lucide-react";
+import { Leaf, Menu, X, LogOut, User, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 
 const Header = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [lang, setLang] = useState<string>(() => localStorage.getItem("lang") || "en");
   const languages = [
     { code: "en", label: "English" },
@@ -77,6 +79,18 @@ const Header = () => {
               </SelectContent>
             </Select>
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-1"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+
+
           
           {/* Desktop Auth */}
           {user ? (
@@ -143,6 +157,15 @@ const Header = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="pt-2">
+              <Button variant="outline" className="w-full justify-start" onClick={toggleTheme}>
+                {theme === "dark" ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </Button>
+            </div>
+
+
             
             {/* Mobile Auth */}
             <div className="pt-4 border-t border-border/40">
