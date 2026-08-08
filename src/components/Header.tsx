@@ -157,6 +157,15 @@ const Header = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="pt-2">
+              <Button variant="outline" className="w-full justify-start" onClick={toggleTheme}>
+                {theme === "dark" ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
+                {theme === "dark" ? "Light Mode" : "Dark Mode"}
+              </Button>
+            </div>
+
+
             
             {/* Mobile Auth */}
             <div className="pt-4 border-t border-border/40">
