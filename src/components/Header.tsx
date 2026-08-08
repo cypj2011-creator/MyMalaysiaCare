@@ -79,6 +79,18 @@ const Header = () => {
               </SelectContent>
             </Select>
           </div>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-1"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+
+
           
           {/* Desktop Auth */}
           {user ? (
