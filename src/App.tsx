@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,16 +9,18 @@ import Footer from "./components/Footer";
 import ChatBot from "./components/ChatBot";
 import GuestUpgradeNotice from "./components/GuestUpgradeNotice";
 import { GuestSessionCleanup } from "./hooks/useGuestCleanup";
+import { lazyWithRetry } from "@/lib/lazyWithRetry";
 
-const Home = lazy(() => import("./pages/Home"));
-const RecycleScanner = lazy(() => import("./pages/RecycleScanner"));
-const InteractiveMap = lazy(() => import("./pages/InteractiveMap"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Learn = lazy(() => import("./pages/Learn"));
-const About = lazy(() => import("./pages/About"));
-const Auth = lazy(() => import("./pages/Auth"));
-const Leaderboard = lazy(() => import("./pages/Leaderboard"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+const Home = lazyWithRetry(() => import("./pages/Home"));
+const RecycleScanner = lazyWithRetry(() => import("./pages/RecycleScanner"));
+const InteractiveMap = lazyWithRetry(() => import("./pages/InteractiveMap"));
+const Dashboard = lazyWithRetry(() => import("./pages/Dashboard"));
+const Learn = lazyWithRetry(() => import("./pages/Learn"));
+const About = lazyWithRetry(() => import("./pages/About"));
+const Auth = lazyWithRetry(() => import("./pages/Auth"));
+const Leaderboard = lazyWithRetry(() => import("./pages/Leaderboard"));
+const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
+
 
 const queryClient = new QueryClient();
 
