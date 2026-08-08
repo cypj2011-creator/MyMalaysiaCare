@@ -150,7 +150,16 @@ All colors MUST be HSL.
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-extrabold;
+    line-height: 1.25;
+    overflow-wrap: break-word;
   }
+
+  /* Playfair descenders get clipped by background-clip: text — give them room */
+  .bg-clip-text {
+    padding-bottom: 0.12em;
+    line-height: 1.3;
+  }
+
 }
 
 @layer utilities {
