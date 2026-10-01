@@ -1,0 +1,1 @@
+SELECT cron.unschedule('cleanup-stale-guest-accounts');
