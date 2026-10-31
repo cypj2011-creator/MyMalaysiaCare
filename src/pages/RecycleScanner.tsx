@@ -329,7 +329,7 @@ const RecycleScanner = () => {
                         {new Date(scan.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <span className={`text-xs md:text-sm font-medium px-2 py-1 rounded-full whitespace-nowrap ${scan.recyclable ? "bg-green-100 text-foreground" : "bg-red-100 text-red-800"}`}>
+                    <span className={`text-xs md:text-sm font-medium px-2 py-1 rounded-full whitespace-nowrap ${scan.recyclable ? "bg-secondary text-secondary-foreground" : "bg-destructive text-destructive-foreground"}`}>
                       {scan.recyclable ? t("recyclable") : t("nonRecyclable")}
                     </span>
                   </div>
