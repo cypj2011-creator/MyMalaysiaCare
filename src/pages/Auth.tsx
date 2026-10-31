@@ -147,7 +147,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex items-start justify-center bg-gradient-to-br from-background via-background to-primary/5 px-4 pt-6 pb-10">
+    <div className="flex items-start justify-center paper-grain px-4 pt-6 pb-10">
       <Card className="w-full max-w-md animate-scale-in">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
@@ -191,7 +191,7 @@ const Auth = () => {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Signing in..." : t("signInButton")}
                 </Button>
-                <p className="text-center text-xs text-muted-foreground pt-2">
+                <p className="text-center text-sm text-muted-foreground pt-2">
                   Protected And Secured By Supabase
                 </p>
               </form>
@@ -223,7 +223,7 @@ const Auth = () => {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Creating account..." : t("signUpButton")}
                 </Button>
-                <p className="text-center text-xs text-muted-foreground pt-2">
+                <p className="text-center text-sm text-muted-foreground pt-2">
                   Protected And Secured By Supabase
                 </p>
               </form>
@@ -249,7 +249,7 @@ const Auth = () => {
             <UserRound className="w-4 h-4 mr-2" />
             Continue as Guest
           </Button>
-          <p className="text-center text-xs text-muted-foreground pt-2">
+          <p className="text-center text-sm text-muted-foreground pt-2">
             No email needed. You can create a full account later.
           </p>
         </CardContent>

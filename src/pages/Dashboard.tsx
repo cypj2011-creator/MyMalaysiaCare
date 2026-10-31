@@ -156,7 +156,7 @@ const Dashboard = () => {
     }));
   };
 
-  const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"];
+  const COLORS = ["#4F7942", "#C9A227", "#C26A45", "#8A9A7B", "#3E7C8C", "#A0522D"];
 
   if (authLoading || loadingData) {
     return (
@@ -181,7 +181,7 @@ const Dashboard = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-4 min-w-0 flex-1">
             <Avatar className="h-16 w-16 flex-shrink-0">
-              <AvatarFallback className="gradient-primary text-white text-xl font-bold">
+              <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
                 {initial}
               </AvatarFallback>
             </Avatar>
@@ -234,8 +234,8 @@ const Dashboard = () => {
         </div>
       </Card>
 
-      <div className="text-center mb-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent leading-[1.15] pb-1">
+      <div className="border-b-2 border-primary pb-6 mb-10">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-primary leading-[1.05]">
           {t("impactDashboard")}
         </h2>
         <p className="text-base text-muted-foreground">{t("trackYourJourney")}</p>
@@ -248,7 +248,7 @@ const Dashboard = () => {
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <Recycle className="w-6 h-6 text-primary" />
             </div>
-            <TrendingUp className="w-5 h-5 text-green-500" />
+            <TrendingUp className="w-5 h-5 text-secondary" />
           </div>
           <div className="text-3xl font-bold">{totalScans}</div>
           <div className="text-sm text-muted-foreground">{t("itemsScanned")}</div>
@@ -259,7 +259,7 @@ const Dashboard = () => {
             <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
               <Award className="w-6 h-6 text-secondary" />
             </div>
-            <TrendingUp className="w-5 h-5 text-green-500" />
+            <TrendingUp className="w-5 h-5 text-secondary" />
           </div>
           <div className="text-3xl font-bold">{recyclableCount}</div>
           <div className="text-sm text-muted-foreground">{t("recyclableItems")}</div>
@@ -288,7 +288,7 @@ const Dashboard = () => {
           <h3 className="text-xl font-semibold mb-2">{t("noScansYet")}</h3>
           <p className="text-muted-foreground mb-6">{t("noScansDesc")}</p>
           <Link to="/recycle">
-            <Button className="gradient-primary text-white">{t("startScanning")}</Button>
+            <Button>{t("startScanning")}</Button>
           </Link>
         </Card>
       ) : (
@@ -322,7 +322,7 @@ const Dashboard = () => {
                 <YAxis allowDecimals={false} />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="scans" stroke="#10b981" strokeWidth={2} />
+                <Line type="monotone" dataKey="scans" stroke="#4F7942" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </Card>
@@ -360,7 +360,7 @@ const Dashboard = () => {
                     </p>
                   </div>
                   <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                    s.recyclable ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                    s.recyclable ? "bg-secondary text-secondary-foreground" : "bg-destructive text-destructive-foreground"
                   }`}>
                     {s.recyclable ? "Recyclable" : "Non-recyclable"}
                   </span>
