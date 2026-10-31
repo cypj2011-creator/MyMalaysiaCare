@@ -47,7 +47,7 @@ const Home = () => {
           {/* Stamp card */}
           <aside className="md:col-span-4">
             <div className="relative border-2 border-primary bg-card p-6 rotate-[-1.5deg] shadow-custom-lg">
-              <div className="absolute -top-3 left-6 bg-accent text-accent-foreground text-[10px] uppercase tracking-widest px-2 py-1">
+              <div className="absolute -top-3 left-6 bg-accent text-accent-foreground text-xs uppercase tracking-widest px-2 py-1">
                 No. 01
               </div>
               <dl className="divide-y divide-border">
@@ -108,7 +108,7 @@ const Home = () => {
       <section className="px-4 pb-20">
         <div className="container mx-auto bg-primary text-primary-foreground p-10 md:p-16 grid md:grid-cols-12 gap-8 items-end rounded-sm">
           <div className="md:col-span-8">
-            <p className="text-xs uppercase tracking-[0.25em] text-accent mb-4">Start today</p>
+            <p className="text-xs uppercase tracking-[0.25em] opacity-75 mb-4">Start today</p>
             <h2 className="text-3xl md:text-5xl leading-tight">{t("getStarted")}</h2>
             <p className="mt-4 text-lg opacity-80 font-normal max-w-xl">{t("communityDrivenDesc")}</p>
           </div>

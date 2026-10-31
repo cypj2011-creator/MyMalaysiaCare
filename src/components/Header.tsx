@@ -42,10 +42,10 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2 group min-w-0">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full gradient-hero flex items-center justify-center flex-shrink-0">
-            <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+            <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
           </div>
-          <span className="font-bold text-base sm:text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words leading-tight">
+          <span className="font-bold text-base sm:text-xl text-primary break-words leading-tight">
             MyMalaysiaCare
           </span>
         </Link>
@@ -57,7 +57,7 @@ const Header = () => {
               <Button
                 variant={isActive(item.path) ? "default" : "ghost"}
                 size="sm"
-                className={isActive(item.path) ? "gradient-primary text-white" : ""}
+                className={isActive(item.path) ? "rounded-sm" : ""}
               >
                 {item.label}
               </Button>
@@ -134,7 +134,7 @@ const Header = () => {
                 <Button
                   variant={isActive(item.path) ? "default" : "ghost"}
                   className={`w-full justify-start ${
-                    isActive(item.path) ? "gradient-primary text-white" : ""
+                    isActive(item.path) ? "rounded-sm" : ""
                   }`}
                 >
                   {item.label}

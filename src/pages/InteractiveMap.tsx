@@ -1,3 +1,4 @@
+import PageHeader from "@/components/PageHeader";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MapPin, Navigation, Phone, Clock, Recycle, Battery, LocateFixed } from "lucide-react";
 import { toast } from "sonner";
@@ -248,15 +249,8 @@ const InteractiveMap = () => {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words px-2">
-          {t("mapTitle")}
-        </h1>
-        <p className="text-lg text-muted-foreground">
-          {t("mapSubtitle")}
-        </p>
-      </div>
+    <div className="container mx-auto px-4 py-12 md:py-16">
+      <PageHeader eyebrow="Map" title={t("mapTitle")} subtitle={t("mapSubtitle")} />
 
       {/* Filters */}
       <Card className="p-4 mb-6 shadow-custom-md">
@@ -269,7 +263,7 @@ const InteractiveMap = () => {
                 onClick={() => toggleFilter(filter.id)}
                 variant={activeFilters.includes(filter.id) ? "default" : "outline"}
                 size="sm"
-                className={activeFilters.includes(filter.id) ? "gradient-primary" : ""}
+                className="rounded-sm"
               >
                 <FilterIcon className="mr-2" size={16} />
                 {filter.label}
@@ -291,8 +285,8 @@ const InteractiveMap = () => {
 
       {loading && loadingMessage && (
         <div className="fixed top-20 right-4 z-[1000] animate-slide-in">
-          <div className="inline-flex items-center space-x-3 bg-primary text-white px-4 py-3 rounded-lg shadow-custom-lg backdrop-blur">
-            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          <div className="inline-flex items-center space-x-3 bg-primary text-primary-foreground px-4 py-3 rounded-lg shadow-custom-lg backdrop-blur">
+            <div className="h-5 w-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
             <span className="text-sm font-medium">{loadingMessage}</span>
           </div>
         </div>
@@ -357,7 +351,7 @@ const InteractiveMap = () => {
 
               <Button
                 onClick={() => getDirections(selectedLocation)}
-                className="w-full mt-6 gradient-primary"
+                className="w-full mt-6"
               >
                 <Navigation className="mr-2" size={18} />
                 {t("getDirections")}

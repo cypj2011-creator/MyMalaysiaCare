@@ -1,3 +1,4 @@
+import PageHeader from "@/components/PageHeader";
 import { Card } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { BookOpen, HelpCircle, Recycle, Trash2, Package, Battery } from "lucide-react";
@@ -10,8 +11,8 @@ const Learn = () => {
     {
       icon: Recycle,
       title: "Recycling Basics",
-      color: "text-green-500",
-      bg: "bg-green-500/10",
+      color: "text-primary",
+      bg: "bg-primary/10",
       faqs: [
         {
           q: "What is recycling?",
@@ -30,8 +31,8 @@ const Learn = () => {
     {
       icon: Package,
       title: "Plastic & Paper",
-      color: "text-blue-500",
-      bg: "bg-blue-500/10",
+      color: "text-secondary",
+      bg: "bg-secondary/10",
       faqs: [
         {
           q: "What types of plastic can be recycled?",
@@ -54,8 +55,8 @@ const Learn = () => {
     {
       icon: Battery,
       title: "E-Waste",
-      color: "text-purple-500",
-      bg: "bg-purple-500/10",
+      color: "text-accent",
+      bg: "bg-accent/15",
       faqs: [
         {
           q: "What is e-waste?",
@@ -78,8 +79,8 @@ const Learn = () => {
     {
       icon: Trash2,
       title: "Common Mistakes",
-      color: "text-red-500",
-      bg: "bg-red-500/10",
+      color: "text-destructive",
+      bg: "bg-destructive/10",
       faqs: [
         {
           q: "Can I recycle plastic bags?",
@@ -111,26 +112,19 @@ const Learn = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent break-words px-2">
-          {t("learnRecycling")}
-        </h1>
-        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto break-words px-4">
-          {t("comprehensiveGuide")}
-        </p>
-      </div>
+    <div className="container mx-auto px-4 py-12 md:py-16">
+      <PageHeader eyebrow="Learn" icon={<BookOpen className="w-4 h-4" />} title={t("learnRecycling")} subtitle={t("comprehensiveGuide")} />
 
       {/* Quick Tips */}
-      <Card className="p-6 mb-12 shadow-custom-lg gradient-primary text-white">
+      <Card className="p-6 md:p-8 mb-12 bg-primary text-primary-foreground border-0 rounded-sm">
         <div className="flex items-center space-x-3 mb-4">
           <HelpCircle className="w-6 h-6" />
           <h2 className="text-2xl font-bold">{t("quickTips")}</h2>
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
           {quickTips.map((tip, index) => (
-            <div key={index} className="flex items-start space-x-2 bg-white/10 backdrop-blur rounded-lg p-3 min-w-0">
-              <span className="text-xs sm:text-sm break-words leading-relaxed">{tip}</span>
+            <div key={index} className="flex items-start space-x-2 border-t border-primary-foreground/25 pt-3 min-w-0">
+              <span className="text-sm sm:text-base break-words leading-relaxed">{tip}</span>
             </div>
           ))}
         </div>
@@ -176,13 +170,13 @@ const Learn = () => {
           </ul>
         </Card>
 
-        <Card className="p-6 shadow-custom-lg gradient-secondary text-white">
+        <Card className="p-6 shadow-custom-lg border-2 border-primary">
           <h3 className="text-xl font-semibold mb-3">{t("tryAIScanner")}</h3>
-          <p className="text-white/90 mb-4">
+          <p className="text-muted-foreground mb-4">
             {t("notSureRecyclable")}
           </p>
           <a href="/recycle">
-            <button className="w-full py-3 bg-white text-secondary font-semibold rounded-lg hover:bg-white/90 transition-colors">
+            <button className="w-full py-3 bg-primary text-primary-foreground rounded-sm hover:opacity-90">
               {t("scanNow")}
             </button>
           </a>
@@ -198,28 +192,28 @@ const Learn = () => {
               <Recycle className="w-5 h-5 text-primary" />
             </div>
             <div className="font-semibold text-sm">#1 PET</div>
-            <div className="text-xs text-muted-foreground">Water bottles</div>
+            <div className="text-sm text-muted-foreground">Water bottles</div>
           </div>
           <div className="text-center p-4 border rounded-lg">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
               <Recycle className="w-5 h-5 text-primary" />
             </div>
             <div className="font-semibold text-sm">#2 HDPE</div>
-            <div className="text-xs text-muted-foreground">Milk jugs</div>
+            <div className="text-sm text-muted-foreground">Milk jugs</div>
           </div>
           <div className="text-center p-4 border rounded-lg">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
               <Recycle className="w-5 h-5 text-primary" />
             </div>
             <div className="font-semibold text-sm">#5 PP</div>
-            <div className="text-xs text-muted-foreground">Yogurt containers</div>
+            <div className="text-sm text-muted-foreground">Yogurt containers</div>
           </div>
           <div className="text-center p-4 border rounded-lg">
             <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mx-auto mb-2">
               <Package className="w-5 h-5 text-secondary" />
             </div>
             <div className="font-semibold text-sm">Paper</div>
-            <div className="text-xs text-muted-foreground">Cardboard, newspaper</div>
+            <div className="text-sm text-muted-foreground">Cardboard, newspaper</div>
           </div>
         </div>
       </Card>
