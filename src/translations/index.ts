@@ -119,6 +119,16 @@ export const translations = {
     scanHistoryTitle: "Recent Scans",
     confident: "confident",
     findNearestCenter: "Find Nearest Recycling Center",
+    scanNow: "Scan Now",
+    scanHeroTitle: "Not sure if it can be recycled?",
+    scanHeroSubtitle: "Snap a photo and let the AI tell you in seconds.",
+    orUploadInstead: "or upload a photo instead",
+    stepSnapTitle: "Snap",
+    stepSnapDesc: "Take a photo of any item",
+    stepIdentifyTitle: "Identify",
+    stepIdentifyDesc: "AI recognises the material",
+    stepGuidanceTitle: "Recycle",
+    stepGuidanceDesc: "Get clear disposal guidance",
     
     // About Page
     empoweringMalaysians: "Empowering Malaysians to protect the environment with smart technology",
