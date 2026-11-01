@@ -110,6 +110,16 @@ const InteractiveMap = () => {
         console.warn("Nationwide data failed:", e);
       }
 
+      try {
+        const sgRes = await fetchWithTimeout(`${import.meta.env.BASE_URL}data/singapore-osm-locations.json`, {}, 8000);
+        if (!cancelled && sgRes.ok) {
+          const sgLocations = await sgRes.json();
+          if (Array.isArray(sgLocations)) mergeLocations(sgLocations);
+        }
+      } catch (e) {
+        console.warn("Singapore data failed:", e);
+      }
+
       if (!cancelled) {
         setLoading(false);
         setLoadingMessage("");
