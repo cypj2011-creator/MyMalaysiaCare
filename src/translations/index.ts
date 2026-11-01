@@ -129,6 +129,7 @@ export const translations = {
     stepIdentifyDesc: "AI recognises the material",
     stepGuidanceTitle: "Recycle",
     stepGuidanceDesc: "Get clear disposal guidance",
+    scanAnother: "Scan another item",
     
     // About Page
     empoweringMalaysians: "Empowering Malaysians to protect the environment with smart technology",
@@ -344,6 +345,7 @@ export const translations = {
     stepIdentifyDesc: "AI 识别材质",
     stepGuidanceTitle: "回收",
     stepGuidanceDesc: "获得清晰的处理指导",
+    scanAnother: "扫描另一件物品",
     
     // About Page
     empoweringMalaysians: "通过智能技术赋能马来西亚人保护环境",
@@ -559,6 +561,7 @@ export const translations = {
     stepIdentifyDesc: "AI mengenali bahan",
     stepGuidanceTitle: "Kitar Semula",
     stepGuidanceDesc: "Dapatkan panduan pelupusan yang jelas",
+    scanAnother: "Imbas item lain",
     
     // About Page
     empoweringMalaysians: "Memperkasa rakyat Malaysia untuk melindungi alam sekitar dengan teknologi pintar",
