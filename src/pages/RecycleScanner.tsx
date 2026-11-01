@@ -203,115 +203,174 @@ const RecycleScanner = () => {
     );
   }
 
+  const showHero = !selectedImage && !isScanning && !scanResult;
+
+  const resetScan = () => {
+    setSelectedImage(null);
+    setScanResult(null);
+  };
+
   return (
     <div className="min-h-screen paper-grain py-12 md:py-16 px-4">
       <div className="container mx-auto max-w-4xl">
         <PageHeader eyebrow={t("smartAIRecognition")} icon={<Sparkles className="w-4 h-4" />} title={t("recycAIScanner")} subtitle={t("instantIdentify")} />
 
-        <Card className="p-4 md:p-8 mb-6 md:mb-8 animate-scale-in">
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            {/* Hidden Inputs */}
-            <input
-              ref={cameraInputRef}
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={handleImageSelect}
-              className="hidden"
-              disabled={isScanning}
-            />
-            <input
-              ref={uploadInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleImageSelect}
-              className="hidden"
-              disabled={isScanning}
-            />
+        {/* Hidden Inputs */}
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onChange={handleImageSelect}
+          className="hidden"
+          disabled={isScanning}
+        />
+        <input
+          ref={uploadInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageSelect}
+          className="hidden"
+          disabled={isScanning}
+        />
 
-            <Button
-              className="flex-1 w-full h-auto py-4 md:py-6"
-              disabled={isScanning}
-              onClick={() => cameraInputRef.current?.click()}
-            >
-              <Camera className="mr-2 h-5 w-5" />
-              <span className="text-sm md:text-base">{t("takePhoto")}</span>
-            </Button>
+        {showHero ? (
+          <>
+            {/* Inviting scan hero */}
+            <div className="relative mb-8 md:mb-10 animate-scale-in">
+              <div className="relative border-2 border-dashed border-primary/40 rounded-2xl bg-card shadow-custom-lg px-6 py-12 md:py-16 text-center overflow-hidden">
+                {/* viewfinder corner marks */}
+                <span className="absolute top-4 left-4 w-6 h-6 border-t-4 border-l-4 border-accent rounded-tl-md" aria-hidden="true" />
+                <span className="absolute top-4 right-4 w-6 h-6 border-t-4 border-r-4 border-accent rounded-tr-md" aria-hidden="true" />
+                <span className="absolute bottom-4 left-4 w-6 h-6 border-b-4 border-l-4 border-accent rounded-bl-md" aria-hidden="true" />
+                <span className="absolute bottom-4 right-4 w-6 h-6 border-b-4 border-r-4 border-accent rounded-br-md" aria-hidden="true" />
 
-            <Button
-              variant="outline"
-              className="flex-1 w-full h-auto py-4 md:py-6"
-              disabled={isScanning}
-              onClick={() => uploadInputRef.current?.click()}
-            >
-              <Upload className="mr-2 h-5 w-5" />
-              <span className="text-sm md:text-base">{t("uploadPhoto")}</span>
-            </Button>
-          </div>
-
-          {selectedImage && (
-            <div className="mb-6 animate-fade-in">
-              <img
-                src={selectedImage}
-                alt="Selected item"
-                className="w-full max-h-[300px] md:max-h-[400px] object-contain rounded-lg"
-              />
-            </div>
-          )}
-
-          {isScanning && (
-            <div className="text-center py-8 md:py-12 animate-fade-in">
-              <div className="inline-flex items-center space-x-3 bg-primary/10 px-6 py-3 rounded-full mb-4">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
-                <span className="text-primary font-medium">AI analyzing your item...</span>
-              </div>
-            </div>
-          )}
-
-          {scanResult && !isScanning && (
-            <div className="space-y-4 md:space-y-6 animate-fade-in">
-              <div className={`p-4 md:p-6 rounded-lg ${scanResult.recyclable ? "bg-secondary/10 border-2 border-secondary" : "bg-destructive/10 border-2 border-destructive"}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-lg md:text-xl font-bold text-foreground">
-                    {scanResult.recyclable ? t("recyclable") : t("nonRecyclable")}
-                  </h3>
-                  <span className="text-xs md:text-sm font-medium text-muted-foreground">
-                    {Math.round(scanResult.confidence * 100)}% {t("confident")}
-                  </span>
+                <div className="mx-auto mb-6 w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-custom-md">
+                  <Camera className="w-10 h-10 md:w-12 md:h-12" />
                 </div>
-                <p className="text-base md:text-lg font-semibold text-foreground mb-2">
-                  {t("category")} {scanResult.category}
+
+                <h2 className="text-2xl md:text-4xl font-extrabold mb-3 max-w-xl mx-auto">
+                  {t("scanHeroTitle")}
+                </h2>
+                <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-md mx-auto">
+                  {t("scanHeroSubtitle")}
                 </p>
-              </div>
 
-              <div className="bg-muted p-4 md:p-6 rounded-lg">
-                <h4 className="font-semibold text-primary mb-2 flex items-center text-sm md:text-base">
-                  <Info className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                  {t("instructionsLabel")}
-                </h4>
-                <p className="text-foreground text-sm md:text-base">{scanResult.instructions}</p>
-              </div>
-
-              <div className="bg-accent/15 p-4 border-l-4 border-accent md:p-6 rounded-lg">
-                <h4 className="font-semibold text-primary mb-2 flex items-center text-sm md:text-base">
-                  <Leaf className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                  {t("ecoFactLabel")}
-                </h4>
-                <p className="text-foreground text-sm md:text-base">{scanResult.ecoFact}</p>
-              </div>
-
-              {scanResult.recyclable && (
                 <Button
-                  onClick={() => navigate("/map")}
-                  className="w-full"
+                  size="lg"
+                  className="h-auto px-10 md:px-14 py-4 md:py-5 text-lg md:text-xl font-bold bg-accent text-accent-foreground hover:bg-accent/90 shadow-custom-lg rounded-full"
+                  onClick={() => cameraInputRef.current?.click()}
                 >
-                  <MapPin className="mr-2 h-5 w-5" />
-                  {t("findNearestCenter")}
+                  <Camera className="mr-3 h-6 w-6" />
+                  {t("scanNow")}
                 </Button>
-              )}
+
+                <div className="mt-5">
+                  <button
+                    type="button"
+                    onClick={() => uploadInputRef.current?.click()}
+                    className="text-sm md:text-base text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                  >
+                    {t("orUploadInstead")}
+                  </button>
+                </div>
+              </div>
             </div>
-          )}
-        </Card>
+
+            {/* How it works */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-10">
+              {[
+                { n: "01", title: t("stepSnapTitle"), desc: t("stepSnapDesc"), icon: <Camera className="w-5 h-5" /> },
+                { n: "02", title: t("stepIdentifyTitle"), desc: t("stepIdentifyDesc"), icon: <Sparkles className="w-5 h-5" /> },
+                { n: "03", title: t("stepGuidanceTitle"), desc: t("stepGuidanceDesc"), icon: <Leaf className="w-5 h-5" /> },
+              ].map((step) => (
+                <div key={step.n} className="bg-card border border-border rounded-xl p-5 shadow-custom-sm">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-xs font-bold tracking-widest text-accent">{step.n}</span>
+                    <span className="text-primary">{step.icon}</span>
+                    <h3 className="font-bold text-base md:text-lg">{step.title}</h3>
+                  </div>
+                  <p className="text-sm md:text-base text-muted-foreground">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <Card className="p-4 md:p-8 mb-6 md:mb-8 animate-scale-in">
+            {selectedImage && (
+              <div className="mb-6 animate-fade-in">
+                <img
+                  src={selectedImage}
+                  alt="Selected item"
+                  className="w-full max-h-[300px] md:max-h-[400px] object-contain rounded-lg"
+                />
+              </div>
+            )}
+
+            {isScanning && (
+              <div className="text-center py-8 md:py-12 animate-fade-in">
+                <div className="inline-flex items-center space-x-3 bg-primary/10 px-6 py-3 rounded-full mb-4">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+                  <span className="text-primary font-medium">AI analyzing your item...</span>
+                </div>
+              </div>
+            )}
+
+            {scanResult && !isScanning && (
+              <div className="space-y-4 md:space-y-6 animate-fade-in">
+                <div className={`p-4 md:p-6 rounded-lg ${scanResult.recyclable ? "bg-secondary/10 border-2 border-secondary" : "bg-destructive/10 border-2 border-destructive"}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg md:text-xl font-bold text-foreground">
+                      {scanResult.recyclable ? t("recyclable") : t("nonRecyclable")}
+                    </h3>
+                    <span className="text-xs md:text-sm font-medium text-muted-foreground">
+                      {Math.round(scanResult.confidence * 100)}% {t("confident")}
+                    </span>
+                  </div>
+                  <p className="text-base md:text-lg font-semibold text-foreground mb-2">
+                    {t("category")} {scanResult.category}
+                  </p>
+                </div>
+
+                <div className="bg-muted p-4 md:p-6 rounded-lg">
+                  <h4 className="font-semibold text-primary mb-2 flex items-center text-sm md:text-base">
+                    <Info className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                    {t("instructionsLabel")}
+                  </h4>
+                  <p className="text-foreground text-sm md:text-base">{scanResult.instructions}</p>
+                </div>
+
+                <div className="bg-accent/15 p-4 border-l-4 border-accent md:p-6 rounded-lg">
+                  <h4 className="font-semibold text-primary mb-2 flex items-center text-sm md:text-base">
+                    <Leaf className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                    {t("ecoFactLabel")}
+                  </h4>
+                  <p className="text-foreground text-sm md:text-base">{scanResult.ecoFact}</p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {scanResult.recyclable && (
+                    <Button
+                      onClick={() => navigate("/map")}
+                      className="flex-1"
+                    >
+                      <MapPin className="mr-2 h-5 w-5" />
+                      {t("findNearestCenter")}
+                    </Button>
+                  )}
+                  <Button
+                    variant="outline"
+                    onClick={resetScan}
+                    className="flex-1"
+                  >
+                    <Camera className="mr-2 h-5 w-5" />
+                    {t("scanAnother")}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Card>
+        )}
 
         {scanHistory.length > 0 && (
           <Card className="p-4 md:p-6 animate-fade-in">
