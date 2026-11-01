@@ -334,6 +334,16 @@ export const translations = {
     scanHistoryTitle: "最近扫描",
     confident: "置信度",
     findNearestCenter: "查找最近的回收中心",
+    scanNow: "立即扫描",
+    scanHeroTitle: "不确定它能不能回收？",
+    scanHeroSubtitle: "拍张照片，AI 几秒钟内告诉您答案。",
+    orUploadInstead: "或改为上传照片",
+    stepSnapTitle: "拍照",
+    stepSnapDesc: "为任何物品拍张照片",
+    stepIdentifyTitle: "识别",
+    stepIdentifyDesc: "AI 识别材质",
+    stepGuidanceTitle: "回收",
+    stepGuidanceDesc: "获得清晰的处理指导",
     
     // About Page
     empoweringMalaysians: "通过智能技术赋能马来西亚人保护环境",
