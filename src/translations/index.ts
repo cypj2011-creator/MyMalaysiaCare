@@ -549,6 +549,16 @@ export const translations = {
     scanHistoryTitle: "Imbasan Terkini",
     confident: "yakin",
     findNearestCenter: "Cari Pusat Kitar Semula Terdekat",
+    scanNow: "Imbas Sekarang",
+    scanHeroTitle: "Tidak pasti sama ada ia boleh dikitar semula?",
+    scanHeroSubtitle: "Ambil foto dan biarkan AI memberitahu anda dalam beberapa saat.",
+    orUploadInstead: "atau muat naik foto",
+    stepSnapTitle: "Ambil Foto",
+    stepSnapDesc: "Ambil foto mana-mana item",
+    stepIdentifyTitle: "Kenal Pasti",
+    stepIdentifyDesc: "AI mengenali bahan",
+    stepGuidanceTitle: "Kitar Semula",
+    stepGuidanceDesc: "Dapatkan panduan pelupusan yang jelas",
     
     // About Page
     empoweringMalaysians: "Memperkasa rakyat Malaysia untuk melindungi alam sekitar dengan teknologi pintar",
