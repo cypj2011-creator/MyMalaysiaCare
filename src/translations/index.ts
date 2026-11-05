@@ -75,6 +75,7 @@ export const translations = {
     signUpButton: "Sign Up",
     noAccount: "Don't have an account?",
     haveAccount: "Already have an account?",
+    continueWithGoogle: "Continue with Google",
     
     // Footer
     madeBy: "Made by Yeoh Phee Jun, Lim Yee Keat and Poh Zhi Xuen",
@@ -290,6 +291,7 @@ export const translations = {
     signUpButton: "注册",
     noAccount: "没有账户？",
     haveAccount: "已有账户？",
+    continueWithGoogle: "使用 Google 继续",
     
     // Footer
     madeBy: "由 Yeoh Phee Jun、Lim Yee Keat 和 Poh Zhi Xuen 制作",
@@ -505,6 +507,7 @@ export const translations = {
     signUpButton: "Daftar",
     noAccount: "Tidak mempunyai akaun?",
     haveAccount: "Sudah mempunyai akaun?",
+    continueWithGoogle: "Teruskan dengan Google",
     
     // Footer
     madeBy: "Dibuat oleh Yeoh Phee Jun, Lim Yee Keat dan Poh Zhi Xuen",
