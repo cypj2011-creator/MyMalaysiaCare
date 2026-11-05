@@ -68,7 +68,7 @@ const RecycleScanner = () => {
     }
   };
 
-  const compressImage = (dataUrl: string, maxDim = 1024, quality = 0.85): Promise<string> =>
+  const compressImage = (dataUrl: string, maxDim = 640, quality = 0.75): Promise<string> =>
     new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
